@@ -1,4 +1,4 @@
-package com.example.kindermonitor_app
+package nl.jastrix_en_coeninblix.kindermonitor_app
 
 import org.junit.Test
 

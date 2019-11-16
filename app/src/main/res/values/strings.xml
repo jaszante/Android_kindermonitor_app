@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Monitoring</string>
-    <string name="name">Name</string>
+    <string name="register">Registreer</string>
+    <string name="login">Login</string>
+    <string name="username">Gebruikersnaam</string>
+    <string name="wachtwoord">Wachtwoord</string>
 </resources>

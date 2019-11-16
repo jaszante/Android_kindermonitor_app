@@ -1,4 +1,4 @@
-package com.example.kindermonitor_app
+package nl.jastrix_en_coeninblix.kindermonitor_app
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.kindermonitor_app", appContext.packageName)
+        assertEquals("nl.jastrix_en_coeninblix.kindermonitor_app", appContext.packageName)
     }
 }
