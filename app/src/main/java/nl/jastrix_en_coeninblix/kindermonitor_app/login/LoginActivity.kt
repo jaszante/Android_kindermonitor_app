@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.GsonBuilder
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
@@ -22,7 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
-    private val apiHelper = APIHelper()
+
     private lateinit var loginOrRegisterErrorField: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
         loginOrRegisterErrorField.visibility = View.GONE
 
-        val service = apiHelper.returnAPIService()
+        val service = apiHelper.buildAndReturnAPIService()
 
         val usernameField = findViewById<EditText>(R.id.Username)
         val passwordField = findViewById<EditText>(R.id.password)
