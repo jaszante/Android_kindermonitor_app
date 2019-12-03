@@ -21,10 +21,21 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserRegister
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.widget.Toast
+import android.R.string
+import org.json.JSONObject
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
     private lateinit var loginOrRegisterErrorField: TextView
+
+    private lateinit var usernameField: EditText
+    private lateinit var passwordField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +46,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
         val service = apiHelper.buildAndReturnAPIService()
 
-        val usernameField = findViewById<EditText>(R.id.Username)
-        val passwordField = findViewById<EditText>(R.id.password)
+        usernameField = findViewById<EditText>(R.id.Username)
+        passwordField = findViewById<EditText>(R.id.password)
 
         val registerButton = findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
         registerButton.setOnClickListener() {
@@ -45,7 +56,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 //            val gson = Gson()
 //            val userRegister = gson.toJson(UserRegister("teff131", "Test-123", "Harrie", "Henry", "404", "Harrie@hotmail.com"))
 //            service.userRegister(UserRegister("tef131", "Test-123", "Harrie", "Henry", "404", "Harrie@hotmail.com")).enqueue(this)
-            val userRegister = UserRegister("tsff131", "Test-123", "Harrie", "Henry", "404", "Harrie@hotmail.com")
+            val userRegister = UserRegister(usernameField.text.toString(), passwordField.text.toString(), "Harrie", "Henry", "404", "Harrie@hotmail.com")
             service.userRegister(userRegister).enqueue(this)
         }
 
@@ -54,7 +65,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             loginOrRegisterErrorField.visibility = View.GONE
 
 //            val userLogin = UserLogin(usernameField.text.toString(), passwordField.text.toString())
-            val userLogin = UserLogin("tsff131", "Test-123")
+            val userLogin = UserLogin(usernameField.text.toString(), passwordField.text.toString())
             service.userLogin(userLogin).enqueue(this)
         }
     }
@@ -69,6 +80,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
             val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
             editor.putString("AuthenticationToken", authToken)
+//            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
+//            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
             editor.apply()
 
             val intent: Intent = Intent(this, MainActivity::class.java)
@@ -82,7 +95,9 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 //                registerOrLoginFailedShowMessage(fourhundredResponseMessage.text)
 //            }
 //            else{
-                registerOrLoginFailedShowMessage(response.message())
+            val jObjError = JSONObject(response.errorBody()!!.string())
+            val errorMessage = jObjError.getString("error")
+                registerOrLoginFailedShowMessage(errorMessage)
 //            }
         }
     }
