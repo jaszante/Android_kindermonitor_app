@@ -27,7 +27,9 @@ import org.json.JSONObject
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-
+import kotlinx.android.synthetic.main.login_activity.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
@@ -46,8 +48,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
         val service = apiHelper.buildAndReturnAPIService()
 
-        usernameField = findViewById<EditText>(R.id.Username)
-        passwordField = findViewById<EditText>(R.id.password)
+        usernameField = findViewById<EditText>(R.id.UserNameField)
+        passwordField = findViewById<EditText>(R.id.passwordField)
 
         val registerButton = findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
         registerButton.setOnClickListener() {
@@ -77,11 +79,13 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
         if (response.isSuccessful && response.body() != null) {
             authToken = response.body()!!.token
+            userName = usernameField.text.toString()
+            password = passwordField.text.toString()
 
             val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
             editor.putString("AuthenticationToken", authToken)
-//            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
-//            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
+            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
+            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
             editor.apply()
 
             val intent: Intent = Intent(this, MainActivity::class.java)
