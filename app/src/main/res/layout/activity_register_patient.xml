@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Register.RegisterPatientActivity"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/TVname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/registerFname"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/EVname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="@string/registerEditFname"
+        android:ems="10"
+        android:hint="@string/registerEditFname"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="true" />
+
+    <TextView
+        android:id="@+id/TLname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/registerLname"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/ELname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints="@string/registerEditLname"
+        android:ems="10"
+        android:hint="@string/registerEditLname"
+        android:inputType="textPersonName"
+        android:selectAllOnFocus="true" />
+    <TextView
+        android:id="@+id/Tdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/registerDate"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/Edate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="date"
+        android:hint="@string/registerEDate"
+        android:autofillHints="@string/registerEDate"
+        android:selectAllOnFocus="true" />
+
+    <Button
+        android:id="@+id/BTNregister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_shape"
+        android:text="@string/registerButtonPatient"
+        android:textColor="@color/white"/>
+</LinearLayout>
