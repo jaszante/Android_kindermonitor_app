@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Register.RegisterPatientActivity"
+    tools:context=".register.RegisterPatientActivity"
     android:orientation="vertical">
     <TextView
         android:id="@+id/TVname"

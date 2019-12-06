@@ -1,4 +1,4 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.Register
+package nl.jastrix_en_coeninblix.kindermonitor_app.register
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

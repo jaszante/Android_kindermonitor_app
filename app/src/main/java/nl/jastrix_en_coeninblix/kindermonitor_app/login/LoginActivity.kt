@@ -22,6 +22,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observa
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
 
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
@@ -45,88 +46,14 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         usernameField = findViewById<EditText>(R.id.UserNameField)
         passwordField = findViewById<EditText>(R.id.passwordField)
 
-        val registerButton =
-            findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
+        val registerButton = findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
         registerButton.setOnClickListener() {
 
             // should go to register pagina
+        val registerIntent = Intent(this, RegisterActivity::class.java)
+            startActivity(registerIntent)
 
-            if (noCallInProgress) {
-                noCallInProgress = false
 
-                loginOrRegisterErrorField.visibility = View.GONE
-
-//            val gson = Gson()
-//            val userRegister = gson.toJson(UserRegister("teff131", "Test-123", "Harrie", "Henry", "404", "Harrie@hotmail.com"))
-//            service.userRegister(UserRegister("tef131", "Test-123", "Harrie", "Henry", "404", "Harrie@hotmail.com")).enqueue(this)
-                val userRegister = UserRegister(
-                    usernameField.text.toString(),
-                    passwordField.text.toString(),
-                    "Harrie",
-                    "Henry",
-                    "404",
-                    "Harrie@hotmail.com"
-                )
-//                service.userRegister(userRegister).enqueue(this)
-
-                val intent: Intent = Intent(this, MainActivity::class.java)
-
-                val call = service.userRegister(userRegister)
-                call.enqueue(object : Callback<AuthenticationToken> {
-                    override fun onResponse(
-                        call: Call<AuthenticationToken>,
-                        response: Response<AuthenticationToken>
-                    ) {
-                        if (response.isSuccessful && response.body() != null) {
-                            observableToken.changeToken(response.body()!!.token)
-                            userName = usernameField.text.toString()
-                            password = passwordField.text.toString()
-
-                            val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
-                            val sharedPreferences = EncryptedSharedPreferences.create(
-                                "kinderMonitorApp",
-                                masterKeyAlias,
-                                applicationContext,
-                                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                            )
-
-                            val editor = sharedPreferences.edit()
-
-//                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-                            editor.putString("AuthenticationToken", observableToken.authToken)
-                            editor.putString(
-                                "KinderMonitorAppUserName",
-                                usernameField.text.toString()
-                            )
-                            editor.putString(
-                                "KinderMonitorAppPassword",
-                                passwordField.text.toString()
-                            )
-                            editor.apply()
-
-                            getUserDataThenCreatePatientForUserAndGoToMainActivity()
-                        } else {
-//            if (response.code() == 400){
-//                val gson = GsonBuilder().create()
-//                var fourhundredResponseMessage = gson.fromJson(response.errorBody()!!.string(), BadResponseFourhundred::class.java)
-//
-//                registerOrLoginFailedShowMessage(fourhundredResponseMessage.text)
-//            }
-//            else{
-                            val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getString("error")
-                            registerOrLoginFailedShowMessage(errorMessage)
-//            }
-                        }
-                    }
-
-                    override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
-                        registerOrLoginFailedShowMessage(t.message!!)
-                    }
-                })
-            }
         }
 
         val loginButton = findViewById<Button>(R.id.LoginButton)
@@ -144,17 +71,19 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         }
     }
 
-    private fun getUserDataThenCreatePatientForUserAndGoToMainActivity() {
+    private fun getUserDataThenCreatePatientForUserAndGoToMainActivity(){
         val call = apiHelper.buildAPIServiceWithNewToken(observableToken.authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
 
-                if (response.isSuccessful && response.body() != null) {
+                if (response.isSuccessful && response.body() != null){
                     MainActivity.userData = response.body()!!
 //                    mainActivity.initDrawerWithUserInformation()
-                    createPatientForThisUser()
-                } else {
+//                    createPatientForThisUser() // moet niet hier, is al gedaan bij registreren of deze gebruiker is
+                                                // geen hoofdgebruiker maar kan toegevoegd worden bij iemand met patient
+                }
+                else {
                     val jObjError = JSONObject(response.errorBody()!!.string())
                     val errorMessage = jObjError.getString("error")
                     registerOrLoginFailedShowMessage(errorMessage)
@@ -170,8 +99,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
     private fun createPatientForThisUser() {
         val intent: Intent = Intent(this, MainActivity::class.java)
-        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
-            .createPatientForLoggedInUser(Patient("testus", "testuses", "1982-09-02"))
+        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(Patient("testus", "testuses", "1982-09-02"))
         call.enqueue(object : Callback<Patient> {
             override fun onResponse(
                 call: Call<Patient>,
@@ -180,7 +108,9 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
                 if (response.isSuccessful && response.body() != null) {
                     val patient = response.body()!!
                     startActivity(intent)
-                } else {
+                }
+                else
+                {
                     val jObjError = JSONObject(response.errorBody()!!.string())
                     val errorMessage = jObjError.getString("error")
                     registerOrLoginFailedShowMessage(errorMessage)
@@ -197,10 +127,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         registerOrLoginFailedShowMessage(t.message!!)
     }
 
-    override fun onResponse(
-        call: Call<AuthenticationToken>,
-        response: Response<AuthenticationToken>
-    ) {
+    override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
         noCallInProgress = true
         if (response.isSuccessful && response.body() != null) {
             observableToken.changeToken(response.body()!!.token)
@@ -214,7 +141,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             editor.apply()
 
             getUserDataThenCreatePatientForUserAndGoToMainActivity()
-        } else {
+        }
+        else {
 //            if (response.code() == 400){
 //                val gson = GsonBuilder().create()
 //                var fourhundredResponseMessage = gson.fromJson(response.errorBody()!!.string(), BadResponseFourhundred::class.java)
@@ -224,7 +152,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 //            else{
             val jObjError = JSONObject(response.errorBody()!!.string())
             val errorMessage = jObjError.getString("error")
-            registerOrLoginFailedShowMessage(errorMessage)
+                registerOrLoginFailedShowMessage(errorMessage)
 //            }
         }
     }
