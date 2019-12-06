@@ -205,7 +205,8 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/rounded_shape"
             android:text="@string/registerButton"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:stateListAnimator="@null"/>
 
 
     </LinearLayout>

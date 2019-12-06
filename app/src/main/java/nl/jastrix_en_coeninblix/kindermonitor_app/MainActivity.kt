@@ -32,11 +32,11 @@ import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity(), Observer {
     override fun update(o: Observable?, arg: Any?) {
-        initDrawerWithUserInformation()
+//        initDrawerWithUserInformation()
     }
 
     companion object {
-//        lateinit var authToken: String
+        //        lateinit var authToken: String
 //        var authToken : String by Delegates.observable("observableToken observable") {
 //                _, oldValue, newValue ->
 //            onTokenChange?.invoke(oldValue, newValue)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), Observer {
         lateinit var userData: UserData
         lateinit var mainAcitivityContext: Context
 
-
+        var authTokenChanged: Boolean = false
     }
 
     // can be called from APIHelper loginWithCachedUsernameAndPassword function
@@ -87,29 +87,51 @@ class MainActivity : AppCompatActivity(), Observer {
 
         setupNavigationDrawer();
 
-        val authTokenNullable = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).getString("AuthenticationToken", "")
-        val userNameNullable = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).getString("KinderMonitorAppUserName", "")
-        val passwordNullable = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).getString("KinderMonitorAppPassword", "")
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            "kinderMonitorApp",
+            masterKeyAlias,
+            applicationContext,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        val authTokenNullable = sharedPreferences.getString("AuthenticationToken", "")
+        val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
+        val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
+
+//        val authTokenNullable = getSharedPreferences(
+//            "kinderMonitorApp",
+//            Context.MODE_PRIVATE
+//        ).getString("AuthenticationToken", "")
+////        val userNameNullable = getSharedPreferences(
+////            "kinderMonitorApp",
+////            Context.MODE_PRIVATE
+////        ).getString("KinderMonitorAppUserName", "")
+//        val passwordNullable = getSharedPreferences(
+//            "kinderMonitorApp",
+//            Context.MODE_PRIVATE
+//        ).getString("KinderMonitorAppPassword", "")
 
         // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
         // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
         if (authTokenNullable != null && authTokenNullable != ""
             && userNameNullable != null && userNameNullable != ""
-            && passwordNullable != null && passwordNullable != "")
-        {
+            && passwordNullable != null && passwordNullable != ""
+        ) {
 //            authToken = authTokenNullable
             userName = userNameNullable
             password = passwordNullable
 
-            observableToken.addObserver(this)
-            observableToken.changeToken(authTokenNullable) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
-        }
-        else
-        {
+//            observableToken.addObserver(this)
+            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
+            authTokenChanged = true
+        } else {
             removeAllSharedPreferencesAndStartLoginActivity()
         }
-
     }
+
     private fun setupNavigationDrawer() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -134,11 +156,39 @@ class MainActivity : AppCompatActivity(), Observer {
         navView.setupWithNavController(navController)
     }
 
-    // only gets called if the user opens
+    override fun onResume() {
+        super.onResume()
+
+        if (authTokenChanged){
+            initDrawerWithUserInformation()
+        }
+    }
+
 //    override fun onResume() {
 //        super.onResume()
-////        initDrawerWithUserInformation()
+//
+//        val authTokenNullable = getSharedPreferences(
+//            "kinderMonitorApp",
+//            Context.MODE_PRIVATE
+//        ).getString("AuthenticationToken", "")
+//        val userNameNullable = getSharedPreferences(
+//            "kinderMonitorApp",
+//            Context.MODE_PRIVATE
+//        ).getString("KinderMonitorAppUserName", "")
+//        val passwordNullable = getSharedPreferences(
+//            "kinderMonitorApp",
+//            Context.MODE_PRIVATE
+//        ).getString("KinderMonitorAppPassword", "")
+//
+//
+//        if (authTokenNullable == null || authTokenNullable == ""
+//            && userNameNullable == null || userNameNullable == ""
+//            && passwordNullable == null || passwordNullable == ""
+//        ) {
+//
+//        }
 //    }
+
 
     // comment after this no longer relevant (for now) // can be called from APIHelper loginWithCachedUsernameAndPassword function and from loginacitivity after succesful login / register (to update the logged in user's data in the drawer)
     private fun initDrawerWithUserInformation() {
@@ -150,15 +200,15 @@ class MainActivity : AppCompatActivity(), Observer {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
 
-                if (response.isSuccessful && response.body() != null){
+                if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
 //                    getPatientSensors()
 
                     navHeaderTitle.text = userData.username // + " " + userData.LastName
-                }
-                else {
+                    authTokenChanged = false
+                } else {
                     if (statusCode == 401) {
-                        apiHelper.loginWithCachedUsernameAndPassword()
+                        apiHelper.loginWithCachedUsernameAndPassword() // add authTokenChanged at the end of this function if that works
                         // after observableToken is changed, this function needs to be called again
                     }
                     // else is not needed because you can only get a different status code if there is no internet connection or API is down
@@ -175,40 +225,41 @@ class MainActivity : AppCompatActivity(), Observer {
     }
 
     // called after userdata has been recieved
-    private fun getPatientSensors(){
-            val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getPatientsSensors(userData.userID.toString())
-            call.enqueue(object : Callback<Array<Sensor>> {
-                override fun onResponse(
-                    call: Call<Array<Sensor>>,
-                    response: Response<Array<Sensor>>
-                ) {
-                    val statusCode = response.code()
+    private fun getPatientSensors() {
+        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            .getPatientsSensors(userData.userID.toString())
+        call.enqueue(object : Callback<Array<Sensor>> {
+            override fun onResponse(
+                call: Call<Array<Sensor>>,
+                response: Response<Array<Sensor>>
+            ) {
+                val statusCode = response.code()
 
-                    if (response.isSuccessful && response.body() != null) {
-                        val sensors: Array<Sensor> = response.body()!!
+                if (response.isSuccessful && response.body() != null) {
+                    val sensors: Array<Sensor> = response.body()!!
+                } else {
+                    if (statusCode == 401) {
+                        apiHelper.loginWithCachedUsernameAndPassword()
+                    } else if (statusCode == 404) {
+                        // notification that there is no connection to API
                     } else {
-                        if (statusCode == 401) {
-                            apiHelper.loginWithCachedUsernameAndPassword()
-                        } else if (statusCode == 404) {
-                            // notification that there is no connection to API
-                        } else {
-                            // internet down notification
-                        }
-                        // try again
-                        Timer("scheduleAfterOneSecond", false).schedule(1000) {
-                            getPatientSensors()
-                        }
-
+                        // internet down notification
                     }
-                }
+                    // try again
+                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
+                        getPatientSensors()
+                    }
 
-                override fun onFailure(call: Call<Array<Sensor>>, t: Throwable) {
-                    Log.d("DEBUG", t.message)
-
-                    // internet down notification
                 }
-            })
-        }
+            }
+
+            override fun onFailure(call: Call<Array<Sensor>>, t: Throwable) {
+                Log.d("DEBUG", t.message)
+
+                // internet down notification
+            }
+        })
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

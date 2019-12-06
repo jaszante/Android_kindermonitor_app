@@ -1,7 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.register
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,10 +8,12 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
@@ -22,6 +23,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 class RegisterActivity : AppCompatActivity() {
     lateinit var service: APIService
@@ -58,13 +60,22 @@ class RegisterActivity : AppCompatActivity() {
         buttonRegister.setOnClickListener() {
             if (checkBoxTerms.isChecked) {
 
-                register(
+
+                /*register(
                     uName.text.toString(),
                     pw.text.toString(),
                     fName.text.toString(),
                     lName.text.toString(),
                     phone.text.toString(),
                     email.text.toString()
+                )*/
+                register(
+                    uName.text.toString(),
+                    "kees123213214455",
+                    "a",
+                   "B",
+                   "123",
+                   "kees@kees.kees"
                 )
             } else {
                 errorfield.text = getString(R.string.registerTerms)
@@ -94,6 +105,8 @@ class RegisterActivity : AppCompatActivity() {
                     val statusCode = response.code()
 
                     if (response.isSuccessful && response.body() != null) {
+                        observableToken.authToken = response.body()!!.token
+                        apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
                         saveUserCredentials()
 
                         goToRegisterPatientActivityOrMainActivity()
@@ -104,13 +117,13 @@ class RegisterActivity : AppCompatActivity() {
 
                         errorfield.text = errorMessage
                         errorfield.visibility = View.VISIBLE
-
                     }
+
                 }
 
                 override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
                     Log.d("DEBUG", t.message)
-                    noCallInProgress = false
+                    noCallInProgress = true
 
                     // try again in 5 seconds?
                 }
@@ -138,7 +151,7 @@ class RegisterActivity : AppCompatActivity() {
                         "KinderMonitorAppPassword",
                         pw
                     )
-                    editor.apply()
+                    editor.commit()//apply()
                 }
             })
         }
@@ -148,10 +161,12 @@ class RegisterActivity : AppCompatActivity() {
         if (checkBoxCaretaker.isChecked) {
             val intent = Intent(this, RegisterPatientActivity::class.java)
             startActivity(intent)
+            finish()
         } else {
             val intent = Intent(this, MainActivity::class.java)
+            authTokenChanged = true
             startActivity(intent)
+            finish()
         }
     }
-
 }

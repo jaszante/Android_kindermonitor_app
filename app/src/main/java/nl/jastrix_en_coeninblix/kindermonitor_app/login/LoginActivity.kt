@@ -16,8 +16,6 @@ import retrofit2.Callback
 import retrofit2.Response
 import org.json.JSONObject
 import android.util.Log
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
@@ -52,8 +50,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             // should go to register pagina
         val registerIntent = Intent(this, RegisterActivity::class.java)
             startActivity(registerIntent)
-
-
+            finish()
         }
 
         val loginButton = findViewById<Button>(R.id.LoginButton)
@@ -98,7 +95,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     }
 
     private fun createPatientForThisUser() {
-        val intent: Intent = Intent(this, MainActivity::class.java)
+        val mainActivityIntent: Intent = Intent(this, MainActivity::class.java)
         var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(Patient("testus", "testuses", "1982-09-02"))
         call.enqueue(object : Callback<Patient> {
             override fun onResponse(
@@ -107,7 +104,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     val patient = response.body()!!
-                    startActivity(intent)
+                    startActivity(mainActivityIntent)
+                    finish()
                 }
                 else
                 {
@@ -161,5 +159,9 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         noCallInProgress = true
         loginOrRegisterErrorField.text = message
         loginOrRegisterErrorField.visibility = View.VISIBLE
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
     }
 }
