@@ -32,6 +32,8 @@
     <string name= "registerCaretaker">Ik ben hoofdverzorger</string>
     <string name= "registerterms">Ik ga akkoord met de algemene voorwaarde*</string>
     <string name= "registerButton">Registreer</string>
+    <string name= "registerTerms">U moet akkoord gaan met de terms en agreements.</string>
+
 
     <string name="log_uit">Log uit</string>
 
