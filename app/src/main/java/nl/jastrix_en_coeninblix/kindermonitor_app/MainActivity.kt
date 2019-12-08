@@ -22,6 +22,7 @@ import androidx.security.crypto.MasterKeys
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.observableToken.ObservableToken
 import retrofit2.Call
 import retrofit2.Callback
@@ -49,9 +50,11 @@ class MainActivity : AppCompatActivity(), Observer {
         lateinit var password: String
         val apiHelper = APIHelper()
         lateinit var userData: UserData
-        lateinit var mainAcitivityContext: Context
+//        lateinit var mainAcitivityContext: Context
 
         var authTokenChanged: Boolean = false
+
+        var active: Boolean = false
     }
 
     // can be called from APIHelper loginWithCachedUsernameAndPassword function
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity(), Observer {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainAcitivityContext = this
+//        mainAcitivityContext = this
 
         setupNavigationDrawer();
 
@@ -125,7 +128,7 @@ class MainActivity : AppCompatActivity(), Observer {
             password = passwordNullable
 
 //            observableToken.addObserver(this)
-            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
+//            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
             authTokenChanged = true
         } else {
             removeAllSharedPreferencesAndStartLoginActivity()
@@ -158,10 +161,16 @@ class MainActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
+        active = true
 
         if (authTokenChanged){
             initDrawerWithUserInformation()
         }
+    }
+
+    override fun onStop() {
+        active = false
+        super.onStop()
     }
 
 //    override fun onResume() {
@@ -192,6 +201,8 @@ class MainActivity : AppCompatActivity(), Observer {
 
     // comment after this no longer relevant (for now) // can be called from APIHelper loginWithCachedUsernameAndPassword function and from loginacitivity after succesful login / register (to update the logged in user's data in the drawer)
     private fun initDrawerWithUserInformation() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+
         val navView = nav_view.getHeaderView(0)
         val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
 
@@ -208,8 +219,10 @@ class MainActivity : AppCompatActivity(), Observer {
                     authTokenChanged = false
                 } else {
                     if (statusCode == 401) {
-                        apiHelper.loginWithCachedUsernameAndPassword() // add authTokenChanged at the end of this function if that works
-                        // after observableToken is changed, this function needs to be called again
+                        loginWithCachedCredentialsOnResume = true
+                        startActivity(loginIntent)
+//                        apiHelper.loginWithCachedUsernameAndPassword()
+
                     }
                     // else is not needed because you can only get a different status code if there is no internet connection or API is down
                     // push notification should be sent by the continues measurement calls about no connection
@@ -226,6 +239,8 @@ class MainActivity : AppCompatActivity(), Observer {
 
     // called after userdata has been recieved
     private fun getPatientSensors() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+
         val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .getPatientsSensors(userData.userID.toString())
         call.enqueue(object : Callback<Array<Sensor>> {
@@ -239,7 +254,9 @@ class MainActivity : AppCompatActivity(), Observer {
                     val sensors: Array<Sensor> = response.body()!!
                 } else {
                     if (statusCode == 401) {
-                        apiHelper.loginWithCachedUsernameAndPassword()
+                        loginWithCachedCredentialsOnResume = true
+                        startActivity(loginIntent)
+//                        apiHelper.loginWithCachedUsernameAndPassword()
                     } else if (statusCode == 404) {
                         // notification that there is no connection to API
                     } else {

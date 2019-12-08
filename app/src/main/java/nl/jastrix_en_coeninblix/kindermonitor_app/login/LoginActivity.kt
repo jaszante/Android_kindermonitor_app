@@ -16,6 +16,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import org.json.JSONObject
 import android.util.Log
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
@@ -25,12 +27,23 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
+    companion object {
+        var loginWithCachedCredentialsOnResume: Boolean = false
+    }
+
     private lateinit var loginOrRegisterErrorField: TextView
 
     private lateinit var usernameField: EditText
     private lateinit var passwordField: EditText
 
     private var noCallInProgress: Boolean = true
+
+    override fun onResume() {
+        super.onResume()
+        if (loginWithCachedCredentialsOnResume){
+            loginWithCachedUsernameAndPassword()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,11 +59,11 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
         val registerButton = findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
         registerButton.setOnClickListener() {
-
-            // should go to register pagina
-        val registerIntent = Intent(this, RegisterActivity::class.java)
-            startActivity(registerIntent)
-            finish()
+            val registerIntent = Intent(this, RegisterActivity::class.java)
+            if (noCallInProgress) {
+                startActivity(registerIntent)
+            }
+//            finish()
         }
 
         val loginButton = findViewById<Button>(R.id.LoginButton)
@@ -64,6 +77,64 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
                 val userLogin =
                     UserLogin(usernameField.text.toString(), passwordField.text.toString())
                 service.userLogin(userLogin).enqueue(this)
+            }
+        }
+    }
+
+    fun loginWithCachedUsernameAndPassword() {
+        if (noCallInProgress) {
+            noCallInProgress = false
+            if (userName != null && password != null && userName != "" && password != "") {
+
+                val mainActivityIntent = Intent(this, MainActivity::class.java)
+
+                val call = apiHelper.buildAndReturnAPIService().userLogin(UserLogin(userName, password))
+
+                call.enqueue(object : Callback<AuthenticationToken> {
+                    override fun onResponse(call: Call<AuthenticationToken>, response: retrofit2.Response<AuthenticationToken>) {
+                        if (response.isSuccessful && response.body() != null){
+
+                            val newToken = response.body()!!.token
+                            apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
+//                            observableToken.changeToken(newToken)
+                            startActivity(mainActivityIntent)
+                            loginWithCachedCredentialsOnResume = false
+                            noCallInProgress = true
+
+                        }
+                        else {
+                            logOutUser()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
+                        logOutUser()
+                    }
+
+                    private fun logOutUser() {
+                        noCallInProgress = true
+
+                        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+                        val sharedPreferences = EncryptedSharedPreferences.create(
+                            "kinderMonitorApp",
+                            masterKeyAlias,
+                            applicationContext,
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                        )
+
+                        val editor = sharedPreferences.edit()
+//        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
+                        editor.putString("AuthenticationToken", null)
+                        editor.putString("KinderMonitorAppUserName", null)
+                        editor.putString("KinderMonitorAppPassword", null)
+                        editor.apply()
+
+//                        val intent: Intent = Intent(this, LoginActivity::class.java)
+//                        startActivity(intent)
+                    }
+                })
             }
         }
     }
@@ -105,7 +176,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
                 if (response.isSuccessful && response.body() != null) {
                     val patient = response.body()!!
                     startActivity(mainActivityIntent)
-                    finish()
+//                    finish()
                 }
                 else
                 {

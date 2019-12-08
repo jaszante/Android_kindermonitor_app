@@ -57,7 +57,6 @@ class GalleryFragment : Fragment() {
 
             val intent: Intent = Intent(activity, LoginActivity::class.java)
             startActivity(intent)
-
         }
     }
 }
