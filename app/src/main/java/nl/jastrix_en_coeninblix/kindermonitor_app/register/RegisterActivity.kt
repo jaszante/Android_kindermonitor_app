@@ -168,13 +168,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun goToRegisterPatientActivityOrMainActivity(){
+        authTokenChanged = true
         if (checkBoxCaretaker.isChecked) {
             val registerPatientIntent = Intent(this, RegisterPatientActivity::class.java)
             startActivity(registerPatientIntent)
             finish()
         } else {
             val mainActivityIntent = Intent(this, MainActivity::class.java)
-            authTokenChanged = true
             startActivity(mainActivityIntent)
             finish()
         }

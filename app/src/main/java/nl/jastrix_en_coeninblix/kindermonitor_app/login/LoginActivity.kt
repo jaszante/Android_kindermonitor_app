@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         }
     }
 
-    fun loginWithCachedUsernameAndPassword() {
+    private fun loginWithCachedUsernameAndPassword() {
         if (noCallInProgress) {
             noCallInProgress = false
             if (userName != null && password != null && userName != "" && password != "") {
@@ -101,7 +101,6 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
                             startActivity(mainActivityIntent)
                             loginWithCachedCredentialsOnResume = false
                             noCallInProgress = true
-
                         }
                         else {
                             logOutUser()

@@ -1,6 +1,5 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,10 +19,11 @@ import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import kotlinx.android.synthetic.main.activity_main.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Patient
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
-import nl.jastrix_en_coeninblix.kindermonitor_app.observableToken.ObservableToken
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity(), Observer {
         var authTokenChanged: Boolean = false
 
         var active: Boolean = false
+        var currentPatient : PatientWithID? = null
     }
 
     // can be called from APIHelper loginWithCachedUsernameAndPassword function
@@ -155,7 +156,9 @@ class MainActivity : AppCompatActivity(), Observer {
         active = true
 
         if (authTokenChanged){
-            initDrawerWithUserInformation()
+            // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
+            // IN THAT ACTIVITY THE CURRENTPATIENT IS CHOSEN AND SET TO THE COMPANION HERE, THEN THE MESUREMENT CALLS CAN START
+            getUserDataAndInitDrawerWithUserInformationThenStartGetPatientsCall()
         }
     }
 
@@ -164,7 +167,7 @@ class MainActivity : AppCompatActivity(), Observer {
         super.onStop()
     }
 
-    private fun initDrawerWithUserInformation() {
+    private fun getUserDataAndInitDrawerWithUserInformationThenStartGetPatientsCall() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         val navView = nav_view.getHeaderView(0)
@@ -177,10 +180,10 @@ class MainActivity : AppCompatActivity(), Observer {
 
                 if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
-//                    getPatientSensors()
-
                     navHeaderTitle.text = userData.username // + " " + userData.LastName
                     authTokenChanged = false
+
+                    getAllPatients()
                 } else {
                     if (statusCode == 401) {
                         loginWithCachedCredentialsOnResume = true
@@ -201,7 +204,30 @@ class MainActivity : AppCompatActivity(), Observer {
 
     }
 
-    // called after userdata has been recieved
+    private fun getAllPatients() {
+        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllPatientsForLogginedInUser()
+        call.enqueue(object : Callback<Array<PatientWithID>> {
+            override fun onResponse(call: Call<Array<PatientWithID>>, response: Response<Array<PatientWithID>>) {
+                val statusCode = response.code()
+
+                if (response.isSuccessful && response.body() != null) {
+                    val allPatients = response.body()!!
+                    if (allPatients.count() != 0) {
+                        currentPatient = allPatients[0]
+                    }
+
+                } else {
+
+                }
+            }
+
+            override fun onFailure(call: Call<Array<PatientWithID>>, t: Throwable) {
+                // no internet connection?
+            }
+        })
+    }
+
+    // called after patient has been chosen
     private fun getPatientSensors() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
@@ -224,12 +250,13 @@ class MainActivity : AppCompatActivity(), Observer {
                     } else if (statusCode == 404) {
                         // notification that there is no connection to API
                     } else {
-                        // internet down notification
+                        // internet down notification? // or maybe there are no patients linked?
                     }
-                    // try again
-                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
-                        getPatientSensors()
-                    }
+
+//                    // try again
+//                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
+//                        getPatientSensors()
+//                    }
 
                 }
             }

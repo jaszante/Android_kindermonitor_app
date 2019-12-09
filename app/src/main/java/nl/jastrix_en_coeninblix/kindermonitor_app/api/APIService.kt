@@ -22,8 +22,8 @@ interface APIService {
     fun getPatientsSensors(@Path("PatientId") patientId: String) : Call<Array<Sensor>>
 
     @POST ("Users/me/patients")
-    fun createPatientForLoggedInUser(@Body patient: Patient): Call<Patient>
+    fun createPatientForLoggedInUser(@Body patient: Patient): Call<PatientWithID>
 
     @GET ("Users/me/patients")
-    fun getAllPatientsForLogginedInUser(): Call<Patient>
+    fun getAllPatientsForLogginedInUser(): Call<Array<PatientWithID>>
 }

@@ -1,22 +1,27 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.register
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Patient
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class RegisterPatientActivity : AppCompatActivity() {
 
@@ -29,6 +34,8 @@ class RegisterPatientActivity : AppCompatActivity() {
 
     lateinit var userData: UserData
 
+    lateinit var createdPatient: PatientWithID
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_patient)
@@ -40,19 +47,41 @@ class RegisterPatientActivity : AppCompatActivity() {
         patientRegisterErrorField = findViewById((R.id.patientRegisterError))
 
         registerPatientButton = findViewById(R.id.patientRegisterButton)
+        registerPatientButton.isClickable = false
         registerPatientButton.setOnClickListener() {
+            val patientBirthdayString = patientBirthDateEditText.text.toString()
+            var parsedDateString: Date? = Date()
+            var parseSucceeded: Boolean = false
 
+            try {
+                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+                parsedDateString = format.parse(patientBirthdayString)
+                parseSucceeded = true
+            } catch (pe: Exception) {
+                patientRegisterErrorField.text = getString(R.string.incorrectDateFormatError)
+            }
+
+            if (parseSucceeded) {
+                val createPatient = Patient(
+                    patientFirstNameEditText.text.toString(),
+                    patientLastNameEditText.text.toString(),
+                    parsedDateString!!
+                )
+
+                createPatientForThisUser(createPatient)
+            }
         }
+
+        getUserData()
     }
 
-    private fun getUserDataThenCreatePatientForUserAndGoToMainActivity(){
+    private fun getUserData(){
         val call = MainActivity.apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 if (response.isSuccessful && response.body() != null){
                     userData = response.body()!!
-//                    createPatientForThisUser() // moet niet hier, is al gedaan bij registreren of deze gebruiker is
-                    // geen hoofdgebruiker maar kan toegevoegd worden bij iemand met patient
+                    registerPatientButton.isClickable = true
                 }
                 else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
@@ -64,7 +93,6 @@ class RegisterPatientActivity : AppCompatActivity() {
                     else{
                         registerPatientShowErrorMessage(response.message())
                     }
-//                    registerOrLoginFailedShowMessage(errorMessage)
                 }
             }
 
@@ -80,20 +108,17 @@ class RegisterPatientActivity : AppCompatActivity() {
         patientRegisterErrorField.visibility = View.VISIBLE
     }
 
-    private fun createPatientForThisUser() {
-        val mainActivityIntent: Intent = Intent(this, MainActivity::class.java)
-        var call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(
-            Patient("testus", "testuses", "1982-09-02")
-        )
-        call.enqueue(object : Callback<Patient> {
+    private fun createPatientForThisUser(patient: Patient) {
+        var call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
+
+        call.enqueue(object : Callback<PatientWithID> {
             override fun onResponse(
-                call: Call<Patient>,
-                response: Response<Patient>
+                call: Call<PatientWithID>,
+                response: Response<PatientWithID>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    val patient = response.body()!!
-                    startActivity(mainActivityIntent)
-//                    finish()
+                    createdPatient = response.body()!!
+                    createSensorForPatient()
                 }
                 else
                 {
@@ -109,9 +134,18 @@ class RegisterPatientActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<Patient>, t: Throwable) {
+            override fun onFailure(call: Call<PatientWithID>, t: Throwable) {
                 registerPatientShowErrorMessage(t.message!!)
             }
         })
+    }
+
+    private fun createSensorForPatient() {
+        val mainActivityIntent: Intent = Intent(this, MainActivity::class.java)
+
+        // call
+
+        startActivity(mainActivityIntent)
+        finish()
     }
 }

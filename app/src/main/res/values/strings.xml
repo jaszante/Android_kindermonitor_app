@@ -38,5 +38,6 @@
     <string name="registerEDate"> </string>
     <string name="log_uit">Log uit</string>
     <string name="registerButtonPatient">Registreer Patient</string>
+    <string name="incorrectDateFormatError">Incorrect date format</string>
 
 </resources>

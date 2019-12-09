@@ -1,9 +1,8 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses
 
-import java.util.*
-
-data class Patient (
+data class PatientWithID (
+    val PatientId: Int,
     val Firstname: String,
     val Lastname: String,
-    val Birthday: Date
+    val Birthday: String
 )
