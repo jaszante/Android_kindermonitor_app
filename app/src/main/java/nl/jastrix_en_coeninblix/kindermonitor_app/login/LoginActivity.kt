@@ -18,7 +18,9 @@ import org.json.JSONObject
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
@@ -30,7 +32,6 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     companion object {
         var loginWithCachedCredentialsOnResume: Boolean = false
     }
-
     private lateinit var loginOrRegisterErrorField: TextView
 
     private lateinit var usernameField: EditText
@@ -139,59 +140,6 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         }
     }
 
-    private fun getUserDataThenCreatePatientForUserAndGoToMainActivity(){
-        val call = apiHelper.buildAPIServiceWithNewToken(observableToken.authToken).getCurrentUser()
-        call.enqueue(object : Callback<UserData> {
-            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
-                val statusCode = response.code()
-
-                if (response.isSuccessful && response.body() != null){
-                    MainActivity.userData = response.body()!!
-//                    mainActivity.initDrawerWithUserInformation()
-//                    createPatientForThisUser() // moet niet hier, is al gedaan bij registreren of deze gebruiker is
-                                                // geen hoofdgebruiker maar kan toegevoegd worden bij iemand met patient
-                }
-                else {
-                    val jObjError = JSONObject(response.errorBody()!!.string())
-                    val errorMessage = jObjError.getString("error")
-                    registerOrLoginFailedShowMessage(errorMessage)
-                }
-            }
-
-            override fun onFailure(call: Call<UserData>, t: Throwable) {
-                Log.d("DEBUG", t.message)
-                registerOrLoginFailedShowMessage(t.message!!)
-            }
-        })
-    }
-
-    private fun createPatientForThisUser() {
-        val mainActivityIntent: Intent = Intent(this, MainActivity::class.java)
-        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(Patient("testus", "testuses", "1982-09-02"))
-        call.enqueue(object : Callback<Patient> {
-            override fun onResponse(
-                call: Call<Patient>,
-                response: Response<Patient>
-            ) {
-                if (response.isSuccessful && response.body() != null) {
-                    val patient = response.body()!!
-                    startActivity(mainActivityIntent)
-//                    finish()
-                }
-                else
-                {
-                    val jObjError = JSONObject(response.errorBody()!!.string())
-                    val errorMessage = jObjError.getString("error")
-                    registerOrLoginFailedShowMessage(errorMessage)
-                }
-            }
-
-            override fun onFailure(call: Call<Patient>, t: Throwable) {
-                registerOrLoginFailedShowMessage(t.message!!)
-            }
-        })
-    }
-
     override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
         registerOrLoginFailedShowMessage(t.message!!)
     }
@@ -199,31 +147,59 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
         noCallInProgress = true
         if (response.isSuccessful && response.body() != null) {
-            observableToken.changeToken(response.body()!!.token)
+            authToken = response.body()!!.token
+            authTokenChanged = true
             userName = usernameField.text.toString()
             password = passwordField.text.toString()
 
-            val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-            editor.putString("AuthenticationToken", observableToken.authToken)
-            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
-            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
-            editor.apply()
+            saveUserCredentials()
+//            val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
+//            editor.putString("AuthenticationToken", authToken)
+//            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
+//            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
+//            editor.apply()
 
-            getUserDataThenCreatePatientForUserAndGoToMainActivity()
+            val mainActivityIntent = Intent(this, MainActivity::class.java)
+            startActivity(mainActivityIntent)
+
+//            getUserDataThenCreatePatientForUserAndGoToMainActivity()
         }
         else {
-//            if (response.code() == 400){
-//                val gson = GsonBuilder().create()
-//                var fourhundredResponseMessage = gson.fromJson(response.errorBody()!!.string(), BadResponseFourhundred::class.java)
-//
-//                registerOrLoginFailedShowMessage(fourhundredResponseMessage.text)
-//            }
-//            else{
-            val jObjError = JSONObject(response.errorBody()!!.string())
-            val errorMessage = jObjError.getString("error")
+            val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+            if (errorbodyLength != 0) {
+                val jObjError = JSONObject(response.errorBody()!!.string())
+                val errorMessage = jObjError.getString("error")
                 registerOrLoginFailedShowMessage(errorMessage)
-//            }
+            }
+            else{
+                registerOrLoginFailedShowMessage(response.message())
+            }
         }
+    }
+
+    private fun saveUserCredentials() {
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            "kinderMonitorApp",
+            masterKeyAlias,
+            applicationContext,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        val editor = sharedPreferences.edit()
+
+        editor.putString("AuthenticationToken", authToken)
+        editor.putString(
+            "KinderMonitorAppUserName",
+            userName
+        )
+        editor.putString(
+            "KinderMonitorAppPassword",
+            password
+        )
+        editor.commit()//apply()
     }
 
     private fun registerOrLoginFailedShowMessage(message: String) {

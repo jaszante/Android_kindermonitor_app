@@ -45,9 +45,11 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val view = getView()
+
         val vidstream = view!!.findViewById<VideoView>(R.id.videoStream)
+
         val vidAddress =
-            "https://www.youtube.com/embed/uFkJaPhb6v8"
+            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
         val vidUri: Uri = Uri.parse(vidAddress)
         vidstream.setVideoURI(vidUri)
         vidstream.start()
