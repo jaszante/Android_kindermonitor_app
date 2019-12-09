@@ -55,8 +55,8 @@ class GalleryFragment : Fragment() {
             editor.putString("KinderMonitorAppPassword", null)
             editor.apply()
 
-            val intent: Intent = Intent(activity, LoginActivity::class.java)
-            startActivity(intent)
+            val loginIntent: Intent = Intent(activity, LoginActivity::class.java)
+            startActivity(loginIntent)
         }
     }
 }
