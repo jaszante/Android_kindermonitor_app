@@ -5,5 +5,5 @@ import java.util.*
 data class Patient (
     val Firstname: String,
     val Lastname: String,
-    val Birthday: Date
+    val Birthday: String
 )

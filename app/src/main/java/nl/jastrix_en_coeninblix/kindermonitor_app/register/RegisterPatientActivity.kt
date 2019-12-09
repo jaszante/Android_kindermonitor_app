@@ -20,7 +20,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class RegisterPatientActivity : AppCompatActivity() {
@@ -60,7 +63,7 @@ class RegisterPatientActivity : AppCompatActivity() {
                 this,
                 DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                     // Display Selected date in TextView
-                    patientBirthDateEditText.setText("" + dayOfMonth + " - " + month + " - " + year)
+                    patientBirthDateEditText.setText("" + dayOfMonth + "-" + month + "-" + year)
                 },
                 year,
                 month,
@@ -70,13 +73,15 @@ class RegisterPatientActivity : AppCompatActivity() {
         }
 
         registerPatientButton.setOnClickListener() {
+
             val patientBirthdayString = patientBirthDateEditText.text.toString()
             var parsedDateString: Date? = Date()
             var parseSucceeded: Boolean = false
 
             try {
-                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
-                parsedDateString = format.parse(patientBirthdayString)
+//                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+                parsedDateString = SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
+//                parsedDateString = format.parse(patientBirthdayString)
                 parseSucceeded = true
             } catch (pe: Exception) {
                 patientRegisterErrorField.text = getString(R.string.incorrectDateFormatError)
@@ -86,7 +91,8 @@ class RegisterPatientActivity : AppCompatActivity() {
                 val createPatient = Patient(
                     patientFirstNameEditText.text.toString(),
                     patientLastNameEditText.text.toString(),
-                    parsedDateString!!
+                    patientBirthdayString
+//                    parsedDateString!!.toString()
                 )
 
                 createPatientForThisUser(createPatient)
