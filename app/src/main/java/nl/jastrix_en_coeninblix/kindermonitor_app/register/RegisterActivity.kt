@@ -13,8 +13,9 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
@@ -102,21 +103,24 @@ class RegisterActivity : AppCompatActivity() {
                     response: Response<AuthenticationToken>
                 ) {
                     noCallInProgress = true
-                    val statusCode = response.code()
 
                     if (response.isSuccessful && response.body() != null) {
-                        observableToken.authToken = response.body()!!.token
+                        authToken = response.body()!!.token
                         apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
                         saveUserCredentials()
 
                         goToRegisterPatientActivityOrMainActivity()
 
                     } else {
-                        val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getString("error")
-
-                        errorfield.text = errorMessage
-                        errorfield.visibility = View.VISIBLE
+                        val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+                        if (errorbodyLength != 0) {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getString("error")
+                            registerFailedShowMessage(errorMessage)
+                        }
+                        else{
+                            registerFailedShowMessage(response.message())
+                        }
                     }
 
                 }
@@ -142,7 +146,7 @@ class RegisterActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
 
 //                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-                    editor.putString("AuthenticationToken", observableToken.authToken)
+                    editor.putString("AuthenticationToken", authToken)
                     editor.putString(
                         "KinderMonitorAppUserName",
                         uName
@@ -157,15 +161,21 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun registerFailedShowMessage(errorMessage: String){
+//        noCallInProgress = true
+        errorfield.text = errorMessage
+        errorfield.visibility = View.VISIBLE
+    }
+
     fun goToRegisterPatientActivityOrMainActivity(){
         if (checkBoxCaretaker.isChecked) {
-            val intent = Intent(this, RegisterPatientActivity::class.java)
-            startActivity(intent)
+            val registerPatientIntent = Intent(this, RegisterPatientActivity::class.java)
+            startActivity(registerPatientIntent)
             finish()
         } else {
-            val intent = Intent(this, MainActivity::class.java)
+            val mainActivityIntent = Intent(this, MainActivity::class.java)
             authTokenChanged = true
-            startActivity(intent)
+            startActivity(mainActivityIntent)
             finish()
         }
     }

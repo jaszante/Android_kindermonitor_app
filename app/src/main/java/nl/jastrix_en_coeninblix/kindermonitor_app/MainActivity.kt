@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), Observer {
 //
 //        }
 //        var onTokenChange: ((String, String) -> Unit)? = null
-        val observableToken: ObservableToken = ObservableToken()// tokenTest: ObservableToken()
+//        val observableToken: ObservableToken = ObservableToken()// tokenTest: ObservableToken()
 
         lateinit var userName: String
         lateinit var password: String
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity(), Observer {
         lateinit var userData: UserData
 //        lateinit var mainAcitivityContext: Context
 
+        var authToken: String = ""
         var authTokenChanged: Boolean = false
 
         var active: Boolean = false
@@ -76,8 +77,8 @@ class MainActivity : AppCompatActivity(), Observer {
         editor.putString("KinderMonitorAppPassword", null)
         editor.apply()
 
-        val intent: Intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        val loginIntent: Intent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -104,35 +105,25 @@ class MainActivity : AppCompatActivity(), Observer {
         val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
         val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
 
-//        val authTokenNullable = getSharedPreferences(
-//            "kinderMonitorApp",
-//            Context.MODE_PRIVATE
-//        ).getString("AuthenticationToken", "")
-////        val userNameNullable = getSharedPreferences(
-////            "kinderMonitorApp",
-////            Context.MODE_PRIVATE
-////        ).getString("KinderMonitorAppUserName", "")
-//        val passwordNullable = getSharedPreferences(
-//            "kinderMonitorApp",
-//            Context.MODE_PRIVATE
-//        ).getString("KinderMonitorAppPassword", "")
-
         // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
         // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
-        if (authTokenNullable != null && authTokenNullable != ""
-            && userNameNullable != null && userNameNullable != ""
-            && passwordNullable != null && passwordNullable != ""
-        ) {
+
+//        if (!authTokenChanged) { // for some fucking reason mainAcitivy oncreate is called again right after logging in
+            if (authTokenNullable != null && authTokenNullable != ""
+                && userNameNullable != null && userNameNullable != ""
+                && passwordNullable != null && passwordNullable != ""
+            ) {
 //            authToken = authTokenNullable
-            userName = userNameNullable
-            password = passwordNullable
+                userName = userNameNullable
+                password = passwordNullable
 
 //            observableToken.addObserver(this)
 //            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
-            authTokenChanged = true
-        } else {
-            removeAllSharedPreferencesAndStartLoginActivity()
-        }
+                authTokenChanged = true
+            } else {
+                removeAllSharedPreferencesAndStartLoginActivity()
+            }
+//        }
     }
 
     private fun setupNavigationDrawer() {
@@ -173,33 +164,6 @@ class MainActivity : AppCompatActivity(), Observer {
         super.onStop()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//
-//        val authTokenNullable = getSharedPreferences(
-//            "kinderMonitorApp",
-//            Context.MODE_PRIVATE
-//        ).getString("AuthenticationToken", "")
-//        val userNameNullable = getSharedPreferences(
-//            "kinderMonitorApp",
-//            Context.MODE_PRIVATE
-//        ).getString("KinderMonitorAppUserName", "")
-//        val passwordNullable = getSharedPreferences(
-//            "kinderMonitorApp",
-//            Context.MODE_PRIVATE
-//        ).getString("KinderMonitorAppPassword", "")
-//
-//
-//        if (authTokenNullable == null || authTokenNullable == ""
-//            && userNameNullable == null || userNameNullable == ""
-//            && passwordNullable == null || passwordNullable == ""
-//        ) {
-//
-//        }
-//    }
-
-
-    // comment after this no longer relevant (for now) // can be called from APIHelper loginWithCachedUsernameAndPassword function and from loginacitivity after succesful login / register (to update the logged in user's data in the drawer)
     private fun initDrawerWithUserInformation() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
@@ -224,14 +188,14 @@ class MainActivity : AppCompatActivity(), Observer {
 //                        apiHelper.loginWithCachedUsernameAndPassword()
 
                     }
-                    // else is not needed because you can only get a different status code if there is no internet connection or API is down
-                    // push notification should be sent by the continues measurement calls about no connection
+                    else{
+                        startActivity(loginIntent)
+                    }
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
-                Log.d("DEBUG", t.message)
-                // getting here means no internet / API down. Should already be handled by the continues measurement calls
+                startActivity(loginIntent)
             }
         })
 

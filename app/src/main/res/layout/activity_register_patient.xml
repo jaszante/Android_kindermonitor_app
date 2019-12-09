@@ -6,7 +6,7 @@
     tools:context=".register.RegisterPatientActivity"
     android:orientation="vertical">
     <TextView
-        android:id="@+id/TVname"
+        android:id="@+id/patientFirstNameLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -17,7 +17,7 @@
         android:textColor="@android:color/black" />
 
     <EditText
-        android:id="@+id/EVname"
+        android:id="@+id/patientFirstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -30,7 +30,7 @@
         android:selectAllOnFocus="true" />
 
     <TextView
-        android:id="@+id/TLname"
+        android:id="@+id/patientLastNameLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -41,7 +41,7 @@
         android:textColor="@android:color/black" />
 
     <EditText
-        android:id="@+id/ELname"
+        android:id="@+id/patientLastName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -53,7 +53,7 @@
         android:inputType="textPersonName"
         android:selectAllOnFocus="true" />
     <TextView
-        android:id="@+id/Tdate"
+        android:id="@+id/patientBirthDateLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -64,7 +64,7 @@
         android:textColor="@android:color/black" />
 
     <EditText
-        android:id="@+id/Edate"
+        android:id="@+id/patientBirthDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -77,7 +77,7 @@
         android:selectAllOnFocus="true" />
 
     <Button
-        android:id="@+id/BTNregister"
+        android:id="@+id/patientRegisterButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -88,4 +88,17 @@
         android:text="@string/registerButtonPatient"
         android:textColor="@color/white"
         android:stateListAnimator="@null"/>
+
+    <TextView
+        android:id="@+id/patientRegisterError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_shape"
+        android:visibility="invisible"
+        android:textColorHint="@android:color/black"
+        android:textColor="@android:color/black"
+        android:textAlignment="center"/>
 </LinearLayout>
