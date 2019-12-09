@@ -1,5 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.register
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -21,7 +22,6 @@ import java.lang.Exception
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 class RegisterPatientActivity : AppCompatActivity() {
 
@@ -48,6 +48,27 @@ class RegisterPatientActivity : AppCompatActivity() {
 
         registerPatientButton = findViewById(R.id.patientRegisterButton)
         registerPatientButton.isClickable = false
+
+
+        val c = Calendar.getInstance()
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        patientBirthDateEditText.setOnClickListener() {
+            val dpd = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    // Display Selected date in TextView
+                    patientBirthDateEditText.setText("" + dayOfMonth + " - " + month + " - " + year)
+                },
+                year,
+                month,
+                day
+            )
+            dpd.show()
+        }
+
         registerPatientButton.setOnClickListener() {
             val patientBirthdayString = patientBirthDateEditText.text.toString()
             var parsedDateString: Date? = Date()
@@ -79,18 +100,18 @@ class RegisterPatientActivity : AppCompatActivity() {
         val call = MainActivity.apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
-                if (response.isSuccessful && response.body() != null){
+                if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
+
                     registerPatientButton.isClickable = true
-                }
-                else {
+                    
+                } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
                         val jObjError = JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getString("error")
                         registerPatientShowErrorMessage(errorMessage)
-                    }
-                    else{
+                    } else {
                         registerPatientShowErrorMessage(response.message())
                     }
                 }
@@ -127,8 +148,7 @@ class RegisterPatientActivity : AppCompatActivity() {
                         val jObjError = JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getString("error")
                         registerPatientShowErrorMessage(errorMessage)
-                    }
-                    else{
+                    } else {
                         registerPatientShowErrorMessage(response.message())
                     }
                 }

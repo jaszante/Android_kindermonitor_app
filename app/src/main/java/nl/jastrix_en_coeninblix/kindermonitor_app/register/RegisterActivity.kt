@@ -24,6 +24,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -57,6 +58,10 @@ class RegisterActivity : AppCompatActivity() {
         checkBoxTerms = findViewById<CheckBox>(R.id.CBterms)
         errorfield = findViewById<EditText>(R.id.registerError)
         service = apiHelper.buildAndReturnAPIService()
+
+
+
+
         /*-------------------------------------------------------------------------------------------*/
         buttonRegister.setOnClickListener() {
             if (checkBoxTerms.isChecked) {

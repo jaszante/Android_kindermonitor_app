@@ -1,11 +1,13 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.home
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -37,8 +39,20 @@ class HomeFragment : Fragment() {
 //        Timer("schedule", false).scheduleAtFixedRate(1000, 1000) {
 //            continuouslyCallForNewMeasurements()
 //        }
-
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val view = getView()
+
+        val vidstream = view!!.findViewById<VideoView>(R.id.videoStream)
+
+        val vidAddress =
+            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+        val vidUri: Uri = Uri.parse(vidAddress)
+        vidstream.setVideoURI(vidUri)
+        vidstream.start()
     }
 
     private fun continuouslyCallForNewMeasurements() {
