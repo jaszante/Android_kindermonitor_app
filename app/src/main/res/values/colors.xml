@@ -6,4 +6,5 @@
     <color name="colorGood">#4D96E596</color>
     <color name="colorBad">#4DFF0000</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>

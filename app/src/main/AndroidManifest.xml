@@ -12,17 +12,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".register.RegisterPatientActivity"></activity>
+        <activity android:name=".patientList.patientList"></activity>
+        <activity android:name=".register.RegisterPatientActivity" />
         <activity android:name=".register.RegisterActivity" />
-        <activity android:name=".MainActivity" android:launchMode="singleInstance" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity" android:launchMode="singleInstance"/>
+        <activity
+            android:name=".login.LoginActivity"
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>
