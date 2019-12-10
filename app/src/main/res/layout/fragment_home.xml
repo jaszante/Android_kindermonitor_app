@@ -56,9 +56,10 @@
                     android:src="@mipmap/heartrate" />
 
                 <TextView
+                    android:id="@+id/hartslagValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="90%"
+                    android:text=""
                     android:textAlignment="center"
                     android:textSize="40sp"
                     android:textColor="@color/black"/>
@@ -123,9 +124,10 @@
                     android:src="@mipmap/temp" />
 
                 <TextView
+                    android:id="@+id/temperatuurValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="90%"
+                    android:text=""
                     android:textAlignment="center"
                     android:textSize="40sp"
                     android:textColor="@color/black"/>
@@ -188,13 +190,14 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
-                    android:contentDescription="SaturatieImage"
+                    android:contentDescription="AdemImage"
                     android:src="@mipmap/adem" />
 
                 <TextView
+                    android:id="@+id/ademFrequentieValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="90%"
+                    android:text=""
                     android:textAlignment="center"
                     android:textSize="40sp"
                     android:textColor="@color/black"/>
@@ -239,7 +242,7 @@
                 android:layout_rowWeight=".5"
                 android:layout_columnWeight=".5"
                 android:layout_marginTop="5dp"
-                android:background="@color/colorBad"
+                android:background="@color/colorGood"
                 android:orientation="vertical">
 
 
@@ -259,9 +262,10 @@
                     android:src="@mipmap/saturatieicon" />
 
                 <TextView
+                    android:id="@+id/saturatieValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="90%"
+                    android:text=""
                     android:textAlignment="center"
                     android:textSize="40sp"
                     android:textColor="@color/black"/>

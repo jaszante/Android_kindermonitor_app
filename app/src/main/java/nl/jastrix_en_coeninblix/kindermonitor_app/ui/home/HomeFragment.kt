@@ -40,6 +40,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
 
+    private lateinit var hartslagValue: TextView
+    private lateinit var temperatuurValue: TextView
+    private lateinit var ademFrequetieValue: TextView
+    private lateinit var saturatieValue: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,7 +59,39 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val currentView = getView()
+        val currentView = getView()!!
+
+        hartslagValue = currentView.findViewById(R.id.hartslagValue)
+        temperatuurValue = currentView.findViewById(R.id.temperatuurValue)
+        ademFrequetieValue = currentView.findViewById(R.id.ademFrequentieValue)
+        saturatieValue = currentView.findViewById(R.id.saturatieValue)
+
+        val vidstream = currentView.findViewById<VideoView>(R.id.videoStream)
+
+        val vidAddress =
+            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+        val vidUri: Uri = Uri.parse(vidAddress)
+        vidstream.setVideoURI(vidUri)
+        vidstream.start()
+
+        val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
+        myLayout.requestFocus()
+
+        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
+            if (patientSensors != null) {
+                var randomValue = (80..100).random()
+                hartslagValue.text = randomValue.toString()
+
+                randomValue = (80..100).random()
+                temperatuurValue.text = randomValue.toString()
+
+                randomValue = (80..100).random()
+                ademFrequetieValue.text = randomValue.toString()
+
+                randomValue = (80..100).random()
+                saturatieValue.text = randomValue.toString()
+            }
+        }
 
 //        Timer("schedule", false).scheduleAtFixedRate(5000, 1000) {
 //            if (patientSensors != null) {
@@ -69,16 +106,6 @@ class HomeFragment : Fragment() {
 //            }
 //        }
 
-        val vidstream = currentView!!.findViewById<VideoView>(R.id.videoStream)
-
-        val vidAddress =
-            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
-        val vidUri: Uri = Uri.parse(vidAddress)
-        vidstream.setVideoURI(vidUri)
-        vidstream.start()
-
-        val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
-        myLayout.requestFocus()
     }
 
     override fun onResume() {
@@ -122,27 +149,29 @@ class HomeFragment : Fragment() {
         // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
 
         val loginIntent = Intent(activity, LoginActivity::class.java)
-        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
-            patientSensors!![0].sensorID)
+        val call =
+            apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
+                patientSensors!![0].sensorID
+            )
         call.enqueue(object : Callback<Array<Measurement>> {
-            override fun onResponse(call: Call<Array<Measurement>>, response: Response<Array<Measurement>>) {
+            override fun onResponse(
+                call: Call<Array<Measurement>>,
+                response: Response<Array<Measurement>>
+            ) {
                 val statusCode = response.code()
 
-                if (response.isSuccessful && response.body() != null){
+                if (response.isSuccessful && response.body() != null) {
                     val test = response.body()
                     if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
 
                     }
-                }
-                else {
+                } else {
                     if (statusCode == 401) {
                         loginWithCachedCredentialsOnResume = true
                         startActivity(loginIntent)
-                    }
-                    else if (statusCode == 404){
+                    } else if (statusCode == 404) {
                         // notification that there is no connection to API
-                    }
-                    else {
+                    } else {
                         // internet down notification
                     }
                 }

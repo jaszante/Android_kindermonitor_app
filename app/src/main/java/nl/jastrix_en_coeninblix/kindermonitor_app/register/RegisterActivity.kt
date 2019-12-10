@@ -63,22 +63,22 @@ class RegisterActivity : AppCompatActivity() {
         buttonRegister.setOnClickListener() {
             if (checkBoxTerms.isChecked) {
 
-                /*register(
+                register(
                     uName.text.toString(),
                     pw.text.toString(),
                     fName.text.toString(),
                     lName.text.toString(),
                     phone.text.toString(),
                     email.text.toString()
-                )*/
-                register(
-                    uName.text.toString(),
-                    "kees123213214455",
-                    "a",
-                   "B",
-                   "123",
-                   "kees@kees.kees"
                 )
+//                register(
+//                    uName.text.toString(),
+//                    "kees123213214455",
+//                    "a",
+//                   "B",
+//                   "123",
+//                   "kees@kees.kees"
+//                )
             } else {
                 errorfield.text = getString(R.string.registerTerms)
                 errorfield.visibility = View.VISIBLE
