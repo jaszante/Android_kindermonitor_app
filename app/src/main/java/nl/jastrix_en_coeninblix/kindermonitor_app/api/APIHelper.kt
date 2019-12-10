@@ -1,11 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.api
 
-import android.content.Intent
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.mainAcitivityContext
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
@@ -35,8 +30,8 @@ class APIHelper {
     }
 
     fun returnAPIServiceWithAuthenticationTokenAdded() : APIService {
-        val token = authToken
         if (apiService == null) {
+            val token = authToken
             val client = OkHttpClient.Builder().addInterceptor(object : Interceptor {
                 @Throws(IOException::class)
                 override fun intercept(chain: Interceptor.Chain): Response {
