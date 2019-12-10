@@ -2,9 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+    android:id="@+id/homeScrollView"
     android:layout_width="match_parent"
-    android:id="@+id/homeScrollView">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/homeConstraintLayout"
@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:focusable="true"
-        android:focusableInTouchMode="true"
-        >
+        android:focusableInTouchMode="true">
 
         <GridLayout
             android:id="@+id/gridLayout"
@@ -46,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8px"
                     android:text="Hartslag"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="80dp"
@@ -60,33 +60,38 @@
                     android:layout_height="wrap_content"
                     android:text="90%"
                     android:textAlignment="center"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:textColor="@color/black">
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
-                        android:text="Grens: " />
+                        android:text="Grens: "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="end"
-                        android:text="80% - " />
+                        android:text="80% - "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="95%" />
+                        android:text="95%"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
@@ -107,7 +112,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8px"
                     android:text="Temperatuur"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="80dp"
@@ -121,7 +127,8 @@
                     android:layout_height="wrap_content"
                     android:text="90%"
                     android:textAlignment="center"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -135,19 +142,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
-                        android:text="Grens: " />
+                        android:text="Grens: "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="end"
-                        android:text="80% - " />
+                        android:text="80% - "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="95%" />
+                        android:text="95%"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
@@ -171,7 +181,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8px"
                     android:text="Adem frequentie"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="80dp"
@@ -185,7 +196,8 @@
                     android:layout_height="wrap_content"
                     android:text="90%"
                     android:textAlignment="center"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -199,19 +211,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
-                        android:text="Grens: " />
+                        android:text="Grens: "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="end"
-                        android:text="80% - " />
+                        android:text="80% - "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="95%" />
+                        android:text="95%"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
@@ -233,7 +248,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8px"
                     android:text="Saturatie"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColor="@color/black"/>
 
                 <ImageView
                     android:layout_width="80dp"
@@ -247,7 +263,8 @@
                     android:layout_height="wrap_content"
                     android:text="90%"
                     android:textAlignment="center"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:textColor="@color/black"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -261,19 +278,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="start"
-                        android:text="Grens: " />
+                        android:text="Grens: "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="end"
-                        android:text="80% - " />
+                        android:text="80% - "
+                        android:textColor="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="95%" />
+                        android:text="95%"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
