@@ -13,17 +13,23 @@ interface APIService {
     fun userLogin(@Body userLogin: UserLogin): Call<AuthenticationToken>
 
     @GET ("Users/me")
-    fun getCurrentUser() : Call<UserData> // @Header("Authorization") Authorization : String
+    fun getCurrentUser() : Call<UserData>
 
-    @POST ("Patients/{PatientId}//Sensors")
-    fun createSensor(@Path("PatientId") patientId: String)
-
-    @GET ("Patients/{PatientId}//Sensors")
+    @GET ("Patients/{PatientId}/Sensors")
     fun getPatientsSensors(@Path("PatientId") patientId: String) : Call<Array<Sensor>>
+
+    @POST ("Patients/{PatientId}/Sensors")
+    fun createSensor(@Path("PatientId") patientId: Int, @Body newSensor: SensorToCreate): Call<Sensor>
 
     @POST ("Users/me/patients")
     fun createPatientForLoggedInUser(@Body patient: Patient): Call<PatientWithID>
 
     @GET ("Users/me/patients")
     fun getAllPatientsForLogginedInUser(): Call<Array<PatientWithID>>
+
+    @GET ("Sensors/{SensorId}//measurements")
+    fun getMeasurementsForSensor(@Path("SensorId") sensorId: Int): Call<String>
+
+    @POST ("Sensors/measurements")
+    fun postMeasurementToSensor(@Body sensorWithID: SensorToSendMeasurements)
 }

@@ -1,12 +1,10 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
-import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -19,40 +17,29 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Patient
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
+import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment.Companion.patientSensors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.concurrent.schedule
-
 
 class MainActivity : AppCompatActivity(), Observer {
     override fun update(o: Observable?, arg: Any?) {
-//        initDrawerWithUserInformation()
+//        getNewUserdataThenInitDrawerWithUserInformation()
     }
 
     companion object {
-        //        lateinit var authToken: String
-//        var authToken : String by Delegates.observable("observableToken observable") {
-//                _, oldValue, newValue ->
-//            onTokenChange?.invoke(oldValue, newValue)
-//
-//        }
-//        var onTokenChange: ((String, String) -> Unit)? = null
-//        val observableToken: ObservableToken = ObservableToken()// tokenTest: ObservableToken()
-
         lateinit var userName: String
         lateinit var password: String
         val apiHelper = APIHelper()
         lateinit var userData: UserData
-//        lateinit var mainAcitivityContext: Context
 
         var authToken: String = ""
         var authTokenChanged: Boolean = false
@@ -160,42 +147,33 @@ class MainActivity : AppCompatActivity(), Observer {
         if (authTokenChanged) {
             // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
             // IN THAT ACTIVITY THE CURRENTPATIENT IS CHOSEN AND SET TO THE COMPANION HERE, THEN THE MESUREMENT CALLS CAN START
-            getUserDataAndInitDrawerWithUserInformationThenStartGetPatientsCall()
+            getNewUserdataThenInitDrawerWithUserInformation()
+        }
+        else
+        {
+            initDrawerWithUserInformationThenGetPatientSensors()
         }
     }
 
-    override fun onStop() {
-        active = false
-        super.onStop()
-    }
-
-    private fun getUserDataAndInitDrawerWithUserInformationThenStartGetPatientsCall() {
+    private fun getNewUserdataThenInitDrawerWithUserInformation(){
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val navView = nav_view.getHeaderView(0)
-        val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
 
-        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
 
                 if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
-                    navHeaderTitle.text = userData.username // + " " + userData.LastName
-                    authTokenChanged = false
 
-                    getAllPatients()
+                    initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
                     if (statusCode == 401) {
                         loginWithCachedCredentialsOnResume = true
-                        startActivity(loginIntent)
-//                        apiHelper.loginWithCachedUsernameAndPassword()
+                    }
 
-                    }
-                    else{
-                        startActivity(loginIntent)
-                    }
+                    startActivity(loginIntent)
                 }
             }
 
@@ -203,74 +181,69 @@ class MainActivity : AppCompatActivity(), Observer {
                 startActivity(loginIntent)
             }
         })
-
     }
 
-    private fun getAllPatients() {
-        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllPatientsForLogginedInUser()
-        call.enqueue(object : Callback<Array<PatientWithID>> {
-            override fun onResponse(call: Call<Array<PatientWithID>>, response: Response<Array<PatientWithID>>) {
-                val statusCode = response.code()
+    private fun initDrawerWithUserInformationThenGetPatientSensors(){
+        val navView = nav_view.getHeaderView(0)
+        val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
 
-                if (response.isSuccessful && response.body() != null) {
-                    val allPatients = response.body()!!
-                    if (allPatients.count() != 0) {
-                        currentPatient = allPatients[0]
-                    }
+        navHeaderTitle.text = userData.username // + " " + userData.LastName
+        authTokenChanged = false
+        getPatientSensors()
+    }
 
-                } else {
-
-                }
-            }
-
-            override fun onFailure(call: Call<Array<PatientWithID>>, t: Throwable) {
-                // no internet connection?
-            }
-        })
+    override fun onStop() {
+        active = false
+        super.onStop()
     }
 
     // called after patient has been chosen
     private fun getPatientSensors() {
+        val patientListIntent = Intent(this, PatientList::class.java)
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
-            .getPatientsSensors(userData.userID.toString())
-        call.enqueue(object : Callback<Array<Sensor>> {
-            override fun onResponse(
-                call: Call<Array<Sensor>>,
-                response: Response<Array<Sensor>>
-            ) {
-                val statusCode = response.code()
+        if (currentPatient != null) {
+            val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+                .getPatientsSensors(currentPatient!!.patientID.toString())
+            call.enqueue(object : Callback<Array<Sensor>> {
+                override fun onResponse(
+                    call: Call<Array<Sensor>>,
+                    response: Response<Array<Sensor>>
+                ) {
+                    val statusCode = response.code()
 
-                if (response.isSuccessful && response.body() != null) {
-                    val sensors: Array<Sensor> = response.body()!!
-                } else {
-                    if (statusCode == 401) {
-                        loginWithCachedCredentialsOnResume = true
-                        startActivity(loginIntent)
-//                        apiHelper.loginWithCachedUsernameAndPassword()
-                    } else if (statusCode == 404) {
-                        // notification that there is no connection to API
+                    if (response.isSuccessful && response.body() != null) {
+                        patientSensors = response.body()
                     } else {
-                        // internet down notification? // or maybe there are no patients linked?
-                    }
+                        if (statusCode == 401) {
+//                            loginWithCachedCredentialsOnResume = true
+//                            startActivity(loginIntent)
+                        } else if (statusCode == 404) {
+                            // notification that there is no connection to API
+                        } else {
+                            // internet down notification? // or maybe there are no patients linked?
+                        }
 
 //                    // try again
 //                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
 //                        getPatientSensors()
 //                    }
 
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Array<Sensor>>, t: Throwable) {
-                Log.d("DEBUG", t.message)
+                override fun onFailure(call: Call<Array<Sensor>>, t: Throwable) {
+                    Log.d("DEBUG", t.message)
 
-                // internet down notification
-            }
-        })
+                    // internet down notification
+                }
+            })
+        }
+        else
+        {
+            startActivity(patientListIntent)
+        }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

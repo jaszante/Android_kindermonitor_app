@@ -4,16 +4,14 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.patientList
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class PatientList : AppCompatActivity() {
 
@@ -40,18 +38,15 @@ class PatientList : AppCompatActivity() {
             override fun onItemClick(position: Int, patient: PatientWithID) {
                 //Log.d("DEBUG", articlesFromResponse[position].toString())
 
-                val intent = Intent(applicationContext, MainActivity::class.java)
+                currentPatient = patient
+                val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
 
-                startActivity(intent)
+                startActivity(mainActivityIntent)
             }
         }
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = PatientAdapter(this, patientList, patientListener)
-
-
-
-
 
         recyclerView = findViewById<RecyclerView>(R.id.patientRecyclerview).apply {
             setHasFixedSize(true)
@@ -69,6 +64,4 @@ class PatientList : AppCompatActivity() {
 
         })
     }
-
-
 }

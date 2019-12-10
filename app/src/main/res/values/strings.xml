@@ -29,7 +29,7 @@
     <string name="registerEditPhone">0612345678*</string>
     <string name="registerEmail">Email*</string>
     <string name="registerEditEmail">Email@email.nl</string>
-    <string name="registerCaretaker">Ik ben hoofdverzorger</string>
+    <string name="registerCaretaker">Maak een patient aan na het registreren</string>
     <string name="registerterms">Ik ga akkoord met de algemene voorwaarde*</string>
     <string name="registerButton">Registreer</string>
     <string name="registerTerms">U moet akkoord gaan met de terms en agreements.</string>

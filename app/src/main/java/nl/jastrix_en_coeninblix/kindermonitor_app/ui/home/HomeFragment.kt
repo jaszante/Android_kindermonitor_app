@@ -14,9 +14,18 @@ import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
+import java.util.*
+import kotlin.concurrent.scheduleAtFixedRate
 
 
 class HomeFragment : Fragment() {
+
+    companion object {
+        var patientSensors: Array<Sensor>? = null
+    }
+
+    private var active = false
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -29,20 +38,20 @@ class HomeFragment : Fragment() {
             ViewModelProviders.of(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-//        Timer("schedule", false).scheduleAtFixedRate(1000, 1000) {
-//            continuouslyCallForNewMeasurements()
-//        }
-
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val view = getView()
+        val currentView = getView()
 
+        Timer("schedule", false).scheduleAtFixedRate(1000, 1000) {
+            if (patientSensors != null) {
+                continuouslyCallForNewMeasurements()
+            }
+        }
 
-
-        val vidstream = view!!.findViewById<VideoView>(R.id.videoStream)
+        val vidstream = currentView!!.findViewById<VideoView>(R.id.videoStream)
 
         val vidAddress =
             "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
@@ -59,10 +68,25 @@ class HomeFragment : Fragment() {
         myLayout.requestFocus()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        active = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        active = false
+    }
+
     private fun continuouslyCallForNewMeasurements() {
         // should do new call every second. do not use onresponse to call again, execute new call continuesly while app is in forefront, don't call at all while in background
         // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
 
+        if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
+
+        }
 
 //        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded(
 //            MainActivity.authToken

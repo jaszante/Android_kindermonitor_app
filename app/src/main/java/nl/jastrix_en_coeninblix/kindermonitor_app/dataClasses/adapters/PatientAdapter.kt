@@ -32,6 +32,7 @@ class PatientAdapter(val context: Context,val items: ArrayList<PatientWithID>, v
         holder.name.setText(items[position].firstname + " " + items[position].lastname)
         holder.itemView.setOnClickListener{
             listener.onItemClick(holder.adapterPosition, items[position])
+
         }
     }
 }

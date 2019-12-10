@@ -24,6 +24,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTok
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
 
 
@@ -97,7 +98,9 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
                             val newToken = response.body()!!.token
                             apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
-//                            observableToken.changeToken(newToken)
+                            authToken = newToken
+                            Log.d("DEBUG", "Need to do authTokenChanged or not?")
+//                            authTokenChanged = true
                             startActivity(mainActivityIntent)
                             loginWithCachedCredentialsOnResume = false
                             noCallInProgress = true
@@ -152,16 +155,9 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             password = passwordField.text.toString()
 
             saveUserCredentials()
-//            val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-//            editor.putString("AuthenticationToken", authToken)
-//            editor.putString("KinderMonitorAppUserName", usernameField.text.toString())
-//            editor.putString("KinderMonitorAppPassword", passwordField.text.toString())
-//            editor.apply()
 
-            val mainActivityIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainActivityIntent)
-
-//            getUserDataThenCreatePatientForUserAndGoToMainActivity()
+            val patientListIntent = Intent(this, PatientList::class.java)
+            startActivity(patientListIntent)
         }
         else {
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()

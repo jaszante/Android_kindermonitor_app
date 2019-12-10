@@ -9,11 +9,10 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Patient
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +22,7 @@ import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -103,7 +103,7 @@ class RegisterPatientActivity : AppCompatActivity() {
     }
 
     private fun getUserData(){
-        val call = MainActivity.apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
+        val call = apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 if (response.isSuccessful && response.body() != null) {
@@ -136,7 +136,7 @@ class RegisterPatientActivity : AppCompatActivity() {
     }
 
     private fun createPatientForThisUser(patient: Patient) {
-        var call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
+        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
 
         call.enqueue(object : Callback<PatientWithID> {
             override fun onResponse(
@@ -169,9 +169,34 @@ class RegisterPatientActivity : AppCompatActivity() {
     private fun createSensorForPatient() {
         val mainActivityIntent: Intent = Intent(this, MainActivity::class.java)
 
-        // call
+        val newSensor = SensorToCreate("Temperatuur", "Nee", "60", "120")
+        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createSensor(createdPatient.patientID, newSensor)
 
-        startActivity(mainActivityIntent)
-        finish()
+        call.enqueue(object : Callback<Sensor> {
+            override fun onResponse(
+                call: Call<Sensor>,
+                response: Response<Sensor>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    startActivity(mainActivityIntent)
+                    finish()
+                }
+                else
+                {
+                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+                    if (errorbodyLength != 0) {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        val errorMessage = jObjError.getString("error")
+                        registerPatientShowErrorMessage(errorMessage)
+                    } else {
+                        registerPatientShowErrorMessage(response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Sensor>, t: Throwable) {
+                registerPatientShowErrorMessage(t.message!!)
+            }
+        })
     }
 }
