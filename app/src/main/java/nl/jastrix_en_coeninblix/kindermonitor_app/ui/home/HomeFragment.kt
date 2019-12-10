@@ -1,5 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.home
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,15 +15,25 @@ import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.MeasurementForPost
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
+import kotlin.concurrent.schedule
 import kotlin.concurrent.scheduleAtFixedRate
 
 
 class HomeFragment : Fragment() {
 
     companion object {
-        var patientSensors: Array<Sensor>? = null
+        var patientSensors: Array<SensorFromCallback>? = null
     }
 
     private var active = false
@@ -45,11 +56,18 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()
 
-        Timer("schedule", false).scheduleAtFixedRate(1000, 1000) {
-            if (patientSensors != null) {
-                continuouslyCallForNewMeasurements()
-            }
-        }
+//        Timer("schedule", false).scheduleAtFixedRate(5000, 1000) {
+//            if (patientSensors != null) {
+//                continuouslyPostNewMeasurements()
+////                continuouslyCallForNewMeasurements()
+//            }
+//        }
+
+//        Timer("schedule", false).schedule(6000) {
+//            if (patientSensors != null) {
+//                continuouslyCallForNewMeasurements()
+//            }
+//        }
 
         val vidstream = currentView!!.findViewById<VideoView>(R.id.videoStream)
 
@@ -58,11 +76,6 @@ class HomeFragment : Fragment() {
         val vidUri: Uri = Uri.parse(vidAddress)
         vidstream.setVideoURI(vidUri)
         vidstream.start()
-//        vidstream.isFocusable =false
-//
-//        val scrollView = view!!.findViewById(R.id.homeScrollView) as ScrollView
-//        scrollView.isFocusableInTouchMode = true
-//        scrollView.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
         val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
         myLayout.requestFocus()
@@ -80,42 +93,66 @@ class HomeFragment : Fragment() {
         active = false
     }
 
-    private fun continuouslyCallForNewMeasurements() {
-        // should do new call every second. do not use onresponse to call again, execute new call continuesly while app is in forefront, don't call at all while in background
-        // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
-
-        if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
-
-        }
-
-//        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded(
-//            MainActivity.authToken
-//        ).mes()
-//        call.enqueue(object : Callback<UserData> {
-//            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+//    private fun continuouslyPostNewMeasurements() {
+//        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().postMeasurementToSensor(
+//            patientSensors!![0].sensorID, MeasurementForPost(70)
+//        )
+//        call.enqueue(object : Callback<String> {
+//            override fun onResponse(call: Call<String>, response: Response<String>) {
 //                val statusCode = response.code()
 //
 //                if (response.isSuccessful && response.body() != null){
-//
+//                    val test = response.body()
 //                }
 //                else {
-//                    if (statusCode == 401) {
-//                        MainActivity.apiHelper.loginWithCachedUsernameAndPassword()
-//                    }
-//                    else if (statusCode == 404){
-//                        // notification that there is no connection to API
-//                    }
-//                    else {
-//                        // internet down notification
-//                    }
+//                    // absolutetly nothing, this function shouldn't even be part of the app.
 //                }
 //            }
 //
-//            override fun onFailure(call: Call<UserData>, t: Throwable) {
+//            override fun onFailure(call: Call<String>, t: Throwable) {
 //                Log.d("DEBUG", t.message)
 //
 //                // internet down notification
 //            }
 //        })
+//    }
+
+    private fun continuouslyCallForNewMeasurements() {
+        // should do new call every second. do not use onresponse to call again, execute new call continuesly while app is in forefront, don't call at all while in background
+        // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
+
+        val loginIntent = Intent(activity, LoginActivity::class.java)
+        val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
+            patientSensors!![0].sensorID)
+        call.enqueue(object : Callback<Array<Measurement>> {
+            override fun onResponse(call: Call<Array<Measurement>>, response: Response<Array<Measurement>>) {
+                val statusCode = response.code()
+
+                if (response.isSuccessful && response.body() != null){
+                    val test = response.body()
+                    if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
+
+                    }
+                }
+                else {
+                    if (statusCode == 401) {
+                        loginWithCachedCredentialsOnResume = true
+                        startActivity(loginIntent)
+                    }
+                    else if (statusCode == 404){
+                        // notification that there is no connection to API
+                    }
+                    else {
+                        // internet down notification
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
+                Log.d("DEBUG", t.message)
+
+                // internet down notification
+            }
+        })
     }
 }

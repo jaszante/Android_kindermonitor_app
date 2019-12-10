@@ -20,11 +20,11 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserRegister
+import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 
 
 class RegisterActivity : AppCompatActivity() {
@@ -59,13 +59,9 @@ class RegisterActivity : AppCompatActivity() {
         errorfield = findViewById<EditText>(R.id.registerError)
         service = apiHelper.buildAndReturnAPIService()
 
-
-
-
         /*-------------------------------------------------------------------------------------------*/
         buttonRegister.setOnClickListener() {
             if (checkBoxTerms.isChecked) {
-
 
                 /*register(
                     uName.text.toString(),
@@ -114,7 +110,7 @@ class RegisterActivity : AppCompatActivity() {
                         apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
                         saveUserCredentials()
 
-                        goToRegisterPatientActivityOrMainActivity()
+                        goToRegisterPatientActivityOrPatientListActivity()
 
                     } else {
                         val errorbodyLength = response.errorBody()!!.contentLength().toInt()
@@ -172,15 +168,15 @@ class RegisterActivity : AppCompatActivity() {
         errorfield.visibility = View.VISIBLE
     }
 
-    fun goToRegisterPatientActivityOrMainActivity(){
+    fun goToRegisterPatientActivityOrPatientListActivity(){
         authTokenChanged = true
         if (checkBoxCaretaker.isChecked) {
             val registerPatientIntent = Intent(this, RegisterPatientActivity::class.java)
             startActivity(registerPatientIntent)
             finish()
         } else {
-            val mainActivityIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainActivityIntent)
+            val patientListIntent = Intent(this, PatientList::class.java)
+            startActivity(patientListIntent)
             finish()
         }
     }

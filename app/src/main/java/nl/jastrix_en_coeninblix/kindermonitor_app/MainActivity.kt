@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
@@ -203,12 +204,12 @@ class MainActivity : AppCompatActivity(), Observer {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         if (currentPatient != null) {
-            val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
                 .getPatientsSensors(currentPatient!!.patientID.toString())
-            call.enqueue(object : Callback<Array<Sensor>> {
+            call.enqueue(object : Callback<Array<SensorFromCallback>> {
                 override fun onResponse(
-                    call: Call<Array<Sensor>>,
-                    response: Response<Array<Sensor>>
+                    call: Call<Array<SensorFromCallback>>,
+                    response: Response<Array<SensorFromCallback>>
                 ) {
                     val statusCode = response.code()
 
@@ -224,6 +225,7 @@ class MainActivity : AppCompatActivity(), Observer {
                             // internet down notification? // or maybe there are no patients linked?
                         }
 
+                        startActivity(loginIntent)
 //                    // try again
 //                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
 //                        getPatientSensors()
@@ -232,7 +234,7 @@ class MainActivity : AppCompatActivity(), Observer {
                     }
                 }
 
-                override fun onFailure(call: Call<Array<Sensor>>, t: Throwable) {
+                override fun onFailure(call: Call<Array<SensorFromCallback>>, t: Throwable) {
                     Log.d("DEBUG", t.message)
 
                     // internet down notification

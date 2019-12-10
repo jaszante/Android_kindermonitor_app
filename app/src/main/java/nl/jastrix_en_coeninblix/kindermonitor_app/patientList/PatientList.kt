@@ -8,10 +8,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class PatientList : AppCompatActivity() {
 
@@ -20,19 +27,9 @@ class PatientList : AppCompatActivity() {
     public lateinit var viewManager: RecyclerView.LayoutManager
     val patientList: ArrayList<PatientWithID> = ArrayList()
 
-    val patient1 = PatientWithID(1,"karel","kees", "10-10-10")
-    val patient2 = PatientWithID(2,"henk","de snoepert", "10-10-10")
-    val patient3 = PatientWithID(3,"harry","de banaan", "10-10-10")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_list)
-//----------------------------------------------------------------------------------------------------------------------
-        // vul de lijst voor lokaal
-        patientList.add(patient1)
-        patientList.add(patient2)
-        patientList.add(patient3)
-//----------------------------------------------------------------------------------------------------------------------
         
         val patientListener: PatientListener = object : PatientListener {
             override fun onItemClick(position: Int, patient: PatientWithID) {
@@ -59,9 +56,71 @@ class PatientList : AppCompatActivity() {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     //get all patients opnieuw ofzo
+
+                    //viewAdapter.notifyDataSetChanged();
                 }
             }
 
+        })
+
+        getUserDataThenStartGetPatientsCall()
+    }
+
+    private fun getUserDataThenStartGetPatientsCall() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+
+        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+        call.enqueue(object : Callback<UserData> {
+            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                val statusCode = response.code()
+
+                if (response.isSuccessful && response.body() != null) {
+                    userData = response.body()!!
+
+                    getAllPatients()
+                } else {
+                    if (statusCode == 401) {
+                        loginWithCachedCredentialsOnResume = true
+                    }
+
+                    startActivity(loginIntent)
+                }
+            }
+
+            override fun onFailure(call: Call<UserData>, t: Throwable) {
+                startActivity(loginIntent)
+            }
+        })
+    }
+
+    private fun getAllPatients() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+
+        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllPatientsForLogginedInUser()
+        call.enqueue(object : Callback<Array<PatientWithID>> {
+            override fun onResponse(call: Call<Array<PatientWithID>>, response: Response<Array<PatientWithID>>) {
+                val statusCode = response.code()
+
+                if (response.isSuccessful && response.body() != null) {
+                    val allPatients = response.body()!!
+                    if (allPatients.count() == 0) {
+                        startActivity(loginIntent)
+                    }
+                    else {
+                        for (patient in allPatients){
+                            patientList.add(patient)
+                        }
+                        viewAdapter.notifyDataSetChanged();
+                    }
+
+                } else {
+                    startActivity(loginIntent)
+                }
+            }
+
+            override fun onFailure(call: Call<Array<PatientWithID>>, t: Throwable) {
+                startActivity(loginIntent)
+            }
         })
     }
 }

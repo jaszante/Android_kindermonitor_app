@@ -16,7 +16,7 @@ interface APIService {
     fun getCurrentUser() : Call<UserData>
 
     @GET ("Patients/{PatientId}/Sensors")
-    fun getPatientsSensors(@Path("PatientId") patientId: String) : Call<Array<Sensor>>
+    fun getPatientsSensors(@Path("PatientId") patientId: String) : Call<Array<SensorFromCallback>>
 
     @POST ("Patients/{PatientId}/Sensors")
     fun createSensor(@Path("PatientId") patientId: Int, @Body newSensor: SensorToCreate): Call<Sensor>
@@ -28,8 +28,9 @@ interface APIService {
     fun getAllPatientsForLogginedInUser(): Call<Array<PatientWithID>>
 
     @GET ("Sensors/{SensorId}//measurements")
-    fun getMeasurementsForSensor(@Path("SensorId") sensorId: Int): Call<String>
+    fun getMeasurementsForSensor(@Path("SensorId") sensorId: Int): Call<Array<Measurement>> //, from: String? = null, to: String? = null
 
+//    @POST ("Sensors/{SensorId}/measurements")
     @POST ("Sensors/measurements")
-    fun postMeasurementToSensor(@Body sensorWithID: SensorToSendMeasurements)
+    fun postMeasurementToSensor(@Body measurementForPost: MeasurementForPost): Call<String>
 }
