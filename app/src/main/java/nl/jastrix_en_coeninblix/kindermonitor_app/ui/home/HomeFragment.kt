@@ -11,17 +11,10 @@ import android.widget.VideoView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.Timer
-import kotlin.concurrent.schedule
-import kotlin.concurrent.scheduleAtFixedRate
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+
 
 class HomeFragment : Fragment() {
 
@@ -39,12 +32,15 @@ class HomeFragment : Fragment() {
 //        Timer("schedule", false).scheduleAtFixedRate(1000, 1000) {
 //            continuouslyCallForNewMeasurements()
 //        }
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val view = getView()
+
+
 
         val vidstream = view!!.findViewById<VideoView>(R.id.videoStream)
 
@@ -53,6 +49,14 @@ class HomeFragment : Fragment() {
         val vidUri: Uri = Uri.parse(vidAddress)
         vidstream.setVideoURI(vidUri)
         vidstream.start()
+//        vidstream.isFocusable =false
+//
+//        val scrollView = view!!.findViewById(R.id.homeScrollView) as ScrollView
+//        scrollView.isFocusableInTouchMode = true
+//        scrollView.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+
+        val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
+        myLayout.requestFocus()
     }
 
     private fun continuouslyCallForNewMeasurements() {
