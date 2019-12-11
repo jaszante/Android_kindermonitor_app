@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<androidx.recyclerview.widget.RecyclerView
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context=".patientList.PatientList"
-    android:id="@+id/patientRecyclerview">
+    android:id="@+id/patientRecyclerview"/>
 
-
-
-
-
-
-</androidx.recyclerview.widget.RecyclerView>
+    <TextView
+        android:id="@+id/TextViewEmpty"
+        android:layout_width="match_parent"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/BTNPatient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_shape"
+        android:text="Maak een patient aan"
+        android:visibility="invisible"
+        android:textColor="@color/white"
+        android:stateListAnimator="@null"/>
+</LinearLayout>

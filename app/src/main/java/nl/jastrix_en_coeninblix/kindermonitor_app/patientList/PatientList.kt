@@ -4,6 +4,9 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.patientList
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
@@ -16,6 +19,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAd
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,11 +30,13 @@ class PatientList : AppCompatActivity() {
     public lateinit var viewAdapter: RecyclerView.Adapter<*>
     public lateinit var viewManager: RecyclerView.LayoutManager
     val patientList: ArrayList<PatientWithID> = ArrayList()
+    lateinit var text: TextView
+    lateinit var buttonPatient: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_list)
-        
+
         val patientListener: PatientListener = object : PatientListener {
             override fun onItemClick(position: Int, patient: PatientWithID) {
                 //Log.d("DEBUG", articlesFromResponse[position].toString())
@@ -69,7 +75,8 @@ class PatientList : AppCompatActivity() {
     private fun getUserDataThenStartGetPatientsCall() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+        val call =
+            MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
@@ -79,6 +86,7 @@ class PatientList : AppCompatActivity() {
 
                     getAllPatients()
                 } else {
+
                     if (statusCode == 401) {
                         loginWithCachedCredentialsOnResume = true
                     }
@@ -96,18 +104,31 @@ class PatientList : AppCompatActivity() {
     private fun getAllPatients() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllPatientsForLogginedInUser()
+        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            .getAllPatientsForLogginedInUser()
         call.enqueue(object : Callback<Array<PatientWithID>> {
-            override fun onResponse(call: Call<Array<PatientWithID>>, response: Response<Array<PatientWithID>>) {
+            override fun onResponse(
+                call: Call<Array<PatientWithID>>,
+                response: Response<Array<PatientWithID>>
+            ) {
                 val statusCode = response.code()
 
                 if (response.isSuccessful && response.body() != null) {
                     val allPatients = response.body()!!
                     if (allPatients.count() == 0) {
-                        startActivity(loginIntent)
-                    }
-                    else {
-                        for (patient in allPatients){
+                        //startActivity(loginIntent)
+                        text = findViewById(R.id.TextViewEmpty)
+                        buttonPatient = findViewById(R.id.BTNPatient)
+                        text.text =
+                            "Er zijn op dit moment geen patienten aan uw account gekoppeld. Vraag aan een ouder/verzorger om uw toe te voegen. Of maak een kind aan."
+                        buttonPatient.visibility = View.VISIBLE
+                        buttonPatient.setOnClickListener{
+                            val intent : Intent = Intent(applicationContext, RegisterPatientActivity::class.java)
+                            startActivity(intent)
+                        }
+
+                    } else {
+                        for (patient in allPatients) {
                             patientList.add(patient)
                         }
                         viewAdapter.notifyDataSetChanged();
