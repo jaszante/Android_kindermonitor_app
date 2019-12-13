@@ -16,7 +16,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.MeasurementForPost

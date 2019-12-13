@@ -1,6 +1,5 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,7 +7,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import retrofit2.Call
@@ -18,11 +16,11 @@ import org.json.JSONObject
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
@@ -83,18 +81,19 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     private fun loginWithCachedUsernameAndPassword() {
         if (noCallInProgress) {
             noCallInProgress = false
-            if (userName != null && password != null && userName != "" && password != "") {
+            val monitorApplication = MonitorApplication.getInstance()
+            if (monitorApplication.userName != null && monitorApplication.password != null && monitorApplication.userName != "" && monitorApplication.password != "") {
 
                 val patientListIntent = Intent(this, PatientList::class.java)
 
-                val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userLogin(UserLogin(userName, password))
+                val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userLogin(UserLogin(monitorApplication.userName!!, monitorApplication.password!!))
 
                 call.enqueue(object : Callback<AuthenticationToken> {
                     override fun onResponse(call: Call<AuthenticationToken>, response: retrofit2.Response<AuthenticationToken>) {
                         if (response.isSuccessful && response.body() != null){
                             val newToken = response.body()!!.token
                             MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
-                            authToken = newToken
+                            MonitorApplication.getInstance().authToken = newToken
                             Log.d("DEBUG", "Need to do authTokenChanged or not?")
 //                            authTokenChanged = true
                             startActivity(patientListIntent)
@@ -145,10 +144,11 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
         noCallInProgress = true
         if (response.isSuccessful && response.body() != null) {
-            authToken = response.body()!!.token
-            authTokenChanged = true
-            userName = usernameField.text.toString()
-            password = passwordField.text.toString()
+            val monitorApplication = MonitorApplication.getInstance()
+            monitorApplication.authToken = response.body()!!.token
+            monitorApplication.authTokenChanged = true
+            monitorApplication.userName = usernameField.text.toString()
+            monitorApplication.password = passwordField.text.toString()
 
             saveUserCredentials()
 
@@ -171,7 +171,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
     private fun saveUserCredentials() {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
-        val sharedPreferences = EncryptedSharedPreferences.create(
+        val encryptedSharedPreferences = EncryptedSharedPreferences.create(
             "kinderMonitorApp",
             masterKeyAlias,
             applicationContext,
@@ -179,16 +179,16 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
 
-        val editor = sharedPreferences.edit()
+        val editor = encryptedSharedPreferences.edit()
 
-        editor.putString("AuthenticationToken", authToken)
+        editor.putString("AuthenticationToken", MonitorApplication.getInstance().authToken)
         editor.putString(
             "KinderMonitorAppUserName",
-            userName
+            MonitorApplication.getInstance().userName
         )
         editor.putString(
             "KinderMonitorAppPassword",
-            password
+            MonitorApplication.getInstance().password
         )
         editor.commit()//apply()
     }

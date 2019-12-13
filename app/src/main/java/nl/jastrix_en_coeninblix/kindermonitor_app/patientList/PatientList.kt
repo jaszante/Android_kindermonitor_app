@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
@@ -83,7 +83,7 @@ class PatientList : AppCompatActivity() {
                 val statusCode = response.code()
 
                 if (response.isSuccessful && response.body() != null) {
-                    userData = response.body()!!
+                    MonitorApplication.getInstance().userData = response.body()!!
 
                     getAllPatients()
                 } else {

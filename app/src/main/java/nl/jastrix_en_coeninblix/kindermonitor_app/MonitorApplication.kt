@@ -2,9 +2,12 @@ package nl.jastrix_en_coeninblix.kindermonitor_app
 
 import android.app.Activity
 import android.app.Application
+import android.content.Intent
 import android.os.Bundle
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
 
 
 class MonitorApplication : Application() {
@@ -13,12 +16,22 @@ class MonitorApplication : Application() {
     var currentlyActiveActivity: Activity? = null
     val apiHelper = APIHelper()
     var currentlySelectedPatient: PatientWithID? = null
+    var userName: String? = null
+    var password: String? = null
+    var authToken: String = ""
+    var userData: UserData? = null
+    var authTokenChanged = false
 
     companion object {
         private var singleton: MonitorApplication? = null
         fun getInstance(): MonitorApplication {
             return singleton!!
         }
+    }
+
+    fun startForegroundMeasurmentService() {
+        val foregroundMeasurmentService = Intent(this, ForegroundMeasurmentService::class.java)
+        startService(foregroundMeasurmentService)
     }
 
     override fun onCreate() {

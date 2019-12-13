@@ -36,18 +36,18 @@ class MainActivity : AppCompatActivity(), Observer {
 //        getNewUserdataThenInitDrawerWithUserInformation()
     }
 
-    companion object {
-        lateinit var userName: String
-        lateinit var password: String
-//        val apiHelper = APIHelper()
-        lateinit var userData: UserData
-
-        var authToken: String = ""
-        var authTokenChanged: Boolean = false
-
-        var active: Boolean = false
-//        var currentPatient : PatientWithID? = null
-    }
+//    companion object {
+////        lateinit var userName: String
+////        lateinit var password: String
+////        val apiHelper = APIHelper()
+////        lateinit var userData: UserData
+//
+////        var authToken: String = ""
+////        var authTokenChanged: Boolean = false
+//
+////        var active: Boolean = false
+////        var currentPatient : PatientWithID? = null
+//    }
 
     // can be called from APIHelper loginWithCachedUsernameAndPassword function
     private fun removeAllSharedPreferencesAndStartLoginActivity() {
@@ -78,8 +78,6 @@ class MainActivity : AppCompatActivity(), Observer {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        mainAcitivityContext = this
-
         setupNavigationDrawer();
 
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
@@ -104,12 +102,12 @@ class MainActivity : AppCompatActivity(), Observer {
                 && passwordNullable != null && passwordNullable != ""
             ) {
 //            authToken = authTokenNullable
-                userName = userNameNullable
-                password = passwordNullable
+                MonitorApplication.getInstance().userName = userNameNullable
+                MonitorApplication.getInstance().password = passwordNullable
 
 //            observableToken.addObserver(this)
 //            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
-                authTokenChanged = true
+                MonitorApplication.getInstance().authTokenChanged = true
             } else {
                 removeAllSharedPreferencesAndStartLoginActivity()
             }
@@ -141,9 +139,9 @@ class MainActivity : AppCompatActivity(), Observer {
 
     override fun onResume() {
         super.onResume()
-        active = true
+//        active = true
 
-        if (authTokenChanged) {
+        if (MonitorApplication.getInstance().authTokenChanged) {
             // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
             // IN THAT ACTIVITY THE CURRENTPATIENT IS CHOSEN AND SET TO THE COMPANION HERE, THEN THE MESUREMENT CALLS CAN START
             getNewUserdataThenInitDrawerWithUserInformation()
@@ -163,7 +161,7 @@ class MainActivity : AppCompatActivity(), Observer {
                 val statusCode = response.code()
 
                 if (response.isSuccessful && response.body() != null) {
-                    userData = response.body()!!
+                    MonitorApplication.getInstance().userData = response.body()!!
 
                     initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
@@ -185,15 +183,15 @@ class MainActivity : AppCompatActivity(), Observer {
         val navView = nav_view.getHeaderView(0)
         val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
 
-        navHeaderTitle.text = userData.username // + " " + userData.LastName
-        authTokenChanged = false
+        navHeaderTitle.text = MonitorApplication.getInstance().userData!!.username // + " " + userData.LastName
+        MonitorApplication.getInstance().authTokenChanged = false
         getPatientSensors()
     }
 
-    override fun onStop() {
-        active = false
-        super.onStop()
-    }
+//    override fun onStop() {
+//        active = false
+//        super.onStop()
+//    }
 
     // called after patient has been chosen
     private fun getPatientSensors() {
