@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.graphPage.GraphPage
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 
 class GalleryFragment : Fragment() {
@@ -58,5 +59,14 @@ class GalleryFragment : Fragment() {
             val loginIntent: Intent = Intent(activity, LoginActivity::class.java)
             startActivity(loginIntent)
         }
+
+
+        val graphbutton = getView()!!.findViewById<Button>(R.id.BTNgraph)
+        graphbutton.setOnClickListener() {
+            val intent = Intent(activity, GraphPage::class.java)
+            startActivity(intent)
+
+        }
+
     }
 }
