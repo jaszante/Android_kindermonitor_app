@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), Observer {
         var authTokenChanged: Boolean = false
 
         var active: Boolean = false
-        var currentPatient : PatientWithID? = null
+//        var currentPatient : PatientWithID? = null
     }
 
     // can be called from APIHelper loginWithCachedUsernameAndPassword function
@@ -200,9 +200,9 @@ class MainActivity : AppCompatActivity(), Observer {
         val patientListIntent = Intent(this, PatientList::class.java)
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        if (currentPatient != null) {
+        if (MonitorApplication.getInstance().currentlySelectedPatient != null) {
             val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
-                .getPatientsSensors(currentPatient!!.patientID.toString())
+                .getPatientsSensors(MonitorApplication.getInstance().currentlySelectedPatient!!.patientID.toString())
             call.enqueue(object : Callback<Array<SensorFromCallback>> {
                 override fun onResponse(
                     call: Call<Array<SensorFromCallback>>,

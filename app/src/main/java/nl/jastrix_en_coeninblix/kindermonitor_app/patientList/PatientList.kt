@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
@@ -42,7 +42,7 @@ class PatientList : AppCompatActivity() {
             override fun onItemClick(position: Int, patient: PatientWithID) {
                 //Log.d("DEBUG", articlesFromResponse[position].toString())
 
-                currentPatient = patient
+                MonitorApplication.getInstance().currentlySelectedPatient = patient
                 val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
 
                 startActivity(mainActivityIntent)

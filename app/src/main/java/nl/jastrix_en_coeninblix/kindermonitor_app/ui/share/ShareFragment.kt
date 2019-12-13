@@ -38,8 +38,7 @@ class ShareFragment : Fragment() {
 
         val logoutButton = getView()!!.findViewById<Button>(R.id.goToPatientOverview)
         logoutButton.setOnClickListener() {
-            // should instead come from getsharedpreferences?
-//            MonitorApplication.currentlySelectedPatient = null
+            MonitorApplication.getInstance().currentlySelectedPatient = null // should instead come from getsharedpreferences?
             val patientListIntent = Intent(activity, PatientList::class.java)
             startActivity(patientListIntent)
         }
