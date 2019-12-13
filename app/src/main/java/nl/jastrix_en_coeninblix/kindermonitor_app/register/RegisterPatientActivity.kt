@@ -9,8 +9,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
@@ -104,7 +105,7 @@ class RegisterPatientActivity : AppCompatActivity() {
     }
 
     private fun getUserData(){
-        val call = apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
+        val call = MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 if (response.isSuccessful && response.body() != null) {
@@ -137,7 +138,7 @@ class RegisterPatientActivity : AppCompatActivity() {
     }
 
     private fun createPatientForThisUser(patient: Patient) {
-        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
+        var call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
 
         call.enqueue(object : Callback<PatientWithID> {
             override fun onResponse(
@@ -171,7 +172,7 @@ class RegisterPatientActivity : AppCompatActivity() {
         val patientListIntent = Intent(this, PatientList::class.java)
 
         val newSensor = SensorToCreate("Temperatuur", "Nee", "60", "120")
-        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createSensor(createdPatient.patientID, newSensor)
+        var call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createSensor(createdPatient.patientID, newSensor)
 
         call.enqueue(object : Callback<Sensor> {
             override fun onResponse(

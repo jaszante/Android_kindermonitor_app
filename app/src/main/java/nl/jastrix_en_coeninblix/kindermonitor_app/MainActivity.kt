@@ -23,7 +23,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+//import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment.Companion.patientSensors
 import retrofit2.Call
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), Observer {
     companion object {
         lateinit var userName: String
         lateinit var password: String
-        val apiHelper = APIHelper()
+//        val apiHelper = APIHelper()
         lateinit var userData: UserData
 
         var authToken: String = ""
@@ -99,7 +99,6 @@ class MainActivity : AppCompatActivity(), Observer {
         // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
         // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
 
-//        if (!authTokenChanged) { // for some fucking reason mainAcitivy oncreate is called again right after logging in
             if (authTokenNullable != null && authTokenNullable != ""
                 && userNameNullable != null && userNameNullable != ""
                 && passwordNullable != null && passwordNullable != ""
@@ -114,7 +113,6 @@ class MainActivity : AppCompatActivity(), Observer {
             } else {
                 removeAllSharedPreferencesAndStartLoginActivity()
             }
-//        }
     }
 
     private fun setupNavigationDrawer() {
@@ -159,8 +157,7 @@ class MainActivity : AppCompatActivity(), Observer {
     private fun getNewUserdataThenInitDrawerWithUserInformation(){
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-
-        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+        val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
@@ -171,7 +168,7 @@ class MainActivity : AppCompatActivity(), Observer {
                     initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
                     if (statusCode == 401) {
-                        loginWithCachedCredentialsOnResume = true
+                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
                     }
 
                     startActivity(loginIntent)
@@ -204,7 +201,7 @@ class MainActivity : AppCompatActivity(), Observer {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         if (currentPatient != null) {
-            val call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
                 .getPatientsSensors(currentPatient!!.patientID.toString())
             call.enqueue(object : Callback<Array<SensorFromCallback>> {
                 override fun onResponse(
@@ -215,7 +212,8 @@ class MainActivity : AppCompatActivity(), Observer {
 
                     if (response.isSuccessful && response.body() != null) {
                         patientSensors = response.body()
-                    } else {
+                    }
+                    else {
                         if (statusCode == 401) {
 //                            loginWithCachedCredentialsOnResume = true
 //                            startActivity(loginIntent)
@@ -256,6 +254,5 @@ class MainActivity : AppCompatActivity(), Observer {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-
     }
 }

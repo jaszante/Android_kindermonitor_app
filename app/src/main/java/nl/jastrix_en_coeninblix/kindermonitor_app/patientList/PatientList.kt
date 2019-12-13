@@ -12,13 +12,14 @@ import androidx.recyclerview.widget.RecyclerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+//import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -76,7 +77,7 @@ class PatientList : AppCompatActivity() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         val call =
-            MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+            MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
@@ -88,7 +89,7 @@ class PatientList : AppCompatActivity() {
                 } else {
 
                     if (statusCode == 401) {
-                        loginWithCachedCredentialsOnResume = true
+                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
                     }
 
                     startActivity(loginIntent)
@@ -104,7 +105,7 @@ class PatientList : AppCompatActivity() {
     private fun getAllPatients() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MainActivity.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+        val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .getAllPatientsForLogginedInUser()
         call.enqueue(object : Callback<Array<PatientWithID>> {
             override fun onResponse(

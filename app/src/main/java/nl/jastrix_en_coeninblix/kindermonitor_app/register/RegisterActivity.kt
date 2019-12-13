@@ -12,9 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
@@ -57,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
         checkBoxCaretaker = findViewById<CheckBox>(R.id.CBcaretaker)
         checkBoxTerms = findViewById<CheckBox>(R.id.CBterms)
         errorfield = findViewById<EditText>(R.id.registerError)
-        service = apiHelper.buildAndReturnAPIService()
+        service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
 
         /*-------------------------------------------------------------------------------------------*/
         buttonRegister.setOnClickListener() {
@@ -97,7 +98,7 @@ class RegisterActivity : AppCompatActivity() {
         if (noCallInProgress) {
             noCallInProgress = false
             val userRegister = UserRegister(uName, pw, fName, lName, bDate, email)
-            val call = apiHelper.buildAndReturnAPIService().userRegister(userRegister)
+            val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userRegister(userRegister)
             call.enqueue(object : Callback<AuthenticationToken> {
                 override fun onResponse(
                     call: Call<AuthenticationToken>,
@@ -107,7 +108,7 @@ class RegisterActivity : AppCompatActivity() {
 
                     if (response.isSuccessful && response.body() != null) {
                         authToken = response.body()!!.token
-                        apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
+                        MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
                         saveUserCredentials()
 
                         goToRegisterPatientActivityOrPatientListActivity()
@@ -123,7 +124,6 @@ class RegisterActivity : AppCompatActivity() {
                             registerFailedShowMessage(response.message())
                         }
                     }
-
                 }
 
                 override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {

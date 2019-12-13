@@ -15,13 +15,14 @@ import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.MeasurementForPost
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
+//import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -93,10 +94,10 @@ class HomeFragment : Fragment() {
             }
         }
 
-//        Timer("schedule", false).scheduleAtFixedRate(5000, 1000) {
+//        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
 //            if (patientSensors != null) {
-//                continuouslyPostNewMeasurements()
-////                continuouslyCallForNewMeasurements()
+////                continuouslyPostNewMeasurements()
+//                continuouslyCallForNewMeasurements()
 //            }
 //        }
 
@@ -150,7 +151,7 @@ class HomeFragment : Fragment() {
 
         val loginIntent = Intent(activity, LoginActivity::class.java)
         val call =
-            apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
+            MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
                 patientSensors!![0].sensorID
             )
         call.enqueue(object : Callback<Array<Measurement>> {
@@ -167,7 +168,7 @@ class HomeFragment : Fragment() {
                     }
                 } else {
                     if (statusCode == 401) {
-                        loginWithCachedCredentialsOnResume = true
+                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
                         startActivity(loginIntent)
                     } else if (statusCode == 404) {
                         // notification that there is no connection to API

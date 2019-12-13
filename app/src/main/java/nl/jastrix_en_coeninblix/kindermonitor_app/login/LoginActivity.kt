@@ -9,7 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,16 +23,13 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTok
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
 
 
 class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
-
-    companion object {
-        var loginWithCachedCredentialsOnResume: Boolean = false
-    }
     private lateinit var loginOrRegisterErrorField: TextView
 
     private lateinit var usernameField: EditText
@@ -42,7 +39,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
     override fun onResume() {
         super.onResume()
-        if (loginWithCachedCredentialsOnResume){
+        if (MonitorApplication.getInstance().loginWithCachedCredentialsOnResume){
             loginWithCachedUsernameAndPassword()
         }
     }
@@ -54,7 +51,7 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
         loginOrRegisterErrorField.visibility = View.GONE
 
-        val service = apiHelper.buildAndReturnAPIService()
+        val service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
 
         usernameField = findViewById<EditText>(R.id.UserNameField)
         passwordField = findViewById<EditText>(R.id.passwordField)
@@ -88,21 +85,20 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             noCallInProgress = false
             if (userName != null && password != null && userName != "" && password != "") {
 
-                val mainActivityIntent = Intent(this, MainActivity::class.java)
+                val patientListIntent = Intent(this, PatientList::class.java)
 
-                val call = apiHelper.buildAndReturnAPIService().userLogin(UserLogin(userName, password))
+                val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userLogin(UserLogin(userName, password))
 
                 call.enqueue(object : Callback<AuthenticationToken> {
                     override fun onResponse(call: Call<AuthenticationToken>, response: retrofit2.Response<AuthenticationToken>) {
                         if (response.isSuccessful && response.body() != null){
-
                             val newToken = response.body()!!.token
-                            apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
+                            MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
                             authToken = newToken
                             Log.d("DEBUG", "Need to do authTokenChanged or not?")
 //                            authTokenChanged = true
-                            startActivity(mainActivityIntent)
-                            loginWithCachedCredentialsOnResume = false
+                            startActivity(patientListIntent)
+                            MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = false
                             noCallInProgress = true
                         }
                         else {
