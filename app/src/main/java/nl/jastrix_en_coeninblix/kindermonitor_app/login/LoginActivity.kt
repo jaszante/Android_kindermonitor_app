@@ -35,13 +35,6 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
 
     private var noCallInProgress: Boolean = true
 
-    override fun onResume() {
-        super.onResume()
-        if (MonitorApplication.getInstance().loginWithCachedCredentialsOnResume){
-            loginWithCachedUsernameAndPassword()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
@@ -74,65 +67,6 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
                 val userLogin =
                     UserLogin(usernameField.text.toString(), passwordField.text.toString())
                 service.userLogin(userLogin).enqueue(this)
-            }
-        }
-    }
-
-    private fun loginWithCachedUsernameAndPassword() {
-        if (noCallInProgress) {
-            noCallInProgress = false
-            val monitorApplication = MonitorApplication.getInstance()
-            if (monitorApplication.userName != null && monitorApplication.password != null && monitorApplication.userName != "" && monitorApplication.password != "") {
-
-                val patientListIntent = Intent(this, PatientList::class.java)
-
-                val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userLogin(UserLogin(monitorApplication.userName!!, monitorApplication.password!!))
-
-                call.enqueue(object : Callback<AuthenticationToken> {
-                    override fun onResponse(call: Call<AuthenticationToken>, response: retrofit2.Response<AuthenticationToken>) {
-                        if (response.isSuccessful && response.body() != null){
-                            val newToken = response.body()!!.token
-                            MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(newToken) // important that we build the apiservice again with new token before the observabletoken is changed
-                            MonitorApplication.getInstance().authToken = newToken
-                            Log.d("DEBUG", "Need to do authTokenChanged or not?")
-//                            authTokenChanged = true
-                            startActivity(patientListIntent)
-                            MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = false
-                            noCallInProgress = true
-                        }
-                        else {
-                            logOutUser()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
-                        logOutUser()
-                    }
-
-                    private fun logOutUser() {
-                        noCallInProgress = true
-
-                        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
-                        val sharedPreferences = EncryptedSharedPreferences.create(
-                            "kinderMonitorApp",
-                            masterKeyAlias,
-                            applicationContext,
-                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                        )
-
-                        val editor = sharedPreferences.edit()
-//        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-                        editor.putString("AuthenticationToken", null)
-                        editor.putString("KinderMonitorAppUserName", null)
-                        editor.putString("KinderMonitorAppPassword", null)
-                        editor.apply()
-
-//                        val intent: Intent = Intent(this, LoginActivity::class.java)
-//                        startActivity(intent)
-                    }
-                })
             }
         }
     }

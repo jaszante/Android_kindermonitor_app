@@ -17,11 +17,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
@@ -30,6 +27,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import kotlin.concurrent.schedule
 
 class MainActivity : AppCompatActivity(), Observer {
     override fun update(o: Observable?, arg: Any?) {
@@ -49,7 +47,6 @@ class MainActivity : AppCompatActivity(), Observer {
 ////        var currentPatient : PatientWithID? = null
 //    }
 
-    // can be called from APIHelper loginWithCachedUsernameAndPassword function
     private fun removeAllSharedPreferencesAndStartLoginActivity() {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
@@ -80,37 +77,37 @@ class MainActivity : AppCompatActivity(), Observer {
 
         setupNavigationDrawer();
 
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            "kinderMonitorApp",
-            masterKeyAlias,
-            applicationContext,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-
-        val authTokenNullable = sharedPreferences.getString("AuthenticationToken", "")
-        val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
-        val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
-
-        // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
-        // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
-
-            if (authTokenNullable != null && authTokenNullable != ""
-                && userNameNullable != null && userNameNullable != ""
-                && passwordNullable != null && passwordNullable != ""
-            ) {
-//            authToken = authTokenNullable
-                MonitorApplication.getInstance().userName = userNameNullable
-                MonitorApplication.getInstance().password = passwordNullable
-
-//            observableToken.addObserver(this)
-//            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
-                MonitorApplication.getInstance().authTokenChanged = true
-            } else {
-                removeAllSharedPreferencesAndStartLoginActivity()
-            }
+//        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+//
+//        val sharedPreferences = EncryptedSharedPreferences.create(
+//            "kinderMonitorApp",
+//            masterKeyAlias,
+//            applicationContext,
+//            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+//            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+//        )
+//
+//        val authTokenNullable = sharedPreferences.getString("AuthenticationToken", "")
+//        val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
+//        val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
+//
+//        // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
+//        // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
+//
+//        if (authTokenNullable != null && authTokenNullable != ""
+//            && userNameNullable != null && userNameNullable != ""
+//            && passwordNullable != null && passwordNullable != ""
+//        ) {
+////            authToken = authTokenNullable
+//            MonitorApplication.getInstance().userName = userNameNullable
+//            MonitorApplication.getInstance().password = passwordNullable
+//
+////            observableToken.addObserver(this)
+////            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
+//            MonitorApplication.getInstance().authTokenChanged = true
+//        } else {
+//            removeAllSharedPreferencesAndStartLoginActivity()
+//        }
     }
 
     private fun setupNavigationDrawer() {
@@ -145,17 +142,16 @@ class MainActivity : AppCompatActivity(), Observer {
             // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
             // IN THAT ACTIVITY THE CURRENTPATIENT IS CHOSEN AND SET TO THE COMPANION HERE, THEN THE MESUREMENT CALLS CAN START
             getNewUserdataThenInitDrawerWithUserInformation()
-        }
-        else
-        {
+        } else {
             initDrawerWithUserInformationThenGetPatientSensors()
         }
     }
 
-    private fun getNewUserdataThenInitDrawerWithUserInformation(){
+    private fun getNewUserdataThenInitDrawerWithUserInformation() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+        val call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
@@ -165,11 +161,12 @@ class MainActivity : AppCompatActivity(), Observer {
 
                     initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
-                    if (statusCode == 401) {
-                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
-                    }
+//                    if (statusCode == 401) {
+//                        loginWithCachedUsernameAndPassword()
+//                    } else {
+                        removeAllSharedPreferencesAndStartLoginActivity()
+//                    }
 
-                    startActivity(loginIntent)
                 }
             }
 
@@ -179,11 +176,12 @@ class MainActivity : AppCompatActivity(), Observer {
         })
     }
 
-    private fun initDrawerWithUserInformationThenGetPatientSensors(){
+    private fun initDrawerWithUserInformationThenGetPatientSensors() {
         val navView = nav_view.getHeaderView(0)
         val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
 
-        navHeaderTitle.text = MonitorApplication.getInstance().userData!!.username // + " " + userData.LastName
+        navHeaderTitle.text =
+            MonitorApplication.getInstance().userData!!.username // + " " + userData.LastName
         MonitorApplication.getInstance().authTokenChanged = false
         getPatientSensors()
     }
@@ -193,13 +191,15 @@ class MainActivity : AppCompatActivity(), Observer {
 //        super.onStop()
 //    }
 
+
     // called after patient has been chosen
     private fun getPatientSensors() {
         val patientListIntent = Intent(this, PatientList::class.java)
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         if (MonitorApplication.getInstance().currentlySelectedPatient != null) {
-            val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            val call = MonitorApplication.getInstance()
+                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
                 .getPatientsSensors(MonitorApplication.getInstance().currentlySelectedPatient!!.patientID.toString())
             call.enqueue(object : Callback<Array<SensorFromCallback>> {
                 override fun onResponse(
@@ -210,35 +210,26 @@ class MainActivity : AppCompatActivity(), Observer {
 
                     if (response.isSuccessful && response.body() != null) {
                         patientSensors = response.body()
-                    }
-                    else {
-                        if (statusCode == 401) {
-//                            loginWithCachedCredentialsOnResume = true
-//                            startActivity(loginIntent)
-                        } else if (statusCode == 404) {
-                            // notification that there is no connection to API
-                        } else {
-                            // internet down notification? // or maybe there are no patients linked?
-                        }
+                    } else {
+//                        if (statusCode == 401) {
+////                            loginWithCachedCredentialsOnResume = true
+////                            startActivity(loginIntent)
+//                        } else if (statusCode == 404) {
+//                            // notification that there is no connection to API
+//                        } else {
+//                            // internet down notification? // or maybe there are no patients linked?
+//                        }
 
-                        startActivity(loginIntent)
-//                    // try again
-//                    Timer("scheduleAfterOneSecond", false).schedule(1000) {
-//                        getPatientSensors()
-//                    }
-
+                        removeAllSharedPreferencesAndStartLoginActivity()
                     }
                 }
 
                 override fun onFailure(call: Call<Array<SensorFromCallback>>, t: Throwable) {
                     Log.d("DEBUG", t.message)
-
-                    // internet down notification
+                    removeAllSharedPreferencesAndStartLoginActivity()
                 }
             })
-        }
-        else
-        {
+        } else {
             startActivity(patientListIntent)
         }
     }

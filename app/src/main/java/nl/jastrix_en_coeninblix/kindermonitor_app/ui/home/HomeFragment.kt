@@ -145,44 +145,44 @@ class HomeFragment : Fragment() {
 //        })
 //    }
 
-    private fun continuouslyCallForNewMeasurements() {
-        // should do new call every second. do not use onresponse to call again, execute new call continuesly while app is in forefront, don't call at all while in background
-        // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
-
-        val loginIntent = Intent(activity, LoginActivity::class.java)
-        val call =
-            MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
-                patientSensors!![0].sensorID
-            )
-        call.enqueue(object : Callback<Array<Measurement>> {
-            override fun onResponse(
-                call: Call<Array<Measurement>>,
-                response: Response<Array<Measurement>>
-            ) {
-                val statusCode = response.code()
-
-                if (response.isSuccessful && response.body() != null) {
-                    val test = response.body()
-                    if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
-
-                    }
-                } else {
-                    if (statusCode == 401) {
-                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
-                        startActivity(loginIntent)
-                    } else if (statusCode == 404) {
-                        // notification that there is no connection to API
-                    } else {
-                        // internet down notification
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
-                Log.d("DEBUG", t.message)
-
-                // internet down notification
-            }
-        })
-    }
+//    private fun continuouslyCallForNewMeasurements() {
+//        // should do new call every second. do not use onresponse to call again, execute new call continuesly while app is in forefront, don't call at all while in background
+//        // if 5 calls in a row fail (every time a call succeeds it sets the counter to 0, every time it fails it checks the counter for 5 and ++'s that), send alarm that there is no connection with API or internet
+//
+//        val loginIntent = Intent(activity, LoginActivity::class.java)
+//        val call =
+//            MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(
+//                patientSensors!![0].sensorID
+//            )
+//        call.enqueue(object : Callback<Array<Measurement>> {
+//            override fun onResponse(
+//                call: Call<Array<Measurement>>,
+//                response: Response<Array<Measurement>>
+//            ) {
+//                val statusCode = response.code()
+//
+//                if (response.isSuccessful && response.body() != null) {
+//                    val test = response.body()
+//                    if (active) { // FOR EVERY VISUAL UPDATE, CHECK IF THIS FRAGMENT IS IN FOREGROUND
+//
+//                    }
+//                } else {
+//                    if (statusCode == 401) {
+//                        MonitorApplication.getInstance().loginWithCachedCredentialsOnResume = true
+//                        startActivity(loginIntent)
+//                    } else if (statusCode == 404) {
+//                        // notification that there is no connection to API
+//                    } else {
+//                        // internet down notification
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
+//                Log.d("DEBUG", t.message)
+//
+//                // internet down notification
+//            }
+//        })
+//    }
 }

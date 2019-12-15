@@ -11,7 +11,6 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentS
 
 
 class MonitorApplication : Application() {
-    var loginWithCachedCredentialsOnResume: Boolean = false
     //    var currentlySelectedPatient: Int? = null // should instead come from getsharedpreferences?
     var currentlyActiveActivity: Activity? = null
     val apiHelper = APIHelper()
