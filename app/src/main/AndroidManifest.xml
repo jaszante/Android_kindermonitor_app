@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".graphPage.GraphPage"></activity>
+        <activity android:name=".Account.AccountPage"></activity>
+        <activity android:name=".graphPage.GraphPage" />
         <activity android:name=".patientList.PatientList" />
         <activity android:name=".register.RegisterPatientActivity" />
         <activity android:name=".register.RegisterActivity" />
