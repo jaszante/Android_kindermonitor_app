@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
@@ -105,7 +105,8 @@ class RegisterPatientActivity : AppCompatActivity() {
     }
 
     private fun getUserData(){
-        val call = MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(authToken).getCurrentUser()
+        val call = MonitorApplication.getInstance().apiHelper.
+            buildAPIServiceWithNewToken(MonitorApplication.getInstance().authToken).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 if (response.isSuccessful && response.body() != null) {

@@ -13,8 +13,8 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
@@ -107,7 +107,7 @@ class RegisterActivity : AppCompatActivity() {
                     noCallInProgress = true
 
                     if (response.isSuccessful && response.body() != null) {
-                        authToken = response.body()!!.token
+                        MonitorApplication.getInstance().authToken = response.body()!!.token
                         MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
                         saveUserCredentials()
 
@@ -147,7 +147,7 @@ class RegisterActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
 
 //                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-                    editor.putString("AuthenticationToken", authToken)
+                    editor.putString("AuthenticationToken", MonitorApplication.getInstance().authToken)
                     editor.putString(
                         "KinderMonitorAppUserName",
                         uName
@@ -169,7 +169,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     fun goToRegisterPatientActivityOrPatientListActivity(){
-        authTokenChanged = true
+        MonitorApplication.getInstance().authTokenChanged = true
         if (checkBoxCaretaker.isChecked) {
             val registerPatientIntent = Intent(this, RegisterPatientActivity::class.java)
             startActivity(registerPatientIntent)

@@ -1,8 +1,9 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.api
 
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserLogin
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
@@ -31,7 +32,7 @@ class APIHelper {
 
     fun returnAPIServiceWithAuthenticationTokenAdded() : APIService {
         if (apiService == null) {
-            val token = authToken
+            val token = MonitorApplication.getInstance().authToken
             val client = OkHttpClient.Builder().addInterceptor(object : Interceptor {
                 @Throws(IOException::class)
                 override fun intercept(chain: Interceptor.Chain): Response {
