@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Account.AccountPage"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Account.AccountPage">
 
 
     <TextView
@@ -24,13 +24,13 @@
         android:id="@+id/PersonGebruikersnaam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="KarelDeGrote"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:textColor="@android:color/black"/>
+        android:text="KarelDeGrote"
+        android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/HEmail"
@@ -49,19 +49,19 @@
         android:id="@+id/PersonEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Kareldegrote@dingen.nl"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:textColor="@android:color/black"/>
+        android:text="Kareldegrote@dingen.nl"
+        android:textColor="@android:color/black" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="24dp">
+        android:layout_marginStart="24dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -84,12 +84,12 @@
                 android:id="@+id/PersonFName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Karel"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
                 android:buttonTint="@color/colorPrimary"
-                android:textColor="@android:color/black"/>
+                android:text="Karel"
+                android:textColor="@android:color/black" />
         </LinearLayout>
 
         <LinearLayout
@@ -114,13 +114,13 @@
                 android:id="@+id/PersonLName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="De Grote"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
                 android:buttonTint="@color/colorPrimary"
-                android:textColor="@android:color/black"/>
+                android:text="De Grote"
+                android:textColor="@android:color/black" />
         </LinearLayout>
     </LinearLayout>
 
@@ -150,14 +150,14 @@
         android:textColor="@android:color/black" />
 
     <LinearLayout
+        android:id="@+id/ChangeCredentialsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_weight="0"
         android:gravity="center|top|center_vertical"
-        android:orientation="horizontal"
-        android:id="@+id/ChangeCredentialsLayout">
+        android:orientation="horizontal">
 
 
         <TextView
@@ -190,15 +190,16 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@color/gray" />
+
     <LinearLayout
+        android:id="@+id/ChangePWLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_weight="0"
         android:gravity="center|top|center_vertical"
-        android:orientation="horizontal"
-        android:id="@+id/ChangePWLayout">
+        android:orientation="horizontal">
 
 
         <TextView
@@ -231,6 +232,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:background="@color/gray" />
+
     <LinearLayout
         android:id="@+id/ManageGebruikersLayout"
         android:layout_width="match_parent"
@@ -273,17 +275,24 @@
         android:layout_marginEnd="24dp"
         android:background="@color/gray" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal" />
+
     <Button
         android:id="@+id/BTNlogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_shape"
+        android:stateListAnimator="@null"
         android:text="Logout"
-        android:textColor="@color/white"
-        android:stateListAnimator="@null"/>
+        android:textColor="@color/white" />
 
 </LinearLayout>

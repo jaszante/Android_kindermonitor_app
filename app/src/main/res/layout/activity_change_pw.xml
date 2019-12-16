@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Account.AccountPage">
+    tools:context=".Account.ChangePW"
+    android:orientation="vertical">
 
 
     <TextView
-        android:id="@+id/Hgebruiker"
+        android:id="@+id/ToldPW"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -16,13 +17,13 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:text="Gebruikersnaam:"
+        android:text="Huidig wachtwoord:"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/PersonGebruikersnaam"
+        android:id="@+id/EOld"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -30,12 +31,12 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:inputType="text"
-        android:text="KarelDeGrote"
-        android:textColor="@android:color/black" />
+        android:inputType="textPassword"
+        android:textColor="@android:color/black"
+        />
 
     <TextView
-        android:id="@+id/HEmail"
+        android:id="@+id/Tnew1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -43,13 +44,13 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:text="Email:"
+        android:text="Nieuw wachtwoord:"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/PersonEmail"
+        android:id="@+id/ENew1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -57,12 +58,12 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:inputType="textEmailAddress"
-        android:text="Kareldegrote@dingen.nl"
-        android:textColor="@android:color/black" />
+        android:inputType="textPassword"
+        android:textColor="@android:color/black"
+        />
 
     <TextView
-        android:id="@+id/Hname"
+        android:id="@+id/Tnew2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -70,13 +71,13 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:text="Voornaam:"
+        android:text="Bevestig nieuw wachtwoord"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/PersonFName"
+        android:id="@+id/ENew2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -84,65 +85,9 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:buttonTint="@color/colorPrimary"
-        android:text="Karel"
-        android:inputType="text"
-        android:textColor="@android:color/black" />
-
-
-    <TextView
-        android:id="@+id/HLname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="Achternaam:"
+        android:inputType="textPassword"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/PersonLName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="De Grote"
-        android:inputType="text"
-        android:textColor="@android:color/black" />
-
-    <TextView
-        android:id="@+id/HPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="Telefoonnummer"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/PersonBdate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="06-123456"
-        android:inputType="phone"
-        android:textColor="@android:color/black" />
-
+        />
 
     <Button
         android:id="@+id/BTNChangeCreds"
