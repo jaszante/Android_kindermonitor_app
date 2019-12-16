@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentManager
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
@@ -20,6 +21,7 @@ class MonitorApplication : Application() {
     var authToken: String = ""
     var userData: UserData? = null
     var authTokenChanged = false
+    var fragmentManager: FragmentManager? = null
 
     companion object {
         private var singleton: MonitorApplication? = null

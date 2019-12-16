@@ -77,37 +77,9 @@ class MainActivity : AppCompatActivity(), Observer {
 
         setupNavigationDrawer();
 
-//        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-//
-//        val sharedPreferences = EncryptedSharedPreferences.create(
-//            "kinderMonitorApp",
-//            masterKeyAlias,
-//            applicationContext,
-//            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-//            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-//        )
-//
-//        val authTokenNullable = sharedPreferences.getString("AuthenticationToken", "")
-//        val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
-//        val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
-//
-//        // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
-//        // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
-//
-//        if (authTokenNullable != null && authTokenNullable != ""
-//            && userNameNullable != null && userNameNullable != ""
-//            && passwordNullable != null && passwordNullable != ""
-//        ) {
-////            authToken = authTokenNullable
-//            MonitorApplication.getInstance().userName = userNameNullable
-//            MonitorApplication.getInstance().password = passwordNullable
-//
-////            observableToken.addObserver(this)
-////            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
-//            MonitorApplication.getInstance().authTokenChanged = true
-//        } else {
-//            removeAllSharedPreferencesAndStartLoginActivity()
-//        }
+        MonitorApplication.getInstance().fragmentManager = supportFragmentManager
+
+        MonitorApplication.getInstance().startForegroundMeasurmentService()
     }
 
     private fun setupNavigationDrawer() {

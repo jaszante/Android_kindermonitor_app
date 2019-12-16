@@ -26,21 +26,21 @@ class ShareFragment : Fragment() {
         shareViewModel =
             ViewModelProviders.of(this).get(ShareViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_share, container, false)
-        val textView: TextView = root.findViewById(R.id.text_share)
-        shareViewModel.text.observe(this, Observer {
-            textView.text = it
-        })
+//        val textView: TextView = root.findViewById(R.id.text_share)
+//        shareViewModel.text.observe(this, Observer {
+//            textView.text = it
+//        })
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val logoutButton = getView()!!.findViewById<Button>(R.id.goToPatientOverview)
-        logoutButton.setOnClickListener() {
-            MonitorApplication.getInstance().currentlySelectedPatient = null // should instead come from getsharedpreferences?
-            val patientListIntent = Intent(activity, PatientList::class.java)
-            startActivity(patientListIntent)
-        }
+//        val logoutButton = getView()!!.findViewById<Button>(R.id.goToPatientOverview)
+//        logoutButton.setOnClickListener() {
+//            MonitorApplication.getInstance().currentlySelectedPatient = null // should instead come from getsharedpreferences?
+//            val patientListIntent = Intent(activity, PatientList::class.java)
+//            startActivity(patientListIntent)
+//        }
     }
 }
