@@ -1,9 +1,8 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.home
 
-import android.content.Intent
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,22 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.MeasurementForPost
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
-import kotlin.concurrent.schedule
-import kotlin.concurrent.scheduleAtFixedRate
 
 
 class HomeFragment : Fragment() {
@@ -78,21 +67,21 @@ class HomeFragment : Fragment() {
         val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
         myLayout.requestFocus()
 
-        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
-            if (patientSensors != null) {
-                var randomValue = (80..100).random()
-                hartslagValue.text = randomValue.toString()
-
-                randomValue = (80..100).random()
-                temperatuurValue.text = randomValue.toString()
-
-                randomValue = (80..100).random()
-                ademFrequetieValue.text = randomValue.toString()
-
-                randomValue = (80..100).random()
-                saturatieValue.text = randomValue.toString()
-            }
-        }
+//        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
+//            if (patientSensors != null) {
+//                var randomValue = (80..100).random()
+//                hartslagValue.text = randomValue.toString()
+//
+//                randomValue = (80..100).random()
+//                temperatuurValue.text = randomValue.toString()
+//
+//                randomValue = (80..100).random()
+//                ademFrequetieValue.text = randomValue.toString()
+//
+//                randomValue = (80..100).random()
+//                saturatieValue.text = randomValue.toString()
+//            }
+//        }
 
 //        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
 //            if (patientSensors != null) {
@@ -107,6 +96,30 @@ class HomeFragment : Fragment() {
 //            }
 //        }
 
+    }
+
+    private val changeHartslagLiveDataObserver = Observer<String> { value ->
+        value?.let { hartslagValue.text = it }
+    }
+
+    private val changeTemperatuurLiveDataObserver = Observer<String> { value ->
+        value?.let { temperatuurValue.text = it }
+    }
+
+    private val changeSaturatieLiveDataObserver = Observer<String> { value ->
+        value?.let { saturatieValue.text = it }
+    }
+
+    private val changeAdemfrequentieLiveDataObserver = Observer<String> { value ->
+        value?.let { ademFrequetieValue.text = it }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        MonitorApplication.getInstance().hartslagLiveData.observe(this, changeHartslagLiveDataObserver)
+        MonitorApplication.getInstance().temperatuurLiveData.observe(this, changeTemperatuurLiveDataObserver)
+        MonitorApplication.getInstance().saturatieLiveData.observe(this, changeSaturatieLiveDataObserver)
+        MonitorApplication.getInstance().ademFrequentieLiveData.observe(this, changeAdemfrequentieLiveDataObserver)
     }
 
     override fun onResume() {

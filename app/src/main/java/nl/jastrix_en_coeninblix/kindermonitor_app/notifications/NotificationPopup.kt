@@ -11,7 +11,7 @@ class NotificationPopup: DialogFragment() {
         return activity?.let {
             // Use the Builder class for convenient dialog construction
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("sfsefjwofew")
+            builder.setMessage("Notificatie test, een van de waardes is boven 95")
                 .setPositiveButton("Pauzeer",
                     DialogInterface.OnClickListener { dialog, id ->
                         // pauzeer notificaties

@@ -1,26 +1,31 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.services
 
-import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
-import android.app.TimePickerDialog
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
-import android.widget.TimePicker
 import androidx.fragment.app.FragmentManager
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.notifications.NotificationPopup
+import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment
 import java.util.*
-import kotlin.concurrent.fixedRateTimer
 import kotlin.concurrent.scheduleAtFixedRate
 
 
-class ForegroundMeasurmentService: Service() {
+class ForegroundMeasurmentService : Service() {
     private lateinit var fragmentManager: FragmentManager
 
     override fun onBind(intent: Intent?): IBinder? {
 
         return null
     }
+
+//    override fun onCreate() {
+//        super.onCreate()
+//        startForeground();
+//    }
 
     override fun onStartCommand(
         intent: Intent?,
@@ -36,10 +41,43 @@ class ForegroundMeasurmentService: Service() {
         return START_NOT_STICKY
     }
 
-    private fun continuesMeasurementCall(){
+    private fun continuesMeasurementCall() {
+        val monitorApplication = MonitorApplication.getInstance()
+        var randomValue = (80..100).random()
+        monitorApplication.hartslagLiveData.postValue(randomValue.toString())
 
-        // on error:
-//        val notificationPopup = NotificationPopup()
-//        notificationPopup.show(fragmentManager, "no")
+        randomValue = (80..100).random()
+        monitorApplication.temperatuurLiveData.postValue(randomValue.toString())
+
+        randomValue = (80..100).random()
+        monitorApplication.saturatieLiveData.postValue(randomValue.toString())
+
+        randomValue = (80..100).random()
+        monitorApplication.ademFrequentieLiveData.postValue(randomValue.toString())
+
+        // check grenswaarden
+        if (randomValue > 95) {
+            val notificationPopup = NotificationPopup()
+            notificationPopup.show(fragmentManager, "no")
+        }
     }
+
+//    fun stopForegroundMeasurementService(){
+//        stopForeground(true)
+//        stopSelf()
+//    }
+
+//    private fun createNotificationChannel() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val serviceChannel = NotificationChannel(
+//                CHANNEL_ID,
+//                "Foreground Service Channel",
+//                NotificationManager.IMPORTANCE_DEFAULT
+//            )
+//            val manager = getSystemService(
+//                NotificationManager::class.java
+//            )
+//            manager.createNotificationChannel(serviceChannel)
+//        }
+//    }
 }

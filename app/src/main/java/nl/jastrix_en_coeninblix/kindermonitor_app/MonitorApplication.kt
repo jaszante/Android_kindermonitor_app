@@ -5,11 +5,11 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
-
 
 class MonitorApplication : Application() {
     //    var currentlySelectedPatient: Int? = null // should instead come from getsharedpreferences?
@@ -22,6 +22,10 @@ class MonitorApplication : Application() {
     var userData: UserData? = null
     var authTokenChanged = false
     var fragmentManager: FragmentManager? = null
+    var hartslagLiveData = MutableLiveData<String>()
+    var saturatieLiveData = MutableLiveData<String>()
+    var temperatuurLiveData = MutableLiveData<String>()
+    var ademFrequentieLiveData = MutableLiveData<String>()
 
     companion object {
         private var singleton: MonitorApplication? = null
@@ -40,6 +44,7 @@ class MonitorApplication : Application() {
 
         singleton = this
 
+//        setupLifecycleListener()
 //        //https://medium.com/@mohitsharma_49363/android-detect-app-foreground-time-9b4f6752b077
 //        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
 //            override fun onActivityCreated(activity: Activity, bundle: Bundle) {}
@@ -60,6 +65,15 @@ class MonitorApplication : Application() {
 //            override fun onActivityDestroyed(activity: Activity) {}
 //        })
     }
+
+//    private val lifecycleListener: SampleLifecycleListener by lazy {
+//        SampleLifecycleListener()
+//    }
+//
+//    private fun setupLifecycleListener() {
+//        ProcessLifecycleOwner.get().lifecycle
+//            .addObserver(lifecycleListener)
+//    }
 
     override fun onLowMemory() {
         super.onLowMemory()
