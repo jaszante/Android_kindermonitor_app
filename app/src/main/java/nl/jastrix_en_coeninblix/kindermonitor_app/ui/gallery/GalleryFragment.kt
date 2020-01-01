@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.graphPage.GraphPage
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
@@ -38,6 +39,7 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val logoutButton = getView()!!.findViewById<Button>(R.id.LogoutButton)
         logoutButton.setOnClickListener() {
+            MonitorApplication.getInstance().stopMeasurementService = true
             val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
             val sharedPreferences = EncryptedSharedPreferences.create(

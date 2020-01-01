@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
@@ -28,7 +29,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class RegisterPatientActivity : AppCompatActivity() {
+class RegisterPatientActivity : BaseActivityClass() {
 
     var noCallInProgress: Boolean = true
     lateinit var registerPatientButton: Button
@@ -80,14 +81,14 @@ class RegisterPatientActivity : AppCompatActivity() {
             var parsedDateString: Date? = Date()
             var parseSucceeded: Boolean = false
 
-            try {
-//                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
-                parsedDateString = SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
-//                parsedDateString = format.parse(patientBirthdayString)
-                parseSucceeded = true
-            } catch (pe: Exception) {
-                patientRegisterErrorField.text = getString(R.string.incorrectDateFormatError)
-            }
+//            try {
+////                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
+//                parsedDateString = SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
+////                parsedDateString = format.parse(patientBirthdayString)
+//                parseSucceeded = true
+//            } catch (pe: Exception) {
+//                patientRegisterErrorField.text = getString(R.string.incorrectDateFormatError)
+//            }
 
             if (parseSucceeded) {
                 val createPatient = Patient(

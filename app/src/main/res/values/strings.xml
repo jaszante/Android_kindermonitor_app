@@ -34,10 +34,11 @@
     <string name="registerButton">Registreer</string>
     <string name="registerTerms">U moet akkoord gaan met de terms en agreements.</string>
 
-    <string name="registerDate">Birthdate*</string>
+    <string name="registerDate">Geboorte datum*</string>
     <string name="registerEDate"> </string>
     <string name="log_uit">Log uit</string>
     <string name="registerButtonPatient">Registreer Patient</string>
     <string name="incorrectDateFormatError">Incorrect date format</string>
+    <string name="pwError">Wachtwoord moet meer dan acht characters lang zijn en 3 of meer cijfers bevatten</string>
 
 </resources>

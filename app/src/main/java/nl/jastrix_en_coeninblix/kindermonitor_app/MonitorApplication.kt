@@ -27,6 +27,10 @@ class MonitorApplication : Application() {
     var temperatuurLiveData = MutableLiveData<String>()
     var ademFrequentieLiveData = MutableLiveData<String>()
 
+    var stopMeasurementService: Boolean = false
+
+    private var currentActivity: Activity? = null
+
     companion object {
         private var singleton: MonitorApplication? = null
         fun getInstance(): MonitorApplication {
@@ -37,6 +41,14 @@ class MonitorApplication : Application() {
     fun startForegroundMeasurmentService() {
         val foregroundMeasurmentService = Intent(this, ForegroundMeasurmentService::class.java)
         startService(foregroundMeasurmentService)
+    }
+
+    fun setCurrentActivity(newCurrentActivity: Activity?){
+        currentActivity = newCurrentActivity
+    }
+
+    fun getCurrentActivity(): Activity?{
+        return currentActivity
     }
 
     override fun onCreate() {

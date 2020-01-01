@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
@@ -26,9 +27,10 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.regex.Pattern
 
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : BaseActivityClass() {
     lateinit var service: APIService
     lateinit var errorfield: TextView
 
@@ -64,14 +66,20 @@ class RegisterActivity : AppCompatActivity() {
         buttonRegister.setOnClickListener() {
             if (checkBoxTerms.isChecked) {
 
-                register(
-                    uName.text.toString(),
-                    pw.text.toString(),
-                    fName.text.toString(),
-                    lName.text.toString(),
-                    phone.text.toString(),
-                    email.text.toString()
-                )
+                if (isValidPassword(pw.text.toString())) {
+
+                    register(
+                        uName.text.toString(),
+                        pw.text.toString(),
+                        fName.text.toString(),
+                        lName.text.toString(),
+                        phone.text.toString(),
+                        email.text.toString()
+                    )
+                } else {
+                    errorfield.text = getString(R.string.pwError)
+                    errorfield.visibility = View.VISIBLE
+                }
 //                register(
 //                    uName.text.toString(),
 //                    "kees123213214455",
@@ -87,6 +95,39 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun isValidPassword(pw: String, updateUI: Boolean = true): Boolean {
+        val str: CharSequence = pw
+        var valid = true
+
+        if (str.length < 8) {
+            return false
+        }
+
+        var numberTotal: Int = 0
+        for (char: Char in str) {
+            try {
+                char.toInt()
+                numberTotal++
+            } finally {
+                // nothing
+            }
+        }
+
+        if (numberTotal <= 2) {
+            return false
+        }
+
+        // Password should contain at least one capital letter
+        val exp = ".*[A-Z].*"
+        val pattern = Pattern.compile(exp)
+        val matcher = pattern.matcher(str)
+        if (!matcher.matches()) {
+            return false
+        }
+
+        return true
+    }
+
     private fun register(
         uName: String,
         pw: String,
@@ -98,7 +139,8 @@ class RegisterActivity : AppCompatActivity() {
         if (noCallInProgress) {
             noCallInProgress = false
             val userRegister = UserRegister(uName, pw, fName, lName, bDate, email)
-            val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService().userRegister(userRegister)
+            val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
+                .userRegister(userRegister)
             call.enqueue(object : Callback<AuthenticationToken> {
                 override fun onResponse(
                     call: Call<AuthenticationToken>,
@@ -108,7 +150,9 @@ class RegisterActivity : AppCompatActivity() {
 
                     if (response.isSuccessful && response.body() != null) {
                         MonitorApplication.getInstance().authToken = response.body()!!.token
-                        MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(response.body()!!.token)
+                        MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(
+                            response.body()!!.token
+                        )
                         saveUserCredentials()
 
                         goToRegisterPatientActivityOrPatientListActivity()
@@ -119,8 +163,7 @@ class RegisterActivity : AppCompatActivity() {
                             val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getString("error")
                             registerFailedShowMessage(errorMessage)
-                        }
-                        else{
+                        } else {
                             registerFailedShowMessage(response.message())
                         }
                     }
@@ -130,7 +173,7 @@ class RegisterActivity : AppCompatActivity() {
                     Log.d("DEBUG", t.message)
                     noCallInProgress = true
 
-                    // try again in 5 seconds?
+                    registerFailedShowMessage(t.localizedMessage)
                 }
 
                 fun saveUserCredentials() {
@@ -147,7 +190,10 @@ class RegisterActivity : AppCompatActivity() {
                     val editor = sharedPreferences.edit()
 
 //                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-                    editor.putString("AuthenticationToken", MonitorApplication.getInstance().authToken)
+                    editor.putString(
+                        "AuthenticationToken",
+                        MonitorApplication.getInstance().authToken
+                    )
                     editor.putString(
                         "KinderMonitorAppUserName",
                         uName
@@ -162,13 +208,13 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerFailedShowMessage(errorMessage: String){
+    private fun registerFailedShowMessage(errorMessage: String) {
 //        noCallInProgress = true
         errorfield.text = errorMessage
         errorfield.visibility = View.VISIBLE
     }
 
-    fun goToRegisterPatientActivityOrPatientListActivity(){
+    fun goToRegisterPatientActivityOrPatientListActivity() {
         MonitorApplication.getInstance().authTokenChanged = true
         if (checkBoxCaretaker.isChecked) {
             val registerPatientIntent = Intent(this, RegisterPatientActivity::class.java)

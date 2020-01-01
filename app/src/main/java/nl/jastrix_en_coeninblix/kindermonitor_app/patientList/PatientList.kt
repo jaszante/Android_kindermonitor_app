@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
@@ -29,7 +30,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PatientList : AppCompatActivity() {
+class PatientList : BaseActivityClass() {
 
     public lateinit var recyclerView: RecyclerView
     public lateinit var viewAdapter: RecyclerView.Adapter<*>

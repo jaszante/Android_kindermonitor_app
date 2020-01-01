@@ -10,12 +10,13 @@ import androidx.fragment.app.FragmentManager
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.notifications.NotificationPopup
 import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment
+import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
 
 class ForegroundMeasurmentService : Service() {
-    private lateinit var fragmentManager: FragmentManager
+//    private lateinit var fragmentManager: FragmentManager
 
     override fun onBind(intent: Intent?): IBinder? {
 
@@ -27,15 +28,23 @@ class ForegroundMeasurmentService : Service() {
 //        startForeground();
 //    }
 
+    private lateinit var timer: TimerTask
+
     override fun onStartCommand(
         intent: Intent?,
         flags: Int,
         startId: Int
     ): Int {
-        fragmentManager = MonitorApplication.getInstance().fragmentManager!!
+//        fragmentManager = MonitorApplication.getInstance().fragmentManager!!
 
-        Timer("schedule", false).scheduleAtFixedRate(0, 2000) {
-            continuesMeasurementCall()
+        timer = Timer("schedule", false).scheduleAtFixedRate(0, 2000) {
+
+            if (MonitorApplication.getInstance().stopMeasurementService){
+                timer.cancel()
+            }
+            else{
+                continuesMeasurementCall()
+            }
         }
 
         return START_NOT_STICKY
@@ -58,7 +67,13 @@ class ForegroundMeasurmentService : Service() {
         // check grenswaarden
         if (randomValue > 95) {
             val notificationPopup = NotificationPopup()
-            notificationPopup.show(fragmentManager, "no")
+            try {
+                notificationPopup.show(MonitorApplication.getInstance().fragmentManager!!, "no")
+            }
+            finally {
+                // means app is in background and last activity was destroyed, so pushnotification is the only notification that can pop up
+            }
+
         }
     }
 

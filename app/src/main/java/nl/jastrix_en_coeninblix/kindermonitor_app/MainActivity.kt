@@ -29,7 +29,7 @@ import retrofit2.Response
 import java.util.*
 import kotlin.concurrent.schedule
 
-class MainActivity : AppCompatActivity(), Observer {
+class MainActivity : BaseActivityClass(), Observer {
     override fun update(o: Observable?, arg: Any?) {
 //        getNewUserdataThenInitDrawerWithUserInformation()
     }

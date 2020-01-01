@@ -16,6 +16,7 @@ import org.json.JSONObject
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
@@ -27,7 +28,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
 
 
-class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
+class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     private lateinit var loginOrRegisterErrorField: TextView
 
     private lateinit var usernameField: EditText
@@ -85,6 +86,8 @@ class LoginActivity : AppCompatActivity(), Callback<AuthenticationToken> {
             monitorApplication.password = passwordField.text.toString()
 
             saveUserCredentials()
+
+            MonitorApplication.getInstance().stopMeasurementService = false
 
             val patientListIntent = Intent(this, PatientList::class.java)
             startActivity(patientListIntent)
