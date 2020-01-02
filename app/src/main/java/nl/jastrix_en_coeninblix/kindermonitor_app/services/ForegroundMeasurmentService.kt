@@ -64,11 +64,15 @@ class ForegroundMeasurmentService : Service() {
         randomValue = (80..100).random()
         monitorApplication.ademFrequentieLiveData.postValue(randomValue.toString())
 
+        // vervang randomValue met de 4 values van de api in final versie
+
         // check grenswaarden
-        if (randomValue > 95) {
+        if (randomValue > 95 && monitorApplication.alarmNotPauzed) {
+            monitorApplication.alarmNotPauzed = false
             val notificationPopup = NotificationPopup()
             try {
                 notificationPopup.show(MonitorApplication.getInstance().fragmentManager!!, "no")
+                monitorApplication.startPauzeTimer()
             }
             finally {
                 // means app is in background and last activity was destroyed, so pushnotification is the only notification that can pop up
