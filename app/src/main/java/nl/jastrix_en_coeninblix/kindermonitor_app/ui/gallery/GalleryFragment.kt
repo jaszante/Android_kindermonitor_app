@@ -16,6 +16,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.graphPage.GraphPage
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
+import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 
 class GalleryFragment : Fragment() {
 
@@ -62,13 +63,16 @@ class GalleryFragment : Fragment() {
             startActivity(loginIntent)
         }
 
-
         val graphbutton = getView()!!.findViewById<Button>(R.id.BTNgraph)
         graphbutton.setOnClickListener() {
             val intent = Intent(activity, GraphPage::class.java)
             startActivity(intent)
-
         }
 
+        val createAndAddNewPatientButton = getView()!!.findViewById<Button>(R.id.createAndAddNewPatient)
+        createAndAddNewPatientButton.setOnClickListener() {
+            val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
+            startActivity(registerPatientIntent)
+        }
     }
 }

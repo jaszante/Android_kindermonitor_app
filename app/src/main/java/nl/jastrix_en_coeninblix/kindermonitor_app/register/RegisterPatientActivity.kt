@@ -21,11 +21,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
+import java.security.Timestamp
 import java.text.DateFormat
 import java.text.DateFormat.getDateInstance
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -65,8 +68,8 @@ class RegisterPatientActivity : BaseActivityClass() {
             val dpd = DatePickerDialog(
                 this,
                 DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    // Display Selected date in TextView
-                    patientBirthDateEditText.setText("" + dayOfMonth + "-" + month + "-" + year)
+                    val monthPlusOne = monthOfYear + 1
+                    patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
                 },
                 year,
                 month,
@@ -77,44 +80,52 @@ class RegisterPatientActivity : BaseActivityClass() {
 
         registerPatientButton.setOnClickListener() {
 
-            val patientBirthdayString = patientBirthDateEditText.text.toString()
-            var parsedDateString: Date? = Date()
-            var parseSucceeded: Boolean = false
+            patientRegisterErrorField.visibility = View.INVISIBLE
 
+            val patientBirthdayString = patientBirthDateEditText.text.toString()
+//            var parsedDateString: String = ""
+//            var parseSucceeded: Boolean = false
+//
 //            try {
 ////                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
-//                parsedDateString = SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
+////                parsedDateString = getDateInstance("DD-MM-yyyy").parse(patientBirthdayString) // SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
 ////                parsedDateString = format.parse(patientBirthdayString)
+//
+////                val parser =  SimpleDateFormat("dd.mm.yyyy") //SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+////                val formatter = SimpleDateFormat("dd.mm.yyyy");
+////                parsedDateString = formatter.format(parser.parse(patientBirthdayString));
+//
 //                parseSucceeded = true
 //            } catch (pe: Exception) {
-//                patientRegisterErrorField.text = getString(R.string.incorrectDateFormatError)
+//                registerPatientShowErrorMessage(getString(R.string.incorrectDateFormatError))
 //            }
 
-            if (parseSucceeded) {
+//            if (parseSucceeded) {
                 val createPatient = Patient(
                     patientFirstNameEditText.text.toString(),
                     patientLastNameEditText.text.toString(),
                     patientBirthdayString
-//                    parsedDateString!!.toString()
+//                    parsedDateString.toString()
                 )
 
                 createPatientForThisUser(createPatient)
-            }
+//            }
         }
 
         getUserData()
     }
 
-    private fun getUserData(){
-        val call = MonitorApplication.getInstance().apiHelper.
-            buildAPIServiceWithNewToken(MonitorApplication.getInstance().authToken).getCurrentUser()
+    private fun getUserData() {
+        val call = MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(
+            MonitorApplication.getInstance().authToken
+        ).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
 
                     registerPatientButton.isClickable = true
-                    
+
                 } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
@@ -140,7 +151,9 @@ class RegisterPatientActivity : BaseActivityClass() {
     }
 
     private fun createPatientForThisUser(patient: Patient) {
-        var call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createPatientForLoggedInUser(patient)
+        var call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            .createPatientForLoggedInUser(patient)
 
         call.enqueue(object : Callback<PatientWithID> {
             override fun onResponse(
@@ -148,18 +161,22 @@ class RegisterPatientActivity : BaseActivityClass() {
                 response: Response<PatientWithID>
             ) {
                 if (response.isSuccessful && response.body() != null) {
+                    noCallInProgress = true
                     createdPatient = response.body()!!
                     createSensorForPatient()
-                }
-                else
-                {
-                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
-                    if (errorbodyLength != 0) {
-                        val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getString("error")
-                        registerPatientShowErrorMessage(errorMessage)
-                    } else {
-                        registerPatientShowErrorMessage(response.message())
+                } else {
+                    if (response.code() == 500){
+                        registerPatientShowErrorMessage(getString(R.string.incorrectDateFormatError))
+                    }
+                    else{
+                        val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+                        if (errorbodyLength != 0) {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getString("error")
+                            registerPatientShowErrorMessage(errorMessage)
+                        } else {
+                            registerPatientShowErrorMessage(response.message())
+                        }
                     }
                 }
             }
@@ -174,7 +191,9 @@ class RegisterPatientActivity : BaseActivityClass() {
         val patientListIntent = Intent(this, PatientList::class.java)
 
         val newSensor = SensorToCreate("Temperatuur", "Nee", "60", "120")
-        var call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().createSensor(createdPatient.patientID, newSensor)
+        var call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            .createSensor(createdPatient.patientID, newSensor)
 
         call.enqueue(object : Callback<Sensor> {
             override fun onResponse(
@@ -182,13 +201,12 @@ class RegisterPatientActivity : BaseActivityClass() {
                 response: Response<Sensor>
             ) {
                 if (response.isSuccessful && response.body() != null) {
+                    noCallInProgress = true
                     startActivity(patientListIntent)
                     finish()
                     // permission not nessesary because this user is creating the patient?
 //                    setSensorPersmissionForCurrentUser()
-                }
-                else
-                {
+                } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
                         val jObjError = JSONObject(response.errorBody()!!.string())
