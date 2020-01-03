@@ -1,15 +1,13 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow
 
+
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.NumberPicker
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
@@ -21,6 +19,18 @@ class SlideshowFragment : Fragment() {
     private lateinit var hMin: TextView
     private lateinit var hMax: TextView
 
+    private lateinit var aMin: TextView
+    private lateinit var aMax: TextView
+
+    private lateinit var sMin: TextView
+    private lateinit var sMax: TextView
+
+    private lateinit var tMin: TextView
+    private lateinit var tMax: TextView
+
+    private var changed: Boolean = false
+    private lateinit var buttonSave: Button
+    private lateinit var spinner: Spinner
 
 
     override fun onCreateView(
@@ -47,6 +57,64 @@ class SlideshowFragment : Fragment() {
             open_Number_picker(hMax, 100, 200)
 
         }
+
+        aMin = currentView.findViewById(R.id.aMin)
+        aMin.setOnClickListener {
+            open_Number_picker(aMin, 0, 100)
+
+        }
+        aMax = currentView.findViewById(R.id.aMax)
+        aMax.setOnClickListener {
+            open_Number_picker(aMax, 100, 200)
+
+        }
+
+        sMin = currentView.findViewById(R.id.sMin)
+        sMin.setOnClickListener {
+            open_Number_picker(sMin, 0, 100)
+
+        }
+        sMax = currentView.findViewById(R.id.sMax)
+        sMax.setOnClickListener {
+            open_Number_picker(sMax, 100, 200)
+        }
+
+        tMin = currentView.findViewById(R.id.tMin)
+        tMin.setOnClickListener {
+            open_Number_picker(tMin, 0, 100)
+
+        }
+        tMax = currentView.findViewById(R.id.tMax)
+        tMax.setOnClickListener {
+            open_Number_picker(tMax, 100, 200)
+        }
+
+        buttonSave = currentView.findViewById(R.id.buttonSave)
+        buttonSave.setOnClickListener {
+            // dingen voor API call
+        }
+        spinner = currentView.findViewById(R.id.spinner_alarm)
+        val array: Array<String> = arrayOf("30 sec", "60 sec", "90 sec", "120 sec ", "180 sec")
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, array)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val item = adapter.getItem(position)
+            }
+
+        }
+
     }
 
 
@@ -70,6 +138,8 @@ class SlideshowFragment : Fragment() {
             .setOnClickListener(View.OnClickListener {
                 textview.text = numberpicker.value.toString()
                 builder.cancel()
+                changed = true
+
             })
     }
 }
