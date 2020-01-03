@@ -1,5 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app
 
+import android.os.AsyncTask
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -13,7 +14,36 @@ import java.lang.Exception
 import java.util.*
 
 // this whole class is outside the scope of the project but nessesary since the API is not filled with new measurements from actual sensors
-class SendPreSharedKey(preSharedKey: String, patient: String) {
+class SendPreSharedKey(preSharedKey: String, patient: String) : AsyncTask<Void, Void, Boolean>() {
+    override fun doInBackground(vararg params: Void?): Boolean {
+        try {
+            mailSession = Session.getDefaultInstance(emailProperties, null);
+            emailMessage = MimeMessage(mailSession)
+
+            emailMessage.setFrom(InternetAddress(fromEmail, fromEmail))
+
+            emailMessage.addRecipient(
+                Message.RecipientType.TO,
+                InternetAddress(toEmail)
+            )
+
+            emailMessage.setSubject(emailSubject)
+            emailMessage.setContent(emailBody, "text/html")
+
+//            sendEmail()
+            val transport = mailSession.getTransport("smtp");
+            transport.connect(emailHost, fromEmail, fromPassword);
+            transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+            transport.close();
+
+            return true
+        }
+        catch (e: Exception)
+        {
+            Log.d(e.message, e.message)
+            return false
+        }
+    }
 
     val emailPort = "587"
     val smtpAuth = "true"
@@ -86,36 +116,15 @@ class SendPreSharedKey(preSharedKey: String, patient: String) {
     fun sendPreSharedKeyToEmail()//: MimeMessage //throws AddressException,
     // MessagingException, UnsupportedEncodingException
     {
-        try {
-            mailSession = Session.getDefaultInstance(emailProperties, null);
-            emailMessage = MimeMessage(mailSession)
-
-            emailMessage.setFrom(InternetAddress(fromEmail, fromEmail))
-
-            emailMessage.addRecipient(
-                Message.RecipientType.TO,
-                InternetAddress(toEmail)
-            )
-
-            emailMessage.setSubject(emailSubject)
-            emailMessage.setContent(emailBody, "text/html")
-
-            sendEmail()
-        }
-        catch (e: Exception)
-        {
-            Log.d(e.message, e.message)
-        }
+        execute()// doInBackground().execute()
     }
 
     private fun sendEmail() //throws AddressException, MessagingException
     {
         val transport = mailSession.getTransport("smtp");
         transport.connect(emailHost, fromEmail, fromPassword);
-//        Log.i("GMail", "allrecipients: " + emailMessage.getAllRecipients());
         transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
         transport.close();
-//        Log.i("GMail", "Email sent successfully.");
     }
 
 }
