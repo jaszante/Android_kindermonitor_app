@@ -3,17 +3,16 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.register
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
+import kotlinx.android.synthetic.main.activity_register_patient.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.*
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
-import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
@@ -77,6 +76,47 @@ class RegisterPatientActivity : BaseActivityClass() {
             )
             dpd.show()
         }
+//        patientBirthDateEditText.setOnTouchListener(object : View.OnTouchListener {
+//            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                when (event?.action) {
+//                    MotionEvent.ACTION_DOWN ->
+//                        val dpd = DatePickerDialog(
+//                    this,
+//                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+//                        val monthPlusOne = monthOfYear + 1
+//                        patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
+//                    },
+//                    year,
+//                    month,
+//                    day
+//                )
+//                    dpd.show()
+//                }
+//
+//                return v?.onTouchEvent(event) ?: true
+//            }
+//        })
+
+//        patientBirthDateEditText.setOnTouchListener(v: View, event: MotionEvent ) {
+////            fun OnTouch(v: View, event: MotionEvent) {
+//                val dpd = DatePickerDialog(
+//                    this,
+//                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+//                        val monthPlusOne = monthOfYear + 1
+//                        patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
+//                    },
+//                    year,
+//                    month,
+//                    day
+//                )
+//                dpd.show()
+//                return true
+////            }
+//        }
+
+//        return true
+
+//        )
 
         registerPatientButton.setOnClickListener() {
 
@@ -202,8 +242,15 @@ class RegisterPatientActivity : BaseActivityClass() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     noCallInProgress = true
+
+                    val preSharedKey = response.body()!!.preSharedKey
+                    val patientFullName = patientFirstName.text.toString() + " " + patientLastName.text.toString()
+                    val sendPreSharedKey = SendPreSharedKey(preSharedKey, patientFullName)
+                    sendPreSharedKey.sendPreSharedKeyToEmail()
+
                     startActivity(patientListIntent)
                     finish()
+
                     // permission not nessesary because this user is creating the patient?
 //                    setSensorPersmissionForCurrentUser()
                 } else {

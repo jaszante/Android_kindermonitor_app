@@ -1,12 +1,12 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses
 
 data class Sensor (
-    val SensorId: Int,
-    val PatientId: Int,
-    val Type: String,
-    val Brand: String,
-    val ThresholdMin: String,
-    val ThresholdMax: String,
-    val PreSharedKey: String,
-    val InUseSince: String
+    val sensorID: Int,
+    val patientID: Int,
+    val type: String,
+    val brand: String,
+    val thresholdMin: String,
+    val thresholdMax: String,
+    val preSharedKey: String,
+    val inUseSince: String
 )

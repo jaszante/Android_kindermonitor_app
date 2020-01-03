@@ -10,6 +10,9 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
+import java.util.*
+import kotlin.concurrent.schedule
+import kotlin.concurrent.scheduleAtFixedRate
 
 class MonitorApplication : Application() {
     //    var currentlySelectedPatient: Int? = null // should instead come from getsharedpreferences?
@@ -26,8 +29,11 @@ class MonitorApplication : Application() {
     var saturatieLiveData = MutableLiveData<String>()
     var temperatuurLiveData = MutableLiveData<String>()
     var ademFrequentieLiveData = MutableLiveData<String>()
+    var pauzeTime: Long = 10000
 
     var stopMeasurementService: Boolean = false
+
+    var alarmNotPauzed = true
 
     private var currentActivity: Activity? = null
 
@@ -35,6 +41,12 @@ class MonitorApplication : Application() {
         private var singleton: MonitorApplication? = null
         fun getInstance(): MonitorApplication {
             return singleton!!
+        }
+    }
+
+    fun startPauzeTimer() {
+        Timer("schedule", false).schedule(pauzeTime) {
+            alarmNotPauzed = true
         }
     }
 
