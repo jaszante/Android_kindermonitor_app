@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 
 class NotificationPopup: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -14,6 +15,7 @@ class NotificationPopup: DialogFragment() {
             builder.setMessage("Notificatie test, een van de waardes is boven 95")
                 .setPositiveButton("Pauzeer",
                     DialogInterface.OnClickListener { dialog, id ->
+                        MonitorApplication.getInstance().alarmNotPauzed = false
                         // pauzeer notificaties
                     })
                 .setNegativeButton("Bel noodnummer",
