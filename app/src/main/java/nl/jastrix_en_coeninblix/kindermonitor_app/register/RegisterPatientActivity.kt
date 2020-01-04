@@ -3,6 +3,7 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.register
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
@@ -14,6 +15,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.*
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
 import retrofit2.Call
@@ -43,6 +45,12 @@ class RegisterPatientActivity : BaseActivityClass() {
     lateinit var userData: UserData
 
     lateinit var createdPatient: PatientWithID
+
+    var sensorsCreatedIndex = 0
+    var emailContent1: EmailContent? = null
+    var emailContent2: EmailContent? = null
+    var emailContent3: EmailContent? = null
+    var emailContent4: EmailContent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,47 +84,6 @@ class RegisterPatientActivity : BaseActivityClass() {
             )
             dpd.show()
         }
-//        patientBirthDateEditText.setOnTouchListener(object : View.OnTouchListener {
-//            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-//                when (event?.action) {
-//                    MotionEvent.ACTION_DOWN ->
-//                        val dpd = DatePickerDialog(
-//                    this,
-//                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-//                        val monthPlusOne = monthOfYear + 1
-//                        patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
-//                    },
-//                    year,
-//                    month,
-//                    day
-//                )
-//                    dpd.show()
-//                }
-//
-//                return v?.onTouchEvent(event) ?: true
-//            }
-//        })
-
-//        patientBirthDateEditText.setOnTouchListener(v: View, event: MotionEvent ) {
-////            fun OnTouch(v: View, event: MotionEvent) {
-//                val dpd = DatePickerDialog(
-//                    this,
-//                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-//                        val monthPlusOne = monthOfYear + 1
-//                        patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
-//                    },
-//                    year,
-//                    month,
-//                    day
-//                )
-//                dpd.show()
-//                return true
-////            }
-//        }
-
-//        return true
-
-//        )
 
         registerPatientButton.setOnClickListener() {
 
@@ -191,7 +158,7 @@ class RegisterPatientActivity : BaseActivityClass() {
     }
 
     private fun createPatientForThisUser(patient: Patient) {
-        var call = MonitorApplication.getInstance()
+        val call = MonitorApplication.getInstance()
             .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .createPatientForLoggedInUser(patient)
 
@@ -203,7 +170,14 @@ class RegisterPatientActivity : BaseActivityClass() {
                 if (response.isSuccessful && response.body() != null) {
                     noCallInProgress = true
                     createdPatient = response.body()!!
-                    createSensorForPatient()
+
+                    Log.d("f", "Save the thresholds (grenswaarden) to local here")
+
+                    createSensorForPatient(SensorType.Temperature.toString(), "35", "41")
+                    createSensorForPatient(SensorType.Hartslag.toString(), "50", "200")
+                    createSensorForPatient(SensorType.Adem.toString(), "10", "80")
+                    createSensorForPatient(SensorType.Saturatie.toString(), "85", "100")
+
                 } else {
                     if (response.code() == 500){
                         registerPatientShowErrorMessage(getString(R.string.incorrectDateFormatError))
@@ -227,10 +201,10 @@ class RegisterPatientActivity : BaseActivityClass() {
         })
     }
 
-    private fun createSensorForPatient() {
+    private fun createSensorForPatient(type: String, thresholdMin: String, thresholdMax: String) {
         val patientListIntent = Intent(this, PatientList::class.java)
 
-        val newSensor = SensorToCreate("Temperatuur", "Nee", "60", "120")
+        val newSensor = SensorToCreate(type, "Nee", thresholdMin, thresholdMax)
         var call = MonitorApplication.getInstance()
             .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .createSensor(createdPatient.patientID, newSensor)
@@ -243,13 +217,45 @@ class RegisterPatientActivity : BaseActivityClass() {
                 if (response.isSuccessful && response.body() != null) {
                     noCallInProgress = true
 
-                    val preSharedKey = response.body()!!.preSharedKey
-                    val patientFullName = patientFirstName.text.toString() + " " + patientLastName.text.toString()
-                    val sendPreSharedKey = SendPreSharedKey(preSharedKey, patientFullName)
-                    sendPreSharedKey.sendPreSharedKeyToEmail()
+                    val callbackResponse = response.body()!!
 
-                    startActivity(patientListIntent)
-                    finish()
+                    when (callbackResponse.type){
+                        SensorType.Temperature.toString() ->
+                            emailContent1 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                        SensorType.Hartslag.toString() ->
+                            emailContent2 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                        SensorType.Adem.toString() ->
+                            emailContent3 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                        SensorType.Saturatie.toString() ->
+                            emailContent4 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                    }
+
+                    sensorsCreatedIndex++
+                    if (sensorsCreatedIndex == 4){
+                        sensorsCreatedIndex = 0
+                        val patientFullName = patientFirstName.text.toString() + " " + patientLastName.text.toString()
+
+                        var emailContents = ArrayList<EmailContent>()
+
+                        if (emailContent1 != null){
+                            emailContents.add(emailContent1!!)
+                        }
+                        if (emailContent2 != null){
+                            emailContents.add(emailContent2!!)
+                        }
+                        if (emailContent3 != null){
+                            emailContents.add(emailContent3!!)
+                        }
+                        if (emailContent4 != null){
+                            emailContents.add(emailContent4!!)
+                        }
+
+                        val sendPreSharedKey = SendPreSharedKey(emailContents, patientFullName)
+                        sendPreSharedKey.sendPreSharedKeyToEmail()
+
+                        startActivity(patientListIntent)
+                        finish()
+                    }
 
                     // permission not nessesary because this user is creating the patient?
 //                    setSensorPersmissionForCurrentUser()

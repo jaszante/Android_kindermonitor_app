@@ -19,10 +19,11 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
-import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment.Companion.patientSensors
+//import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment.Companion.patientSensors
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -136,7 +137,7 @@ class MainActivity : BaseActivityClass(), Observer {
 //                    if (statusCode == 401) {
 //                        loginWithCachedUsernameAndPassword()
 //                    } else {
-                        removeAllSharedPreferencesAndStartLoginActivity()
+                    removeAllSharedPreferencesAndStartLoginActivity()
 //                    }
 
                 }
@@ -181,7 +182,22 @@ class MainActivity : BaseActivityClass(), Observer {
                     val statusCode = response.code()
 
                     if (response.isSuccessful && response.body() != null) {
-                        patientSensors = response.body()
+                        for (sensorFromCallback in response.body()!!) {
+                            var patientSensor: PatientSensor? = null
+                            when (sensorFromCallback.type) {
+                                SensorType.Hartslag.toString() -> patientSensor =
+                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag)
+                                SensorType.Temperature.toString() -> patientSensor =
+                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Temperature)
+                                SensorType.Adem.toString() -> patientSensor =
+                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Adem)
+                                SensorType.Saturatie.toString() -> patientSensor =
+                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Saturatie)
+                            }
+                            if (patientSensor != null) {
+                                MonitorApplication.getInstance().patientSensors.add(patientSensor)
+                            }
+                        }
                     } else {
 //                        if (statusCode == 401) {
 ////                            loginWithCachedCredentialsOnResume = true

@@ -22,9 +22,9 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
 
 class HomeFragment : Fragment() {
 
-    companion object {
-        var patientSensors: Array<SensorFromCallback>? = null
-    }
+//    companion object {
+//        var patientSensors: Array<SensorFromCallback>? = null
+//    }
 
     private var active = false
 
