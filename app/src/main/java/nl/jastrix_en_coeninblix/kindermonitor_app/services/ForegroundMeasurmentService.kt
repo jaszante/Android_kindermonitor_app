@@ -105,17 +105,17 @@ class ForegroundMeasurmentService : Service() {
                 response: Response<Array<Measurement>>
             ) {
                 if (response.isSuccessful && response.body() != null && response.body()!!.count() != 0) {
-                    val response = response.body()!![response.body()!!.count() - 1]
+                    val responseBody = response.body()!![response.body()!!.count() - 1]
 
                     when(sensorType){
                         SensorType.Hartslag ->
-                            monitorApplication.hartslagLiveData.postValue(response.Value.toString())
+                            monitorApplication.hartslagLiveData.postValue(responseBody.value.toString())
                         SensorType.Temperature ->
-                            monitorApplication.temperatuurLiveData.postValue(response.Value.toString())
+                            monitorApplication.temperatuurLiveData.postValue(responseBody.value.toString())
                         SensorType.Adem ->
-                            monitorApplication.ademFrequentieLiveData.postValue(response.Value.toString())
+                            monitorApplication.ademFrequentieLiveData.postValue(responseBody.value.toString())
                         SensorType.Saturatie ->
-                            monitorApplication.saturatieLiveData.postValue(response.Value.toString())
+                            monitorApplication.saturatieLiveData.postValue(responseBody.value.toString())
                     }
 
                 } else {
