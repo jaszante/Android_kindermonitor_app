@@ -7,10 +7,13 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientSensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
+import nl.jastrix_en_coeninblix.kindermonitor_app.notifications.NoConnectionPopup
 import nl.jastrix_en_coeninblix.kindermonitor_app.notifications.NotificationPopup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import kotlin.concurrent.scheduleAtFixedRate
 
@@ -60,10 +63,10 @@ class ForegroundMeasurmentService : Service() {
 //            }
 //        }
 
-        requestMeasurementFromSensor(monitorApplication, monitorApplication.temperatuurSensor)
-        requestMeasurementFromSensor(monitorApplication, monitorApplication.hartslagSensor)
-        requestMeasurementFromSensor(monitorApplication, monitorApplication.ademFrequentieSensor)
-        requestMeasurementFromSensor(monitorApplication, monitorApplication.saturatieSensor)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.temperatuurSensor!!)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.hartslagSensor!!)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.ademFrequentieSensor!!)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.saturatieSensor!!)
 
 //        monitorApplication.hartslagLiveData.postValue(randomValue.toString())
 //
@@ -104,61 +107,83 @@ class ForegroundMeasurmentService : Service() {
                 if (response.isSuccessful && response.body() != null && response.body()!!.count() != 0) {
                     val responseBody = response.body()!![response.body()!!.count() - 1]
 //                    val monitorApplication = MonitorApplication.getInstance()
-
+                    val newValue = BigDecimal(responseBody.value).setScale(1, RoundingMode.HALF_EVEN)
                     when(patientSensor.sensorType){
                         SensorType.Hartslag -> {
-                            monitorApplication.hartslagLiveData.postValue(responseBody.value.toString())
-                            if (responseBody.value > monitorApplication.hartslagSensor.thresholdMin){
-                                thresholdOrNoConnectionPopup("iets idk")
+
+                            monitorApplication.hartslagLiveData.postValue(newValue.toString())
+
+                            if (responseBody.value < monitorApplication.hartslagSensor!!.thresholdMin){
+                                thresholdPopup("Hartslag is te laag")
+                                monitorApplication.hartslagLayoutLiveData.value = false
                             }
-                            if (responseBody.value
-                                < monitorApplication.hartslagSensor.thresholdMax)
+                            else if (responseBody.value
+                                > monitorApplication.hartslagSensor!!.thresholdMax)
                             {
-                                thresholdOrNoConnectionPopup("iets idk")
+                                thresholdPopup("Hartslag is te hoog")
+                                monitorApplication.hartslagLayoutLiveData.value = false
+                            }
+                            else if (monitorApplication.hartslagLayoutLiveData.value == false) {
+                                monitorApplication.hartslagLayoutLiveData.value = true
                             }
                         }
                         SensorType.Temperature -> {
-                            monitorApplication.temperatuurLiveData.postValue(responseBody.value.toString())
-                            if (responseBody.value > monitorApplication.temperatuurSensor.thresholdMin){
-                                thresholdOrNoConnectionPopup("iets idk")
+                            monitorApplication.temperatuurLiveData.postValue(newValue.toString())
+                            if (responseBody.value < monitorApplication.temperatuurSensor!!.thresholdMin){
+                                thresholdPopup("Temperatuur is te laag")
+                                monitorApplication.temperatuurLayoutLiveData.value = false
                             }
-                            if (responseBody.value
-                                < monitorApplication.temperatuurSensor.thresholdMax)
+                            else if (responseBody.value
+                                > monitorApplication.temperatuurSensor!!.thresholdMax)
                             {
-                                thresholdOrNoConnectionPopup("iets idk")
+                                thresholdPopup("Temperatuur is te hoog")
+                                monitorApplication.temperatuurLayoutLiveData.value = false
+                            }
+                            else if (monitorApplication.temperatuurLayoutLiveData.value == false) {
+                                monitorApplication.temperatuurLayoutLiveData.value = true
                             }
                         }
                         SensorType.Adem -> {
-                            monitorApplication.ademFrequentieLiveData.postValue(responseBody.value.toString())
-                            if (responseBody.value > monitorApplication.ademFrequentieSensor.thresholdMin){
-                                thresholdOrNoConnectionPopup("iets idk")
+                            monitorApplication.ademFrequentieLiveData.postValue(newValue.toString())
+                            if (responseBody.value < monitorApplication.ademFrequentieSensor!!.thresholdMin){
+                                thresholdPopup("Adem frequentie is te laag")
+                                monitorApplication.ademFrequentieLayoutLiveData.value = false
                             }
-                            if (responseBody.value
-                                < monitorApplication.ademFrequentieSensor.thresholdMax)
+                            else if (responseBody.value
+                                > monitorApplication.ademFrequentieSensor!!.thresholdMax)
                             {
-                                thresholdOrNoConnectionPopup("iets idk")
+                                thresholdPopup("Adem frequentie is te hoog")
+                                monitorApplication.ademFrequentieLayoutLiveData.value = false
+                            }
+                            else if (monitorApplication.ademFrequentieLayoutLiveData.value == false) {
+                                monitorApplication.ademFrequentieLayoutLiveData.value = true
                             }
                         }
                         SensorType.Saturatie -> {
-                            monitorApplication.saturatieLiveData.postValue(responseBody.value.toString())
-                            if (responseBody.value > monitorApplication.saturatieSensor.thresholdMin){
-                                thresholdOrNoConnectionPopup("iets idk")
+                            monitorApplication.saturatieLiveData.postValue(newValue.toString())
+                            if (responseBody.value < monitorApplication.saturatieSensor!!.thresholdMin){
+                                thresholdPopup("Saturatie is te laag")
+                                monitorApplication.saturatieLayoutLiveData.value = false
                             }
-                            if (responseBody.value
-                                < monitorApplication.saturatieSensor.thresholdMax)
+                            else if (responseBody.value
+                                > monitorApplication.saturatieSensor!!.thresholdMax)
                             {
-                                thresholdOrNoConnectionPopup("iets idk")
+                                thresholdPopup("Saturatie is te hoog")
+                                monitorApplication.saturatieLayoutLiveData.value = false
+                            }
+                            else if (monitorApplication.saturatieLayoutLiveData.value == false) {
+                                monitorApplication.saturatieLayoutLiveData.value = true
                             }
                         }
                     }
 
                 } else {
-                    thresholdOrNoConnectionPopup(response.message())
+                    thresholdPopup(response.message())
                 }
             }
 
             override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
-                thresholdOrNoConnectionPopup(t.message!!)
+                noConnectionPopup(t.message!!)
             }
         })
     }
@@ -184,20 +209,33 @@ class ForegroundMeasurmentService : Service() {
 //        })
 //    }
 
-    private fun thresholdOrNoConnectionPopup(message: String){
-        if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null){
-                val notificationPopup = NotificationPopup()
-//                notificationPopup.dialog // should set text here to message
-//            notificationPopup. doe hier methode die text veranderd binnen de popupclass
+    private fun thresholdPopup(message: String){
+        if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null
+            && MonitorApplication.getInstance().alarmNotPauzed){
+                val notificationPopup = NotificationPopup(message)
 
                 try {
                     notificationPopup.show(MonitorApplication.getInstance().fragmentManager!!, "Notification")
-                    MonitorApplication.getInstance().startPauzeTimer()
+                    MonitorApplication.getInstance().currentlyShowingErrorColor = true
                 }
                 finally {
                     // means app is in background and last activity was destroyed, so pushnotification is the only notification that can pop up
                 }
             }
+    }
+
+    private fun noConnectionPopup(message: String){
+        if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("NoConnectionNotification") == null &&
+                MonitorApplication.getInstance().noConnectionAlarmNotPauzed){
+            val noConnectionPopup = NoConnectionPopup(message)
+
+            try {
+                noConnectionPopup.show(MonitorApplication.getInstance().fragmentManager!!, "NoConnectionNotification")
+            }
+            finally {
+                // means app is in background and last activity was destroyed, so pushnotification is the only notification that can pop up
+            }
+        }
     }
 
 

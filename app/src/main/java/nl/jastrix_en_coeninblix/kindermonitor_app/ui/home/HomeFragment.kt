@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.fragment.app.Fragment
@@ -13,6 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import kotlinx.android.synthetic.main.fragment_home.*
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
@@ -35,6 +38,11 @@ class HomeFragment : Fragment() {
     private lateinit var ademFrequetieValue: TextView
     private lateinit var saturatieValue: TextView
 
+    private lateinit var hartslagLayout: LinearLayout
+    private lateinit var temperatuurLayout: LinearLayout
+    private lateinit var ademFrequentieLayout: LinearLayout
+    private lateinit var saturatieLayout: LinearLayout
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -55,6 +63,11 @@ class HomeFragment : Fragment() {
         temperatuurValue = currentView.findViewById(R.id.temperatuurValue)
         ademFrequetieValue = currentView.findViewById(R.id.ademFrequentieValue)
         saturatieValue = currentView.findViewById(R.id.saturatieValue)
+
+        hartslagLayout = currentView.findViewById(R.id.linearLayoutHartslag)
+        temperatuurLayout = currentView.findViewById(R.id.linearLayoutTemperatuur)
+        ademFrequentieLayout = currentView.findViewById(R.id.linearLayoutAdemFrequentie)
+        saturatieLayout = currentView.findViewById(R.id.linearLayoutSaturatie)
 
         val vidstream = currentView.findViewById<VideoView>(R.id.videoStream)
 
@@ -98,7 +111,8 @@ class HomeFragment : Fragment() {
 
     }
 
-    private val changeHartslagLiveDataObserver = Observer<String> { value ->
+    private val changeHartslagLiveDataObserver = Observer<String> {
+            value ->
         value?.let { hartslagValue.text = it }
     }
 
@@ -114,12 +128,68 @@ class HomeFragment : Fragment() {
         value?.let { ademFrequetieValue.text = it }
     }
 
+    private val changeHartslagColor = Observer<Boolean> {
+            value ->
+        value?.let {
+            if (it) {
+                hartslagLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorGood))
+            }
+            else{
+                hartslagLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorBad))
+            }
+        }
+    }
+
+    private val changeTemperatuurColor = Observer<Boolean> {
+            value ->
+        value?.let {
+            if (it) {
+                temperatuurLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorGood))
+            }
+            else{
+                temperatuurLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorBad))
+            }
+        }
+    }
+
+    private val changeAdemFrequentieColor = Observer<Boolean> {
+            value ->
+        value?.let {
+            if (it) {
+                ademFrequentieLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorGood))
+            }
+            else{
+                ademFrequentieLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorBad))
+            }
+        }
+    }
+
+    private val changeSaturatieColor = Observer<Boolean> {
+            value ->
+        value?.let {
+            if (it) {
+                saturatieLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorGood))
+            }
+            else{
+                saturatieLayout.setBackgroundColor(ContextCompat.getColor(context!!, R.color.colorBad))
+            }
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        MonitorApplication.getInstance().hartslagLiveData.observe(this, changeHartslagLiveDataObserver)
-        MonitorApplication.getInstance().temperatuurLiveData.observe(this, changeTemperatuurLiveDataObserver)
-        MonitorApplication.getInstance().saturatieLiveData.observe(this, changeSaturatieLiveDataObserver)
-        MonitorApplication.getInstance().ademFrequentieLiveData.observe(this, changeAdemfrequentieLiveDataObserver)
+
+        val monitorApplication = MonitorApplication.getInstance()
+
+        monitorApplication.hartslagLiveData.observe(this, changeHartslagLiveDataObserver)
+        monitorApplication.temperatuurLiveData.observe(this, changeTemperatuurLiveDataObserver)
+        monitorApplication.saturatieLiveData.observe(this, changeSaturatieLiveDataObserver)
+        monitorApplication.ademFrequentieLiveData.observe(this, changeAdemfrequentieLiveDataObserver)
+
+        monitorApplication.hartslagLayoutLiveData.observe(this, changeHartslagColor)
+        monitorApplication.temperatuurLayoutLiveData.observe(this, changeTemperatuurColor)
+        monitorApplication.ademFrequentieLayoutLiveData.observe(this, changeAdemFrequentieColor)
+        monitorApplication.saturatieLayoutLiveData.observe(this, changeSaturatieColor)
     }
 
     override fun onResume() {

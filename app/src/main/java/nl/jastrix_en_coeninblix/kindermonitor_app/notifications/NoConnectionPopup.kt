@@ -7,7 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 
-class NotificationPopup(var message: String) : DialogFragment() {
+class NoConnectionPopup(var message: String) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             // Use the Builder class for convenient dialog construction
@@ -15,8 +15,8 @@ class NotificationPopup(var message: String) : DialogFragment() {
             builder.setMessage(message)
                 .setPositiveButton("Pauzeer",
                     DialogInterface.OnClickListener { dialog, id ->
-                        MonitorApplication.getInstance().alarmNotPauzed = false
-                        MonitorApplication.getInstance().startPauzeTimer()
+                        MonitorApplication.getInstance().noConnectionAlarmNotPauzed = false
+                        MonitorApplication.getInstance().startNoConnectionPauzeTimer()
                     })
                 .setNegativeButton("Bel noodnummer",
                     DialogInterface.OnClickListener { dialog, id ->

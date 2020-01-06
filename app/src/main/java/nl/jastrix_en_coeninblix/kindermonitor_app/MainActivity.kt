@@ -217,11 +217,16 @@ class MainActivity : BaseActivityClass(), Observer {
                                 }
                             }
 
-                            MonitorApplication.getInstance().startForegroundMeasurmentService()
 
 //                            if (patientSensor != null) {
 //                                monitorApplication.patientSensors.add(patientSensor)
 //                            }
+                        }
+                        if (monitorApplication.hartslagSensor != null &&
+                            monitorApplication.temperatuurSensor != null &&
+                            monitorApplication.ademFrequentieSensor != null &&
+                            monitorApplication.saturatieSensor != null) {
+                            monitorApplication.startForegroundMeasurmentService()
                         }
                     } else {
 //                        if (statusCode == 401) {

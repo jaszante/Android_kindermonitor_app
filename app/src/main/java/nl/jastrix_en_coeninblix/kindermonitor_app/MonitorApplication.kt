@@ -33,16 +33,21 @@ class MonitorApplication : Application() {
     var temperatuurLiveData = MutableLiveData<String>()
     var ademFrequentieLiveData = MutableLiveData<String>()
     var pauzeTime: Long = 10000
-    lateinit var hartslagSensor: PatientSensor
-    lateinit var temperatuurSensor: PatientSensor
-    lateinit var ademFrequentieSensor: PatientSensor
-    lateinit var saturatieSensor: PatientSensor
+    var hartslagSensor: PatientSensor? = null
+    var temperatuurSensor: PatientSensor? = null
+    var ademFrequentieSensor: PatientSensor? = null
+    var saturatieSensor: PatientSensor? = null
+    var hartslagLayoutLiveData = MutableLiveData<Boolean>()
+    var temperatuurLayoutLiveData = MutableLiveData<Boolean>()
+    var ademFrequentieLayoutLiveData = MutableLiveData<Boolean>()
+    var saturatieLayoutLiveData = MutableLiveData<Boolean>()
 
     var stopMeasurementService: Boolean = false
 
     var alarmNotPauzed = true
-
+    var noConnectionAlarmNotPauzed = true
     private var currentActivity: Activity? = null
+    var currentlyShowingErrorColor: Boolean = false
 
 //    var patientSensors: ArrayList<PatientSensor> = ArrayList()
 
@@ -56,6 +61,12 @@ class MonitorApplication : Application() {
     fun startPauzeTimer() {
         Timer("schedule", false).schedule(pauzeTime) {
             alarmNotPauzed = true
+        }
+    }
+
+    fun startNoConnectionPauzeTimer() {
+        Timer("schedule", false).schedule(120000) {
+            noConnectionAlarmNotPauzed = true
         }
     }
 
