@@ -71,17 +71,18 @@ class RegisterPatientActivity : BaseActivityClass() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
 
+        val dpd = DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                val monthPlusOne = monthOfYear + 1
+                patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
+            },
+            year,
+            month,
+            day
+        )
+
         patientBirthDateEditText.setOnClickListener() {
-            val dpd = DatePickerDialog(
-                this,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    val monthPlusOne = monthOfYear + 1
-                    patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
-                },
-                year,
-                month,
-                day
-            )
             dpd.show()
         }
 
