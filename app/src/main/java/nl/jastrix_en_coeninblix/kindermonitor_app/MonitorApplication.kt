@@ -41,6 +41,11 @@ class MonitorApplication : Application() {
     var temperatuurLayoutLiveData = MutableLiveData<Boolean>()
     var ademFrequentieLayoutLiveData = MutableLiveData<Boolean>()
     var saturatieLayoutLiveData = MutableLiveData<Boolean>()
+    var hartslagThresholds = MutableLiveData<String>()
+    var temperatuurThresholds = MutableLiveData<String>()
+    var ademfrequentieThresholds = MutableLiveData<String>()
+    var saturatieThresholds = MutableLiveData<String>()
+
 
     var stopMeasurementService: Boolean = false
 

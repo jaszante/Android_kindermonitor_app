@@ -43,6 +43,11 @@ class HomeFragment : Fragment() {
     private lateinit var ademFrequentieLayout: LinearLayout
     private lateinit var saturatieLayout: LinearLayout
 
+    lateinit var hartslagGrensWaardes: TextView
+    lateinit var temperatuurGrensWaardes: TextView
+    lateinit var ademfrequentieGrensWaardes: TextView
+    lateinit var saturatieGrensWaardes: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,6 +73,12 @@ class HomeFragment : Fragment() {
         temperatuurLayout = currentView.findViewById(R.id.linearLayoutTemperatuur)
         ademFrequentieLayout = currentView.findViewById(R.id.linearLayoutAdemFrequentie)
         saturatieLayout = currentView.findViewById(R.id.linearLayoutSaturatie)
+
+        hartslagGrensWaardes = currentView.findViewById(R.id.hartslagGrensWaardes)
+        temperatuurGrensWaardes = currentView.findViewById(R.id.temperatuurGrensWaardes)
+        ademfrequentieGrensWaardes = currentView.findViewById(R.id.ademfrequentieGrensWaarden)
+        saturatieGrensWaardes = currentView.findViewById(R.id.saturatieGrensWaardes)
+
 
         val vidstream = currentView.findViewById<VideoView>(R.id.videoStream)
 
@@ -146,6 +157,34 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private val changeHartslagThresholds = Observer<String> {
+            value ->
+        value?.let {
+            hartslagGrensWaardes.text = it
+        }
+    }
+
+    private val changeTemperatuurThresholds = Observer<String> {
+            value ->
+        value?.let {
+            temperatuurGrensWaardes.text = it
+        }
+    }
+
+    private val changeAdemFrequentieThresholds = Observer<String> {
+            value ->
+        value?.let {
+            ademfrequentieGrensWaardes.text = it
+        }
+    }
+
+    private val changeSaturatieThresholds = Observer<String> {
+            value ->
+        value?.let {
+            saturatieGrensWaardes.text = it
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -160,6 +199,11 @@ class HomeFragment : Fragment() {
         monitorApplication.temperatuurLayoutLiveData.observe(this, changeTemperatuurColor)
         monitorApplication.ademFrequentieLayoutLiveData.observe(this, changeAdemFrequentieColor)
         monitorApplication.saturatieLayoutLiveData.observe(this, changeSaturatieColor)
+
+        monitorApplication.hartslagThresholds.observe(this, changeHartslagThresholds)
+        monitorApplication.temperatuurThresholds.observe(this, changeTemperatuurThresholds)
+        monitorApplication.ademfrequentieThresholds.observe(this, changeAdemFrequentieThresholds)
+        monitorApplication.saturatieThresholds.observe(this, changeSaturatieThresholds)
     }
 
     override fun onResume() {
