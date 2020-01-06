@@ -79,36 +79,6 @@ class HomeFragment : Fragment() {
 
         val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
         myLayout.requestFocus()
-
-//        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
-//            if (patientSensors != null) {
-//                var randomValue = (80..100).random()
-//                hartslagValue.text = randomValue.toString()
-//
-//                randomValue = (80..100).random()
-//                temperatuurValue.text = randomValue.toString()
-//
-//                randomValue = (80..100).random()
-//                ademFrequetieValue.text = randomValue.toString()
-//
-//                randomValue = (80..100).random()
-//                saturatieValue.text = randomValue.toString()
-//            }
-//        }
-
-//        Timer("schedule", false).scheduleAtFixedRate(0, 3000) {
-//            if (patientSensors != null) {
-////                continuouslyPostNewMeasurements()
-//                continuouslyCallForNewMeasurements()
-//            }
-//        }
-
-//        Timer("schedule", false).schedule(6000) {
-//            if (patientSensors != null) {
-//                continuouslyCallForNewMeasurements()
-//            }
-//        }
-
     }
 
     private val changeHartslagLiveDataObserver = Observer<String> {

@@ -107,20 +107,20 @@ class ForegroundMeasurmentService : Service() {
                 if (response.isSuccessful && response.body() != null && response.body()!!.count() != 0) {
                     val responseBody = response.body()!![response.body()!!.count() - 1]
 //                    val monitorApplication = MonitorApplication.getInstance()
-                    val newValue = BigDecimal(responseBody.value).setScale(1, RoundingMode.HALF_EVEN)
+                    val newValue = BigDecimal(responseBody.value).setScale(1, RoundingMode.HALF_EVEN).toString()
                     when(patientSensor.sensorType){
                         SensorType.Hartslag -> {
 
                             monitorApplication.hartslagLiveData.postValue(newValue.toString())
 
                             if (responseBody.value < monitorApplication.hartslagSensor!!.thresholdMin){
-                                thresholdPopup("Hartslag is te laag")
+                                thresholdPopup("Hartslag is te laag " + newValue)
                                 monitorApplication.hartslagLayoutLiveData.value = false
                             }
                             else if (responseBody.value
                                 > monitorApplication.hartslagSensor!!.thresholdMax)
                             {
-                                thresholdPopup("Hartslag is te hoog")
+                                thresholdPopup("Hartslag is te hoog " + newValue)
                                 monitorApplication.hartslagLayoutLiveData.value = false
                             }
                             else if (monitorApplication.hartslagLayoutLiveData.value == false) {
@@ -130,13 +130,13 @@ class ForegroundMeasurmentService : Service() {
                         SensorType.Temperature -> {
                             monitorApplication.temperatuurLiveData.postValue(newValue.toString())
                             if (responseBody.value < monitorApplication.temperatuurSensor!!.thresholdMin){
-                                thresholdPopup("Temperatuur is te laag")
+                                thresholdPopup("Temperatuur is te laag " + newValue)
                                 monitorApplication.temperatuurLayoutLiveData.value = false
                             }
                             else if (responseBody.value
                                 > monitorApplication.temperatuurSensor!!.thresholdMax)
                             {
-                                thresholdPopup("Temperatuur is te hoog")
+                                thresholdPopup("Temperatuur is te hoog " + newValue)
                                 monitorApplication.temperatuurLayoutLiveData.value = false
                             }
                             else if (monitorApplication.temperatuurLayoutLiveData.value == false) {
@@ -146,13 +146,13 @@ class ForegroundMeasurmentService : Service() {
                         SensorType.Adem -> {
                             monitorApplication.ademFrequentieLiveData.postValue(newValue.toString())
                             if (responseBody.value < monitorApplication.ademFrequentieSensor!!.thresholdMin){
-                                thresholdPopup("Adem frequentie is te laag")
+                                thresholdPopup("Adem frequentie is te laag " + newValue)
                                 monitorApplication.ademFrequentieLayoutLiveData.value = false
                             }
                             else if (responseBody.value
                                 > monitorApplication.ademFrequentieSensor!!.thresholdMax)
                             {
-                                thresholdPopup("Adem frequentie is te hoog")
+                                thresholdPopup("Adem frequentie is te hoog " + newValue)
                                 monitorApplication.ademFrequentieLayoutLiveData.value = false
                             }
                             else if (monitorApplication.ademFrequentieLayoutLiveData.value == false) {
@@ -162,13 +162,13 @@ class ForegroundMeasurmentService : Service() {
                         SensorType.Saturatie -> {
                             monitorApplication.saturatieLiveData.postValue(newValue.toString())
                             if (responseBody.value < monitorApplication.saturatieSensor!!.thresholdMin){
-                                thresholdPopup("Saturatie is te laag")
+                                thresholdPopup("Saturatie is te laag " + newValue)
                                 monitorApplication.saturatieLayoutLiveData.value = false
                             }
                             else if (responseBody.value
                                 > monitorApplication.saturatieSensor!!.thresholdMax)
                             {
-                                thresholdPopup("Saturatie is te hoog")
+                                thresholdPopup("Saturatie is te hoog " + newValue)
                                 monitorApplication.saturatieLayoutLiveData.value = false
                             }
                             else if (monitorApplication.saturatieLayoutLiveData.value == false) {

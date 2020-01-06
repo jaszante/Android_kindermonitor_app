@@ -210,17 +210,13 @@ class MainActivity : BaseActivityClass(), Observer {
 
                                 }
                                 SensorType.Saturatie.toString() -> {
-                                    monitorApplication.saturatieSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Saturatie,
+                                    monitorApplication.saturatieSensor = PatientSensor(
+                                        sensorFromCallback.sensorID, SensorType.Saturatie,
                                         sensorFromCallback.thresholdMin,
-                                        sensorFromCallback.thresholdMax)
-//                                    monitorApplication.thresholdSaturatieValues = ThresholdValues(sensorFromCallback.thresholdMin, sensorFromCallback.thresholdMax)
+                                        sensorFromCallback.thresholdMax
+                                    )
                                 }
                             }
-
-
-//                            if (patientSensor != null) {
-//                                monitorApplication.patientSensors.add(patientSensor)
-//                            }
                         }
                         if (monitorApplication.hartslagSensor != null &&
                             monitorApplication.temperatuurSensor != null &&

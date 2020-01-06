@@ -12,10 +12,9 @@
 
     <string name="menu_home">Monitoring</string>
     <string name="menu_statistics">Statistieken</string>
-    <string name="menu_account">Account</string>
+    <string name="menu_instellingen">Instellingen</string>
     <string name="menu_information">Informatie</string>
-    <string name="menu_settings">Instellingen</string>
-
+    <string name="menu_account">Account</string>
 
     <string name="registerUname">Gebruikersnaam*</string>
     <string name="registerEditUname">Gebruikersnaam</string>
