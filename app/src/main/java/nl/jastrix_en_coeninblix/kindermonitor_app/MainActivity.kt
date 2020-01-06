@@ -79,8 +79,6 @@ class MainActivity : BaseActivityClass(), Observer {
         setupNavigationDrawer();
 
         MonitorApplication.getInstance().fragmentManager = supportFragmentManager
-
-        MonitorApplication.getInstance().startForegroundMeasurmentService()
     }
 
     private fun setupNavigationDrawer() {
@@ -182,21 +180,48 @@ class MainActivity : BaseActivityClass(), Observer {
                     val statusCode = response.code()
 
                     if (response.isSuccessful && response.body() != null) {
+                        val monitorApplication = MonitorApplication.getInstance()
+
                         for (sensorFromCallback in response.body()!!) {
-                            var patientSensor: PatientSensor? = null
+//                            var patientSensor: PatientSensor? = null
                             when (sensorFromCallback.type) {
-                                SensorType.Hartslag.toString() -> patientSensor =
-                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag)
-                                SensorType.Temperature.toString() -> patientSensor =
-                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Temperature)
-                                SensorType.Adem.toString() -> patientSensor =
-                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Adem)
-                                SensorType.Saturatie.toString() -> patientSensor =
-                                    PatientSensor(sensorFromCallback.sensorID, SensorType.Saturatie)
+                                SensorType.Hartslag.toString() -> {
+                                    monitorApplication.hartslagSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag,
+                                            sensorFromCallback.thresholdMin,
+                                        sensorFromCallback.thresholdMax)
+
+                                }
+                                SensorType.Temperature.toString() -> {
+                                    monitorApplication.temperatuurSensor =
+                                        PatientSensor(
+                                            sensorFromCallback.sensorID,
+                                            SensorType.Temperature,
+                                            sensorFromCallback.thresholdMin,
+                                            sensorFromCallback.thresholdMax
+                                        )
+//                                    monitorApplication.thresholdTemperatuurValues = ThresholdValues(sensorFromCallback.thresholdMin, sensorFromCallback.thresholdMax)
+                                }
+                                SensorType.Adem.toString() -> {
+                                    monitorApplication.ademFrequentieSensor =
+                                        PatientSensor(sensorFromCallback.sensorID, SensorType.Adem,
+                                            sensorFromCallback.thresholdMin,
+                                            sensorFromCallback.thresholdMax)
+//                                    monitorApplication.thresholdAdemFrequentieValues = ThresholdValues(sensorFromCallback.thresholdMin, sensorFromCallback.thresholdMax)
+
+                                }
+                                SensorType.Saturatie.toString() -> {
+                                    monitorApplication.saturatieSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Saturatie,
+                                        sensorFromCallback.thresholdMin,
+                                        sensorFromCallback.thresholdMax)
+//                                    monitorApplication.thresholdSaturatieValues = ThresholdValues(sensorFromCallback.thresholdMin, sensorFromCallback.thresholdMax)
+                                }
                             }
-                            if (patientSensor != null) {
-                                MonitorApplication.getInstance().patientSensors.add(patientSensor)
-                            }
+
+                            MonitorApplication.getInstance().startForegroundMeasurmentService()
+
+//                            if (patientSensor != null) {
+//                                monitorApplication.patientSensors.add(patientSensor)
+//                            }
                         }
                     } else {
 //                        if (statusCode == 401) {

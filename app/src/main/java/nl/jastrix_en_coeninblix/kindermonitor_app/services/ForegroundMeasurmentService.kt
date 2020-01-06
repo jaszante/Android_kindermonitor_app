@@ -1,25 +1,17 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
-import androidx.fragment.app.FragmentManager
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientSensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 import nl.jastrix_en_coeninblix.kindermonitor_app.notifications.NotificationPopup
-import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.concurrent.scheduleAtFixedRate
 
 
@@ -63,10 +55,15 @@ class ForegroundMeasurmentService : Service() {
 //        var randomValue = (80..100).random()
 
 //        if (monitorApplication.patientSensors.count() > 0) {
-            for (patientSensor in monitorApplication.patientSensors){
-                requestMeasurementFromSensor(monitorApplication, patientSensor.sensorID, patientSensor.sensorType)
-            }
+//            for (patientSensor in monitorApplication.patientSensors){
+//                requestMeasurementFromSensor(monitorApplication, patientSensor.sensorID, patientSensor.sensorType)
+//            }
 //        }
+
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.temperatuurSensor)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.hartslagSensor)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.ademFrequentieSensor)
+        requestMeasurementFromSensor(monitorApplication, monitorApplication.saturatieSensor)
 
 //        monitorApplication.hartslagLiveData.postValue(randomValue.toString())
 //
@@ -96,9 +93,9 @@ class ForegroundMeasurmentService : Service() {
 //        }
     }
 
-    private fun requestMeasurementFromSensor(monitorApplication: MonitorApplication, sensorID: Int, sensorType: SensorType ){
+    private fun requestMeasurementFromSensor(monitorApplication: MonitorApplication, patientSensor: PatientSensor){
         val call = monitorApplication.apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
-            .getMeasurementsForSensor(sensorID)
+            .getMeasurementsForSensor(patientSensor.sensorID)
         call.enqueue(object : Callback<Array<Measurement>> {
             override fun onResponse(
                 call: Call<Array<Measurement>>,
@@ -106,25 +103,62 @@ class ForegroundMeasurmentService : Service() {
             ) {
                 if (response.isSuccessful && response.body() != null && response.body()!!.count() != 0) {
                     val responseBody = response.body()!![response.body()!!.count() - 1]
+//                    val monitorApplication = MonitorApplication.getInstance()
 
-                    when(sensorType){
-                        SensorType.Hartslag ->
+                    when(patientSensor.sensorType){
+                        SensorType.Hartslag -> {
                             monitorApplication.hartslagLiveData.postValue(responseBody.value.toString())
-                        SensorType.Temperature ->
+                            if (responseBody.value > monitorApplication.hartslagSensor.thresholdMin){
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                            if (responseBody.value
+                                < monitorApplication.hartslagSensor.thresholdMax)
+                            {
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                        }
+                        SensorType.Temperature -> {
                             monitorApplication.temperatuurLiveData.postValue(responseBody.value.toString())
-                        SensorType.Adem ->
+                            if (responseBody.value > monitorApplication.temperatuurSensor.thresholdMin){
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                            if (responseBody.value
+                                < monitorApplication.temperatuurSensor.thresholdMax)
+                            {
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                        }
+                        SensorType.Adem -> {
                             monitorApplication.ademFrequentieLiveData.postValue(responseBody.value.toString())
-                        SensorType.Saturatie ->
+                            if (responseBody.value > monitorApplication.ademFrequentieSensor.thresholdMin){
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                            if (responseBody.value
+                                < monitorApplication.ademFrequentieSensor.thresholdMax)
+                            {
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                        }
+                        SensorType.Saturatie -> {
                             monitorApplication.saturatieLiveData.postValue(responseBody.value.toString())
+                            if (responseBody.value > monitorApplication.saturatieSensor.thresholdMin){
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                            if (responseBody.value
+                                < monitorApplication.saturatieSensor.thresholdMax)
+                            {
+                                thresholdOrNoConnectionPopup("iets idk")
+                            }
+                        }
                     }
 
                 } else {
-                    noConnectionError(response.message())
+                    thresholdOrNoConnectionPopup(response.message())
                 }
             }
 
             override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
-                noConnectionError(t.message!!)
+                thresholdOrNoConnectionPopup(t.message!!)
             }
         })
     }
@@ -150,10 +184,11 @@ class ForegroundMeasurmentService : Service() {
 //        })
 //    }
 
-    private fun noConnectionError(message: String){
+    private fun thresholdOrNoConnectionPopup(message: String){
         if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null){
                 val notificationPopup = NotificationPopup()
 //                notificationPopup.dialog // should set text here to message
+//            notificationPopup. doe hier methode die text veranderd binnen de popupclass
 
                 try {
                     notificationPopup.show(MonitorApplication.getInstance().fragmentManager!!, "Notification")

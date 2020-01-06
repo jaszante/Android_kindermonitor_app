@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientSensor
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.ThresholdValues
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
 import java.util.*
@@ -32,6 +33,10 @@ class MonitorApplication : Application() {
     var temperatuurLiveData = MutableLiveData<String>()
     var ademFrequentieLiveData = MutableLiveData<String>()
     var pauzeTime: Long = 10000
+    lateinit var hartslagSensor: PatientSensor
+    lateinit var temperatuurSensor: PatientSensor
+    lateinit var ademFrequentieSensor: PatientSensor
+    lateinit var saturatieSensor: PatientSensor
 
     var stopMeasurementService: Boolean = false
 
@@ -39,7 +44,7 @@ class MonitorApplication : Application() {
 
     private var currentActivity: Activity? = null
 
-    var patientSensors: ArrayList<PatientSensor> = ArrayList()
+//    var patientSensors: ArrayList<PatientSensor> = ArrayList()
 
     companion object {
         private var singleton: MonitorApplication? = null
