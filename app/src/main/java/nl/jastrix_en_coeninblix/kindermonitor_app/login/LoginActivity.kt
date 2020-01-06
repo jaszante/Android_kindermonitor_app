@@ -39,6 +39,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
+        this.setTitle(getString(R.string.login))
 
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
         loginOrRegisterErrorField.visibility = View.INVISIBLE
