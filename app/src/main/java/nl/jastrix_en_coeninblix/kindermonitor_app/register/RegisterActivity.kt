@@ -44,22 +44,24 @@ class RegisterActivity : BaseActivityClass() {
     lateinit var lName: EditText
     lateinit var phone: EditText
     lateinit var email: EditText
+    lateinit var confirmPW: EditText
 
     var noCallInProgress = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        buttonRegister = findViewById<Button>(R.id.BTNregister)
-        uName = findViewById<EditText>(R.id.EUname)
-        pw = findViewById<EditText>(R.id.EPW)
-        fName = findViewById<EditText>(R.id.EVname)
-        lName = findViewById<EditText>(R.id.ELname)
-        phone = findViewById<EditText>(R.id.Ephone)
-        email = findViewById<EditText>(R.id.Eemail)
-        checkBoxCaretaker = findViewById<CheckBox>(R.id.CBcaretaker)
-        checkBoxTerms = findViewById<CheckBox>(R.id.CBterms)
+        buttonRegister = findViewById(R.id.BTNregister)
+        uName = findViewById(R.id.EUname)
+        pw = findViewById(R.id.EPW)
+        fName = findViewById(R.id.EVname)
+        lName = findViewById(R.id.ELname)
+        phone = findViewById(R.id.Ephone)
+        email = findViewById(R.id.Eemail)
+        checkBoxCaretaker = findViewById(R.id.CBcaretaker)
+        checkBoxTerms = findViewById(R.id.CBterms)
         errorfield = findViewById<EditText>(R.id.registerError)
+        confirmPW = findViewById(R.id.TCPW)
         service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
 
         /*-------------------------------------------------------------------------------------------*/
@@ -67,15 +69,19 @@ class RegisterActivity : BaseActivityClass() {
             if (checkBoxTerms.isChecked) {
 
                 if (isValidPassword(pw.text.toString())) {
-
-                    register(
-                        uName.text.toString(),
-                        pw.text.toString(),
-                        fName.text.toString(),
-                        lName.text.toString(),
-                        phone.text.toString(),
-                        email.text.toString()
-                    )
+                    if (pw.text.toString() == confirmPW.text.toString()) {
+                        register(
+                            uName.text.toString(),
+                            pw.text.toString(),
+                            fName.text.toString(),
+                            lName.text.toString(),
+                            phone.text.toString(),
+                            email.text.toString()
+                        )
+                    } else {
+                        errorfield.text = "De twee wachtwoorden komen niet overeen"
+                        errorfield.visibility = View.VISIBLE
+                    }
                 } else {
                     errorfield.text = getString(R.string.pwError)
                     errorfield.visibility = View.VISIBLE

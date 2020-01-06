@@ -61,6 +61,30 @@
             android:selectAllOnFocus="true" />
 
         <TextView
+            android:id="@+id/TCPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/bevestig_wachtwoord"
+            android:textColor="@android:color/black" />
+
+        <EditText
+            android:id="@+id/ECPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints="@string/registerEditPW"
+            android:ems="10"
+            android:hint="@string/registerEditPW"
+            android:inputType="textPassword"
+            android:selectAllOnFocus="true" />
+
+        <TextView
             android:id="@+id/Temail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -188,7 +212,7 @@
             android:text=""
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:background="@drawable/rounded_shape"
+            android:background="@drawable/rounded_shape_bad"
             android:visibility="invisible"
             android:textColorHint="@android:color/black"
             android:textColor="@android:color/black"

@@ -49,49 +49,51 @@ class SlideshowFragment : Fragment() {
         val currentView = getView()!!
         hMin = currentView.findViewById(R.id.hMin)
         hMin.setOnClickListener {
-            open_Number_picker(hMin, 0, 100)
+            open_Number_picker(hMin, 50, 200)
 
         }
         hMax = currentView.findViewById(R.id.hMax)
         hMax.setOnClickListener {
-            open_Number_picker(hMax, 100, 200)
+            open_Number_picker(hMax, 50, 200)
 
         }
 
         aMin = currentView.findViewById(R.id.aMin)
         aMin.setOnClickListener {
-            open_Number_picker(aMin, 0, 100)
+            open_Number_picker(aMin, 10, 80)
 
         }
         aMax = currentView.findViewById(R.id.aMax)
         aMax.setOnClickListener {
-            open_Number_picker(aMax, 100, 200)
+            open_Number_picker(aMax, 10, 80)
 
         }
 
         sMin = currentView.findViewById(R.id.sMin)
         sMin.setOnClickListener {
-            open_Number_picker(sMin, 0, 100)
+            open_Number_picker(sMin, 85, 100)
 
         }
         sMax = currentView.findViewById(R.id.sMax)
         sMax.setOnClickListener {
-            open_Number_picker(sMax, 100, 200)
+            open_Number_picker(sMax, 85, 100)
         }
 
         tMin = currentView.findViewById(R.id.tMin)
         tMin.setOnClickListener {
-            open_Number_picker(tMin, 0, 100)
+            open_Number_picker(tMin, 35, 41)
 
         }
         tMax = currentView.findViewById(R.id.tMax)
         tMax.setOnClickListener {
-            open_Number_picker(tMax, 100, 200)
+            open_Number_picker(tMax, 35, 41)
         }
 
         buttonSave = currentView.findViewById(R.id.buttonSave)
         buttonSave.setOnClickListener {
             // dingen voor API call
+
+            buttonSave.visibility = View.INVISIBLE
         }
         spinner = currentView.findViewById(R.id.spinner_alarm)
         val array: Array<String> = arrayOf("30 sec", "60 sec", "90 sec", "120 sec ", "180 sec")
@@ -126,8 +128,8 @@ class SlideshowFragment : Fragment() {
         numberpicker.maxValue = max
 
         val builder: AlertDialog = AlertDialog.Builder(this.context)
-            .setPositiveButton("Submit", null)
-            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Selecteer", null)
+            .setNegativeButton("Annuleren", null)
             .setView(linearLayout)
             .setCancelable(false)
             .create()
@@ -139,6 +141,7 @@ class SlideshowFragment : Fragment() {
                 textview.text = numberpicker.value.toString()
                 builder.cancel()
                 changed = true
+                buttonSave.visibility = View.VISIBLE
 
             })
     }

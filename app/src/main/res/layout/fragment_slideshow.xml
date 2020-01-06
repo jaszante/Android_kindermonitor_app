@@ -434,6 +434,7 @@
         android:background="@drawable/rounded_shape"
         android:textColor="@color/white"
         android:visibility="invisible"
+        android:stateListAnimator="null"
         />
 
 </LinearLayout>
