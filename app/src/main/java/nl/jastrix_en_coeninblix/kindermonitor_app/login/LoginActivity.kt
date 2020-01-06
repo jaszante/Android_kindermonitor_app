@@ -41,7 +41,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         setContentView(R.layout.login_activity)
 
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
-        loginOrRegisterErrorField.visibility = View.GONE
+        loginOrRegisterErrorField.visibility = View.INVISIBLE
 
         val service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
 
@@ -62,7 +62,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             loginButton.setBackground(getDrawable(R.drawable.round_shape_dark))
             if (noCallInProgress) {
                 noCallInProgress = false
-                loginOrRegisterErrorField.visibility = View.GONE
+                loginOrRegisterErrorField.visibility = View.INVISIBLE
 
 //            val userLogin = UserLogin(usernameField.text.toString(), passwordField.text.toString())
                 val userLogin =

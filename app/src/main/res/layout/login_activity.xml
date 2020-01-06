@@ -43,6 +43,16 @@
         android:importantForAutofill="no"
         android:inputType="textPassword"
         android:textColor="@android:color/black" />
+    <TextView
+        android:id="@+id/loginOrRegisterFailed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_shape_bad"
+        android:visibility="invisible"
+        />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -80,9 +90,5 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/loginOrRegisterFailed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBad" />
+
 </LinearLayout>
