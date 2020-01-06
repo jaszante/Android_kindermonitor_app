@@ -98,7 +98,7 @@ class MainActivity : BaseActivityClass(), Observer {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share //, R.id.nav_send
+                R.id.nav_share //, R.id.nav_send
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -150,11 +150,16 @@ class MainActivity : BaseActivityClass(), Observer {
     private fun initDrawerWithUserInformationThenGetPatientSensors() {
         val navView = nav_view.getHeaderView(0)
         val navHeaderTitle = navView.findViewById(R.id.navHeaderTitle) as TextView
-
+        val patientTitle = navView.findViewById(R.id.navHeaderBottomText) as TextView
+        patientTitle.text =
+            getString(R.string.nav_header_patient) + " " + MonitorApplication.getInstance().currentlySelectedPatient!!.firstname + " " + MonitorApplication.getInstance().currentlySelectedPatient!!.lastname
         navHeaderTitle.text =
-            MonitorApplication.getInstance().userData!!.username // + " " + userData.LastName
+            getString(R.string.nav_header_name) +" "+ MonitorApplication.getInstance().userData!!.username
+
+        // + " " + userData.LastName
         MonitorApplication.getInstance().authTokenChanged = false
         getPatientSensors()
+
     }
 
 //    override fun onStop() {
@@ -181,7 +186,6 @@ class MainActivity : BaseActivityClass(), Observer {
 
                     if (response.isSuccessful && response.body() != null) {
                         val monitorApplication = MonitorApplication.getInstance()
-
                         for (sensorFromCallback in response.body()!!) {
 //                            var patientSensor: PatientSensor? = null
                             when (sensorFromCallback.type) {
@@ -203,7 +207,8 @@ class MainActivity : BaseActivityClass(), Observer {
                                 }
                                 SensorType.Adem.toString() -> {
                                     monitorApplication.ademFrequentieSensor =
-                                        PatientSensor(sensorFromCallback.sensorID, SensorType.Adem,
+                                        PatientSensor(
+                                            sensorFromCallback.sensorID, SensorType.Adem,
                                             sensorFromCallback.thresholdMin,
                                             sensorFromCallback.thresholdMax)
                                   monitorApplication.ademfrequentieThresholds.postValue(sensorFromCallback.thresholdMin.toString() + " - " + sensorFromCallback.thresholdMax.toString())
@@ -222,7 +227,8 @@ class MainActivity : BaseActivityClass(), Observer {
                         if (monitorApplication.hartslagSensor != null &&
                             monitorApplication.temperatuurSensor != null &&
                             monitorApplication.ademFrequentieSensor != null &&
-                            monitorApplication.saturatieSensor != null) {
+                            monitorApplication.saturatieSensor != null
+                        ) {
                             monitorApplication.startForegroundMeasurmentService()
                         }
                     } else {
