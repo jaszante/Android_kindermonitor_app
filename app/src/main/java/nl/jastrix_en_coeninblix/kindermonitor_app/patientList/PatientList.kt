@@ -79,6 +79,12 @@ class PatientList : BaseActivityClass() {
         getUserDataThenStartGetPatientsCall()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        MonitorApplication.getInstance().stopMeasurementService = true
+    }
+
     private fun initApp() {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 

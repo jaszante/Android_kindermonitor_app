@@ -53,6 +53,7 @@
     <string name="register_patient">Registreer patient</string>
     <string name="add_patient">Voeg een patient toe</string>
     <string name="genereer_grafiek">genereer grafiek</string>
+    <string name="noInternetError">Not connected to mobile internet or wifi</string>
 
 
 </resources>

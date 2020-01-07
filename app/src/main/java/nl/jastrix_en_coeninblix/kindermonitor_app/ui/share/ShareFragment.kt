@@ -1,5 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,12 +20,17 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.Account.ChangePW
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 
 class ShareFragment : Fragment() {
 
     private lateinit var shareViewModel: ShareViewModel
+
+    private lateinit var usernameTextView: TextView
+    private lateinit var firstNameTextView: TextView
+    private lateinit var lastNameTextView: TextView
+    private lateinit var emailTextView: TextView
+    private lateinit var phoneNumberTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +50,12 @@ class ShareFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()!!
+
+        usernameTextView = currentView.findViewById(R.id.PersonGebruikersnaam)
+        firstNameTextView = currentView.findViewById(R.id.PersonFName)
+        lastNameTextView = currentView.findViewById(R.id.PersonLName)
+        emailTextView = currentView.findViewById(R.id.PersonEmail)
+        phoneNumberTextView = currentView.findViewById(R.id.PersonTelefoonNummer)
 
         var buttonLogout= currentView.findViewById<Button>(R.id.BTNlogout)
         buttonLogout.setOnClickListener {
@@ -70,7 +82,6 @@ class ShareFragment : Fragment() {
             startActivity(loginIntent)
         }
 
-
         val addPatientLayout = currentView.findViewById<LinearLayout>(R.id.Add_patient)
         addPatientLayout.setOnClickListener{
             val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
@@ -92,8 +103,37 @@ class ShareFragment : Fragment() {
             val intent= Intent(activity, AddUserToAccount::class.java)
             startActivity(intent)
         }
+    }
 
-//
-//        }
+    private val changeUsernameLiveDataObserver = Observer<String> { value ->
+        value?.let { usernameTextView.text = it }
+    }
+
+    private val changeFirstNameLiveDataObserver = Observer<String> { value ->
+        value?.let { firstNameTextView.text = it }
+    }
+
+    private val changeLastNameLiveDataObserver = Observer<String> { value ->
+        value?.let { lastNameTextView.text = it }
+    }
+
+    private val changeEmailLiveDataObserver = Observer<String> { value ->
+        value?.let { emailTextView.text = it }
+    }
+
+    private val changePhoneNumberLiveDataObserver = Observer<String> { value ->
+        value?.let { phoneNumberTextView.text = it }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val monitorApplication = MonitorApplication.getInstance()
+
+        monitorApplication.loggedInUsername.observe(this, changeUsernameLiveDataObserver)
+        monitorApplication.loggedInFirstName.observe(this, changeFirstNameLiveDataObserver)
+        monitorApplication.loggedInLastName.observe(this, changeLastNameLiveDataObserver)
+        monitorApplication.loggedInEmail.observe(this, changeEmailLiveDataObserver)
+        monitorApplication.loggedInPhoneNumber.observe(this, changePhoneNumberLiveDataObserver)
     }
 }

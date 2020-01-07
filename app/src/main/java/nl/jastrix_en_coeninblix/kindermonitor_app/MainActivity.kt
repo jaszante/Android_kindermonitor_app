@@ -107,7 +107,7 @@ class MainActivity : BaseActivityClass(), Observer {
 
     override fun onResume() {
         super.onResume()
-//        active = true
+        MonitorApplication.getInstance().stopMeasurementService = false
 
         if (MonitorApplication.getInstance().authTokenChanged) {
             // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
@@ -128,7 +128,15 @@ class MainActivity : BaseActivityClass(), Observer {
                 val statusCode = response.code()
 
                 if (response.isSuccessful && response.body() != null) {
-                    MonitorApplication.getInstance().userData = response.body()!!
+                    val responseBody = response.body()!!
+
+                    val monitorApplication = MonitorApplication.getInstance()
+                    monitorApplication.userData = responseBody
+                    monitorApplication.loggedInUsername.postValue(responseBody.username)
+                    monitorApplication.loggedInFirstName.postValue(responseBody.firstName)
+                    monitorApplication.loggedInLastName.postValue(responseBody.lastName)
+                    monitorApplication.loggedInEmail.postValue(responseBody.email)
+                    monitorApplication.loggedInPhoneNumber.postValue(responseBody.phoneNumber)
 
                     initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
