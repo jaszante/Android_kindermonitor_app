@@ -32,7 +32,7 @@ class MonitorApplication : Application() {
     var saturatieLiveData = MutableLiveData<String>()
     var temperatuurLiveData = MutableLiveData<String>()
     var ademFrequentieLiveData = MutableLiveData<String>()
-    var pauzeTime: Long = 10000
+    var pauzeTime: Long = 30000
     var hartslagSensor: PatientSensor? = null
     var temperatuurSensor: PatientSensor? = null
     var ademFrequentieSensor: PatientSensor? = null

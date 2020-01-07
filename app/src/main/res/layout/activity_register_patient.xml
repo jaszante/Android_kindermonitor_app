@@ -78,6 +78,7 @@
         android:autofillHints="@string/registerEDate"
         android:selectAllOnFocus="true"
         android:focusable="false"/>
+
     <TextView
         android:id="@+id/patientRegisterError"
         android:layout_width="match_parent"
@@ -90,6 +91,7 @@
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
         android:visibility="invisible" />
+
     <Button
         android:id="@+id/patientRegisterButton"
         android:layout_width="match_parent"

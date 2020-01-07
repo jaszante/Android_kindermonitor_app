@@ -54,6 +54,7 @@
     <string name="add_patient">Voeg een patient toe</string>
     <string name="genereer_grafiek">genereer grafiek</string>
     <string name="noInternetError">Not connected to mobile internet or wifi</string>
+    <string name="wachtwoordenKomenNietOvereen">De twee wachtwoorden komen niet overeen</string>
 
 
 </resources>

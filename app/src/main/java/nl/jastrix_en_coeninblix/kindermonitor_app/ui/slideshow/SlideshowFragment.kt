@@ -2,6 +2,7 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow
 
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,24 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 
 
 class SlideshowFragment : Fragment() {
 
     private lateinit var slideshowViewModel: SlideshowViewModel
-    private lateinit var hMin: TextView
-    private lateinit var hMax: TextView
+    private lateinit var hartslagMin: TextView
+    private lateinit var hartslagMax: TextView
 
-    private lateinit var aMin: TextView
-    private lateinit var aMax: TextView
+    private lateinit var ademfrequentieMin: TextView
+    private lateinit var ademfrequentieMax: TextView
 
-    private lateinit var sMin: TextView
-    private lateinit var sMax: TextView
+    private lateinit var saturatieMin: TextView
+    private lateinit var saturatieMax: TextView
 
-    private lateinit var tMin: TextView
-    private lateinit var tMax: TextView
+    private lateinit var temperatuurMin: TextView
+    private lateinit var temperatuurMax: TextView
 
     private var changed: Boolean = false
     private lateinit var buttonSave: Button
@@ -47,51 +50,58 @@ class SlideshowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()!!
-        hMin = currentView.findViewById(R.id.hMin)
-        hMin.setOnClickListener {
-            open_Number_picker(hMin, 50, 200)
+        hartslagMin = currentView.findViewById(R.id.hartslagMin)
+        hartslagMin.setOnClickListener {
+            open_Number_picker(hartslagMin, 50, 200)
 
         }
-        hMax = currentView.findViewById(R.id.hMax)
-        hMax.setOnClickListener {
-            open_Number_picker(hMax, 50, 200)
-
-        }
-
-        aMin = currentView.findViewById(R.id.aMin)
-        aMin.setOnClickListener {
-            open_Number_picker(aMin, 10, 80)
-
-        }
-        aMax = currentView.findViewById(R.id.aMax)
-        aMax.setOnClickListener {
-            open_Number_picker(aMax, 10, 80)
+        hartslagMax = currentView.findViewById(R.id.hartslagMax)
+        hartslagMax.setOnClickListener {
+            open_Number_picker(hartslagMax, 50, 200)
 
         }
 
-        sMin = currentView.findViewById(R.id.sMin)
-        sMin.setOnClickListener {
-            open_Number_picker(sMin, 85, 100)
+        ademfrequentieMin = currentView.findViewById(R.id.ademfrequentieMin)
+        ademfrequentieMin.setOnClickListener {
+            open_Number_picker(ademfrequentieMin, 10, 80)
 
         }
-        sMax = currentView.findViewById(R.id.sMax)
-        sMax.setOnClickListener {
-            open_Number_picker(sMax, 85, 100)
-        }
-
-        tMin = currentView.findViewById(R.id.tMin)
-        tMin.setOnClickListener {
-            open_Number_picker(tMin, 35, 41)
+        ademfrequentieMax = currentView.findViewById(R.id.ademfrequentieMax)
+        ademfrequentieMax.setOnClickListener {
+            open_Number_picker(ademfrequentieMax, 10, 80)
 
         }
-        tMax = currentView.findViewById(R.id.tMax)
-        tMax.setOnClickListener {
-            open_Number_picker(tMax, 35, 41)
+
+        saturatieMin = currentView.findViewById(R.id.saturatieMin)
+        saturatieMin.setOnClickListener {
+            open_Number_picker(saturatieMin, 85, 100)
+
+        }
+        saturatieMax = currentView.findViewById(R.id.saturatieMax)
+        saturatieMax.setOnClickListener {
+            open_Number_picker(saturatieMax, 85, 100)
+        }
+
+        temperatuurMin = currentView.findViewById(R.id.temperatuurMin)
+        temperatuurMin.setOnClickListener {
+            open_Number_picker(temperatuurMin, 35, 41)
+
+        }
+        temperatuurMax = currentView.findViewById(R.id.temperatuurMax)
+        temperatuurMax.setOnClickListener {
+            open_Number_picker(temperatuurMax, 35, 41)
         }
 
         buttonSave = currentView.findViewById(R.id.buttonSave)
         buttonSave.setOnClickListener {
-            // dingen voor API call
+            val monitorApplication = MonitorApplication.getInstance()
+
+            monitorApplication.hartslagThresholds.postValue(hartslagMin.text.toString() + " - " + hartslagMax.text.toString())
+            monitorApplication.temperatuurThresholds.postValue(temperatuurMin.text.toString() + " - " + temperatuurMax.text.toString())
+            monitorApplication.saturatieThresholds.postValue(saturatieMin.text.toString() + " - " + saturatieMax.text.toString())
+            monitorApplication.ademfrequentieThresholds.postValue(ademfrequentieMin.text.toString() + " - " + ademfrequentieMax.text.toString())
+
+            // api call voor elke sensor
 
             buttonSave.visibility = View.INVISIBLE
         }
@@ -113,10 +123,61 @@ class SlideshowFragment : Fragment() {
                 id: Long
             ) {
                 val item = adapter.getItem(position)
+                val newValue = item.split(" sec")[0] + "000"
+                MonitorApplication.getInstance().pauzeTime = newValue.toLong()
             }
-
         }
+    }
 
+    private val changeAdemFrequentieThresholds = Observer<String> {
+            value ->
+        value?.let {
+            val minAndMax = it.split(" - ")
+            ademfrequentieMin.text = minAndMax[0]
+            ademfrequentieMax.text = minAndMax[1]
+        }
+    }
+
+    private val changeHartslagThresholds = Observer<String> {
+            value ->
+        value?.let {
+            val minAndMax = it.split(" - ")
+            hartslagMin.text = minAndMax[0]
+            hartslagMax.text = minAndMax[1]
+        }
+    }
+
+    private val changeTemperatuurThresholds = Observer<String> {
+            value ->
+        value?.let {
+            val minAndMax = it.split(" - ")
+            val min = minAndMax[0].replace("°", "")
+            val max = minAndMax[1].replace("°", "")
+            temperatuurMin.text = min
+            temperatuurMax.text = max
+        }
+    }
+
+    private val changeSaturatieThresholds = Observer<String> {
+            value ->
+        value?.let {
+            val minAndMax = it.split(" - ")
+            val min = minAndMax[0].replace("%", "")
+            val max = minAndMax[1].replace("%", "")
+            saturatieMin.text = min
+            saturatieMax.text = max
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        val monitorApplication = MonitorApplication.getInstance()
+
+        monitorApplication.hartslagThresholds.observe(this, changeHartslagThresholds)
+        monitorApplication.temperatuurThresholds.observe(this, changeTemperatuurThresholds)
+        monitorApplication.saturatieThresholds.observe(this, changeSaturatieThresholds)
+        monitorApplication.ademfrequentieThresholds.observe(this, changeAdemFrequentieThresholds)
     }
 
 

@@ -143,9 +143,21 @@
         android:inputType="phone"
         android:textColor="@android:color/black" />
 
+    <TextView
+        android:id="@+id/errorField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_shape_bad"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:visibility="invisible" />
 
     <Button
-        android:id="@+id/BTNChangeCreds"
+        android:id="@+id/ChangePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

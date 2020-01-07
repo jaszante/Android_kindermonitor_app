@@ -34,7 +34,10 @@ interface APIService {
     fun getMeasurementsForSensorWithRange(@Path("SensorId") sensorId: Int, @Query("from")from : String, @Query("to") to :String ): Call<Array<Measurement>>
 
 
-//    @POST ("Sensors/{SensorId}/measurements")
-    @POST ("Sensors/measurements")
-    fun postMeasurementToSensor(@Body measurementForPost: MeasurementForPost): Call<String>
+////    @POST ("Sensors/{SensorId}/measurements")
+//    @POST ("Sensors/measurements")
+//    fun postMeasurementToSensor(@Body measurementForPost: MeasurementForPost): Call<String>
+
+    @PUT ("Users/me")
+    fun updateCurrentUser(@Body newUserData: UserRegister): Call<Void>
 }

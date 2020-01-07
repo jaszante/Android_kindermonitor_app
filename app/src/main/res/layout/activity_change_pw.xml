@@ -8,32 +8,32 @@
     android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/ToldPW"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="Huidig wachtwoord:"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+<!--    <TextView-->
+<!--        android:id="@+id/ToldPW"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="24dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:buttonTint="@color/colorPrimary"-->
+<!--        android:text="Huidig wachtwoord:"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textStyle="bold" />-->
 
-    <EditText
-        android:id="@+id/EOld"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:inputType="textPassword"
-        android:textColor="@android:color/black"
-        />
+<!--    <EditText-->
+<!--        android:id="@+id/EOld"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="24dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:buttonTint="@color/colorPrimary"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:textColor="@android:color/black"-->
+<!--        />-->
 
     <TextView
         android:id="@+id/Tnew1"
@@ -50,7 +50,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/ENew1"
+        android:id="@+id/passwordChangeTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -77,7 +77,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/ENew2"
+        android:id="@+id/checkPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -89,8 +89,21 @@
         android:textColor="@android:color/black"
         />
 
+    <TextView
+        android:id="@+id/errorField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/rounded_shape_bad"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:visibility="invisible" />
+
     <Button
-        android:id="@+id/BTNChangeCreds"
+        android:id="@+id/ChangePasswordButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

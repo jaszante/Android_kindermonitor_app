@@ -80,7 +80,7 @@ class RegisterActivity : BaseActivityClass() {
                             email.text.toString()
                         )
                     } else {
-                        errorfield.text = "De twee wachtwoorden komen niet overeen"
+                        errorfield.text = getString(R.string.wachtwoordenKomenNietOvereen) //"De twee wachtwoorden komen niet overeen"
                         errorfield.visibility = View.VISIBLE
                     }
                 } else {

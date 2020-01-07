@@ -110,7 +110,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/hMin"
+                    android:id="@+id/hartslagMin"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -140,7 +140,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/hMax"
+                    android:id="@+id/hartslagMax"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -199,7 +199,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tMin"
+                    android:id="@+id/temperatuurMin"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -229,7 +229,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/tMax"
+                    android:id="@+id/temperatuurMax"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -288,7 +288,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/sMin"
+                    android:id="@+id/saturatieMin"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -318,7 +318,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/sMax"
+                    android:id="@+id/saturatieMax"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -377,7 +377,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/aMin"
+                    android:id="@+id/ademfrequentieMin"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
@@ -407,7 +407,7 @@
                     />
 
                 <TextView
-                    android:id="@+id/aMax"
+                    android:id="@+id/ademfrequentieMax"
                     android:layout_width="80dp"
                     android:layout_height="24dp"
                     android:background="@drawable/borderinput"
