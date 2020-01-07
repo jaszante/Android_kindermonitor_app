@@ -71,18 +71,17 @@ class PatientList : BaseActivityClass() {
                     //viewAdapter.notifyDataSetChanged();
                 }
             }
-
         })
-
-        initApp()
-
-        getUserDataThenStartGetPatientsCall()
     }
 
     override fun onResume() {
         super.onResume()
 
         MonitorApplication.getInstance().stopMeasurementService = true
+
+        initApp()
+
+        getUserDataThenStartGetPatientsCall()
     }
 
     private fun initApp() {

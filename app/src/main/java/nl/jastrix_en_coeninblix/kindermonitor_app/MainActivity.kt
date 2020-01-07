@@ -196,7 +196,6 @@ class MainActivity : BaseActivityClass(), Observer {
                     if (response.isSuccessful && response.body() != null) {
                         val monitorApplication = MonitorApplication.getInstance()
                         for (sensorFromCallback in response.body()!!) {
-//                            var patientSensor: PatientSensor? = null
                             when (sensorFromCallback.type) {
                                 SensorType.Hartslag.toString() -> {
                                     monitorApplication.hartslagSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag,

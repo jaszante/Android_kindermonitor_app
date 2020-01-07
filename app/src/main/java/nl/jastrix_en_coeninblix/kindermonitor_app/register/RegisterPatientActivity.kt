@@ -16,6 +16,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.*
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
 import retrofit2.Call
@@ -283,38 +284,4 @@ class RegisterPatientActivity : BaseActivityClass() {
             }
         })
     }
-
-//    // permission not nessesary because this user is creating the patient?
-//    private fun setSensorPersmissionForCurrentUser() {
-//        val patientListIntent: Intent = Intent(this, PatientList::class.java)
-
-//        var call = apiHelper.returnAPIServiceWithAuthenticationTokenAdded().permission(createdPatient.patientID, newSensor)
-//
-//        call.enqueue(object : Callback<Sensor> {
-//            override fun onResponse(
-//                call: Call<Sensor>,
-//                response: Response<Sensor>
-//            ) {
-//                if (response.isSuccessful && response.body() != null) {
-//                    startActivity(patientListIntent)
-//                    finish()
-//                }
-//                else
-//                {
-//                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
-//                    if (errorbodyLength != 0) {
-//                        val jObjError = JSONObject(response.errorBody()!!.string())
-//                        val errorMessage = jObjError.getString("error")
-//                        registerPatientShowErrorMessage(errorMessage)
-//                    } else {
-//                        registerPatientShowErrorMessage(response.message())
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<Sensor>, t: Throwable) {
-//                registerPatientShowErrorMessage(t.message!!)
-//            }
-//        })
-//    }
 }
