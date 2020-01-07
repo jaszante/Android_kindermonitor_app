@@ -10,5 +10,6 @@ class ChangePW : BaseActivityClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_pw)
+        this.setTitle(R.string.title_change_pw)
     }
 }

@@ -40,27 +40,7 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val logoutButton = getView()!!.findViewById<Button>(R.id.LogoutButton)
         logoutButton.setOnClickListener() {
-            MonitorApplication.getInstance().stopMeasurementService = true
-            val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
-            val sharedPreferences = EncryptedSharedPreferences.create(
-                "kinderMonitorApp",
-                masterKeyAlias,
-                activity!!.applicationContext,
-                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-            )
-
-            val editor = sharedPreferences.edit()
-
-//                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
-            editor.putString("AuthenticationToken", null)
-            editor.putString("KinderMonitorAppUserName", null)
-            editor.putString("KinderMonitorAppPassword", null)
-            editor.apply()
-
-            val loginIntent: Intent = Intent(activity, LoginActivity::class.java)
-            startActivity(loginIntent)
         }
 
         val graphbutton = getView()!!.findViewById<Button>(R.id.BTNgraph)

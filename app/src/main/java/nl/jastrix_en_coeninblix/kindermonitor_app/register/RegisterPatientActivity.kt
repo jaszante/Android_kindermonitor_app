@@ -55,6 +55,7 @@ class RegisterPatientActivity : BaseActivityClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_patient)
+        this.setTitle(R.string.register_patient)
 
         // after startactivity do finish()
         patientFirstNameEditText = findViewById(R.id.patientFirstName)

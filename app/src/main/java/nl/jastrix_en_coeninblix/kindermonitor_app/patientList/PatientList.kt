@@ -42,6 +42,7 @@ class PatientList : BaseActivityClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_list)
+        this.setTitle(getString(R.string.select_patient))
 
         val patientListener: PatientListener = object : PatientListener {
             override fun onItemClick(position: Int, patient: PatientWithID) {

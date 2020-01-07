@@ -10,5 +10,6 @@ class AccountPage : BaseActivityClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_page)
+        this.setTitle(R.string.title_change_cred)
     }
 }

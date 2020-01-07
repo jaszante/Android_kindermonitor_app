@@ -51,6 +51,7 @@ class RegisterActivity : BaseActivityClass() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        this.setTitle(R.string.register_account)
         buttonRegister = findViewById(R.id.BTNregister)
         uName = findViewById(R.id.EUname)
         pw = findViewById(R.id.EPW)
@@ -61,7 +62,7 @@ class RegisterActivity : BaseActivityClass() {
         checkBoxCaretaker = findViewById(R.id.CBcaretaker)
         checkBoxTerms = findViewById(R.id.CBterms)
         errorfield = findViewById<EditText>(R.id.registerError)
-        confirmPW = findViewById(R.id.TCPW)
+        confirmPW = findViewById(R.id.ECPW)
         service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
 
         /*-------------------------------------------------------------------------------------------*/

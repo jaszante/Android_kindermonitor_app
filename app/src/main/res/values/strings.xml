@@ -45,4 +45,15 @@
     <string name="algemeen">Algemeen</string>
     <string name="bevestig_wachtwoord">Bevestig wachtwoord</string>
 
+    <string name="select_patient">Selecteer patient</string>
+    <string name="title_add_users">Beheer gebruikers</string>
+    <string name="title_change_pw">Verander wachtwoord</string>
+    <string name="title_change_cred">Verander gegevens</string>
+    <string name="register_account">Registreer uw account</string>
+    <string name="register_patient">Registreer patient</string>
+    <string name="add_patient">Voeg een patient toe</string>
+
+
+
+
 </resources>
