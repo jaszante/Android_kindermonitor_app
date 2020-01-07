@@ -27,8 +27,12 @@ interface APIService {
     @GET ("Users/me/patients")
     fun getAllPatientsForLogginedInUser(): Call<Array<PatientWithID>>
 
-    @GET ("Sensors/{SensorId}//measurements")
+    @GET ("Sensors/{SensorId}/measurements")
     fun getMeasurementsForSensor(@Path("SensorId") sensorId: Int): Call<Array<Measurement>> //, from: String? = null, to: String? = null
+
+    @GET ("Sensors/{SensorId}/measurements")
+    fun getMeasurementsForSensorWithRange(@Path("SensorId") sensorId: Int, @Query("from")from : String, @Query("to") to :String ): Call<Array<Measurement>>
+
 
 //    @POST ("Sensors/{SensorId}/measurements")
     @POST ("Sensors/measurements")
