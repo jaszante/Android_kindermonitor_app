@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -32,9 +33,12 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GalleryFragment : Fragment() {
 
@@ -69,15 +73,17 @@ class GalleryFragment : Fragment() {
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         var month2 = month + 1
-        fromDateString = "" + month2 + "-" + day + "-" + year
-        toDateString = "" + month2 + "-" + day + "-" + year
+        var day2 = day + 1
 
+        fromDateString = "" + year + "-" + month2 + "-" + day + "T" + "00:00:00.000"
+        toDateString = "" + year + "-" + month2 + "-" + day2 + "T" + "00:00:00.000"
         val dpd = DatePickerDialog(
             this.context,
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 val monthPlusOne = monthOfYear + 1
                 fromDate.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
-                fromDateString = "" + monthPlusOne + "-" + dayOfMonth + "-" + year
+                fromDateString =
+                    "" + year + "-" + monthPlusOne + "-" + dayOfMonth + "T" + "00:00:00.000"
             },
             year,
             month,
@@ -88,7 +94,8 @@ class GalleryFragment : Fragment() {
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 val monthPlusOne = monthOfYear + 1
                 toDate.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
-                toDateString = "" + monthPlusOne + "-" + dayOfMonth + "-" + year
+                toDateString =
+                    "" + year + "-" + monthPlusOne + "-" + dayOfMonth + "T" + "23:59:59.000"
             },
             year,
             month,
@@ -115,12 +122,13 @@ class GalleryFragment : Fragment() {
 
     private fun getArray(from: String, to: String) {
         var monitorapp = MonitorApplication.getInstance()
-        var from2 =""
+
+
         val call = monitorapp.apiHelper.buildAPIServiceWithNewToken(
             monitorapp.authToken
         ).getMeasurementsForSensorWithRange(
             monitorapp.hartslagSensor!!.sensorID
-        ,fromDateString, toDateString
+            , fromDateString, toDateString
         )
         call.enqueue(object : Callback<Array<Measurement>> {
             override fun onResponse(
@@ -129,7 +137,8 @@ class GalleryFragment : Fragment() {
             ) {
                 if (response.isSuccessful && response.body() != null) {
                     var responsebody = response.body()!!
-
+                    var list: Array<Measurement> = responsebody
+                    create_Graph(list)
 
                 } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
@@ -150,25 +159,35 @@ class GalleryFragment : Fragment() {
     }
 
 
-    fun create_Graph() {
+    fun create_Graph(array: Array<Measurement>) {
 
-        graph.setTitle("hartslag")
-        val series = LineGraphSeries(
-            arrayOf(
-                DataPoint(0.0, 1.0),
-                DataPoint(1.0, 5.0),
-                DataPoint(2.00, 3.0),
-                DataPoint(3.0, 35.0),
-                DataPoint(4.0, 100.0),
-                DataPoint(4.5, 150.0),
-                DataPoint(5.0, 65.0)
-            )
-        )
+        var dataPoint: ArrayList<DataPoint>
+        var list = ArrayList<DataPoint>()
+        var format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSS", Locale.GERMANY)
+
+        array.forEach {
+            var date = format.parse(it.time)
+            var point = DataPoint(date, it.value)
+            list.add(point)
+        }
+        var arrayDP = arrayOfNulls<DataPoint>(list.size)
+        var de = list.toArray(arrayDP)
+
+        var series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(de)
+
 
         val view = graph.getViewport()
+
+
+        var nf = NumberFormat.getInstance()
+        nf.maximumFractionDigits = 3
+        nf.maximumIntegerDigits = 4
+        graph.title = "Hartslag"
+        graph.gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
+        view.isScrollable = true
+        //view.isScalable = true
         view.borderColor = ContextCompat.getColor(this.context!!, R.color.colorPrimaryDark)
         view.backgroundColor = ContextCompat.getColor(this.context!!, R.color.white)
-        view.isScrollable = true
         graph.addSeries(series)
     }
 }

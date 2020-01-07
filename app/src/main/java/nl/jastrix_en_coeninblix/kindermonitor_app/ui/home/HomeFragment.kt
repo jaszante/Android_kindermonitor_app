@@ -82,8 +82,9 @@ class HomeFragment : Fragment() {
 
         val vidstream = currentView.findViewById<VideoView>(R.id.videoStream)
 
-        val vidAddress =
-            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"
+       /* val vidAddress =
+            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"*/
+        val vidAddress = "https://18973.live.streamtheworld.com/RADIO538.mp3"
         val vidUri: Uri = Uri.parse(vidAddress)
         vidstream.setVideoURI(vidUri)
         vidstream.start()
