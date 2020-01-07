@@ -4,12 +4,17 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import kotlinx.android.synthetic.main.activity_register_patient.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserRegister
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,7 +22,14 @@ import retrofit2.Response
 
 class AccountPage : BaseActivityClass() {
 
-//    val
+    private lateinit var usernameTextView: EditText
+    private lateinit var emailTextView: EditText
+    private lateinit var firstnameTextView: EditText
+    private lateinit var lastnameTextView: EditText
+    private lateinit var phonenumberTextView: EditText
+    private lateinit var errorField: TextView
+
+    private var noCallInProgress: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +37,33 @@ class AccountPage : BaseActivityClass() {
         setContentView(R.layout.activity_account_page)
         this.setTitle(R.string.title_change_cred)
 
+        usernameTextView = findViewById(R.id.PersonGebruikersnaam)
+        emailTextView = findViewById(R.id.PersonEmail)
+        firstnameTextView = findViewById(R.id.PersonFName)
+        lastnameTextView = findViewById(R.id.PersonLName)
+        phonenumberTextView = findViewById(R.id.PersonTelefoonNummer)
+        errorField = findViewById(R.id.errorField)
 
+        val changeUsernameButton = findViewById<Button>(R.id.changeUserDataButton)
+        changeUsernameButton.setOnClickListener(){
+            val oldUserData = MonitorApplication.getInstance().userData!!
+
+            val newUserRegister = UserRegister(usernameTextView.text.toString(), oldUserData.password, firstnameTextView.text.toString(), lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString())
+
+            updateUserData(newUserRegister)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val userdata = MonitorApplication.getInstance().userData!!
+
+        usernameTextView.setText(userdata.username)
+        emailTextView.setText(userdata.email)
+        firstnameTextView.setText(userdata.firstName)
+        lastnameTextView.setText(userdata.lastName)
+        phonenumberTextView.setText(userdata.phoneNumber)
     }
 
     private fun updateUserData(newUserData: UserRegister) {
@@ -47,6 +85,16 @@ class AccountPage : BaseActivityClass() {
                     noCallInProgress = true
 
                     if (response.isSuccessful) {
+                        val monitorApplication = MonitorApplication.getInstance()
+
+                        val oldUserData = MonitorApplication.getInstance().userData!!
+                        monitorApplication.userData = UserData(oldUserData.userID, usernameTextView.text.toString(), oldUserData.password , firstnameTextView.text.toString() ,lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString())
+//                        MonitorApplication.getInstance().userRegister.postValue(UserRegister(usernameTextView.text.toString(), oldUserData.password , firstnameTextView.text.toString() ,lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString()))
+                        monitorApplication.loggedInUsername.postValue(usernameTextView.text.toString())
+                        monitorApplication.loggedInFirstName.postValue(firstnameTextView.text.toString())
+                        monitorApplication.loggedInLastName.postValue(lastnameTextView.text.toString())
+                        monitorApplication.loggedInEmail.postValue(emailTextView.text.toString())
+                        monitorApplication.loggedInPhoneNumber.postValue(phonenumberTextView.text.toString())
                         saveUserCredentials()
                         startActivity(mainActivityIntent)
                     }
@@ -80,7 +128,7 @@ class AccountPage : BaseActivityClass() {
 
                     editor.putString(
                         "KinderMonitorAppUserName",
-                        uName
+                        usernameTextView.text.toString()
                     )
                     editor.commit()//apply()
                 }

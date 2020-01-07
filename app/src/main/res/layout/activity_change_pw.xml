@@ -103,7 +103,7 @@
         android:visibility="invisible" />
 
     <Button
-        android:id="@+id/ChangePasswordButton"
+        android:id="@+id/changeUserDataButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

@@ -68,33 +68,6 @@ class ForegroundMeasurmentService : Service() {
         requestMeasurementFromSensor(monitorApplication, monitorApplication.hartslagSensor!!)
         requestMeasurementFromSensor(monitorApplication, monitorApplication.ademFrequentieSensor!!)
         requestMeasurementFromSensor(monitorApplication, monitorApplication.saturatieSensor!!)
-
-//        monitorApplication.hartslagLiveData.postValue(randomValue.toString())
-//
-//        randomValue = (80..100).random()
-//        monitorApplication.temperatuurLiveData.postValue(randomValue.toString())
-//
-//        randomValue = (80..100).random()
-//        monitorApplication.saturatieLiveData.postValue(randomValue.toString())
-//
-//        randomValue = (80..100).random()
-//        monitorApplication.ademFrequentieLiveData.postValue(randomValue.toString())
-
-//        // vervang randomValue met de 4 values van de api in final versie
-//        // check grenswaarden
-//        if (randomValue > 95 && monitorApplication.alarmNotPauzed) {
-//            if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null){
-//                val notificationPopup = NotificationPopup()
-//
-//                try {
-//                    notificationPopup.show(MonitorApplication.getInstance().fragmentManager!!, "Notification")
-//                    monitorApplication.startPauzeTimer()
-//                }
-//                finally {
-//                    // means app is in background and last activity was destroyed, so pushnotification is the only notification that can pop up
-//                }
-//            }
-//        }
     }
 
     private fun requestMeasurementFromSensor(monitorApplication: MonitorApplication, patientSensor: PatientSensor){

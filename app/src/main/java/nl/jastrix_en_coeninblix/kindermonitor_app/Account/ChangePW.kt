@@ -1,7 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.Account
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -13,12 +12,8 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserRegister
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -43,7 +38,7 @@ class ChangePW : BaseActivityClass() {
         passwordCheckEditText = findViewById(R.id.checkPassword)
 
 
-        val changePasswordButton = findViewById<Button>(R.id.ChangePasswordButton)
+        val changePasswordButton = findViewById<Button>(R.id.changeUserDataButton)
         changePasswordButton.setOnClickListener() {
             if (isValidPassword(passwordEditText.text.toString())) {
                 if (passwordCheckEditText.text.toString() == passwordEditText.text.toString()) {
@@ -81,6 +76,10 @@ class ChangePW : BaseActivityClass() {
                     noCallInProgress = true
 
                     if (response.isSuccessful) {
+                        val oldUserData = MonitorApplication.getInstance().userData!!
+                        MonitorApplication.getInstance().userData = UserData(oldUserData.userID, oldUserData.username, passwordEditText.text.toString(),oldUserData.firstName ,oldUserData.lastName, oldUserData.phoneNumber, oldUserData.email)
+                        updateUserData(newUserData)
+
                         saveUserCredentials()
                         startActivity(mainActivityIntent)
                     }

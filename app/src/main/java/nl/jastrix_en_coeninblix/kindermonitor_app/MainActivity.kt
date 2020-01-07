@@ -132,6 +132,7 @@ class MainActivity : BaseActivityClass(), Observer {
 
                     val monitorApplication = MonitorApplication.getInstance()
                     monitorApplication.userData = responseBody
+//                    monitorApplication.userRegister.postValue(UserRegister(responseBody.username, responseBody.password, responseBody.firstName, responseBody.lastName, responseBody.phoneNumber, responseBody.email))
                     monitorApplication.loggedInUsername.postValue(responseBody.username)
                     monitorApplication.loggedInFirstName.postValue(responseBody.firstName)
                     monitorApplication.loggedInLastName.postValue(responseBody.lastName)

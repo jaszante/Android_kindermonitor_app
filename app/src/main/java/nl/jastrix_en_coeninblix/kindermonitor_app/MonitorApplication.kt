@@ -7,10 +7,7 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientSensor
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.ThresholdValues
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
 import java.util.*
 import kotlin.collections.ArrayList
@@ -45,6 +42,7 @@ class MonitorApplication : Application() {
     var temperatuurThresholds = MutableLiveData<String>()
     var ademfrequentieThresholds = MutableLiveData<String>()
     var saturatieThresholds = MutableLiveData<String>()
+//    var userRegister = MutableLiveData<UserRegister>()
 
     var loggedInUsername = MutableLiveData<String>()
     var loggedInFirstName = MutableLiveData<String>()
