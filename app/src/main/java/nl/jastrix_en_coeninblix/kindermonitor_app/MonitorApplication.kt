@@ -46,6 +46,11 @@ class MonitorApplication : Application() {
     var ademfrequentieThresholds = MutableLiveData<String>()
     var saturatieThresholds = MutableLiveData<String>()
 
+    var loggedInUsername = MutableLiveData<String>()
+    var loggedInFirstName = MutableLiveData<String>()
+    var loggedInLastName = MutableLiveData<String>()
+    var loggedInEmail = MutableLiveData<String>()
+    var loggedInPhoneNumber = MutableLiveData<String>()
 
     var stopMeasurementService: Boolean = false
 
