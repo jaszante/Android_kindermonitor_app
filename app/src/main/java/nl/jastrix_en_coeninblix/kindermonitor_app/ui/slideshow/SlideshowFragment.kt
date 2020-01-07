@@ -97,9 +97,22 @@ class SlideshowFragment : Fragment() {
             val monitorApplication = MonitorApplication.getInstance()
 
             monitorApplication.hartslagThresholds.postValue(hartslagMin.text.toString() + " - " + hartslagMax.text.toString())
-            monitorApplication.temperatuurThresholds.postValue(temperatuurMin.text.toString() + " - " + temperatuurMax.text.toString())
-            monitorApplication.saturatieThresholds.postValue(saturatieMin.text.toString() + " - " + saturatieMax.text.toString())
+            monitorApplication.temperatuurThresholds.postValue(temperatuurMin.text.toString() + "° - " + temperatuurMax.text.toString() + "°")
+            monitorApplication.saturatieThresholds.postValue(saturatieMin.text.toString() + "% - " + saturatieMax.text.toString() + "%")
             monitorApplication.ademfrequentieThresholds.postValue(ademfrequentieMin.text.toString() + " - " + ademfrequentieMax.text.toString())
+
+            monitorApplication.hartslagSensor!!.thresholdMin = hartslagMin.text.toString().toInt()
+            monitorApplication.hartslagSensor!!.thresholdMax = hartslagMax.text.toString().toInt()
+
+            monitorApplication.temperatuurSensor!!.thresholdMin = temperatuurMin.text.toString().toInt()
+            monitorApplication.temperatuurSensor!!.thresholdMax = temperatuurMax.text.toString().toInt()
+
+            monitorApplication.ademFrequentieSensor!!.thresholdMin = ademfrequentieMin.text.toString().toInt()
+            monitorApplication.ademFrequentieSensor!!.thresholdMax = ademfrequentieMax.text.toString().toInt()
+
+            monitorApplication.saturatieSensor!!.thresholdMin = saturatieMin.text.toString().toInt()
+            monitorApplication.saturatieSensor!!.thresholdMax = saturatieMax.text.toString().toInt()
+
 
             // api call voor elke sensor
 

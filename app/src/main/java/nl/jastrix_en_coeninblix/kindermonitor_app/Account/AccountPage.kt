@@ -31,7 +31,6 @@ class AccountPage : BaseActivityClass() {
 
     private var noCallInProgress: Boolean = true
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_page)

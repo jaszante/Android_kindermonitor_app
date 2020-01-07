@@ -22,6 +22,7 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserRegister
+import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
 import retrofit2.Call
@@ -232,5 +233,10 @@ class RegisterActivity : BaseActivityClass() {
             startActivity(patientListIntent)
             finish()
         }
+    }
+
+    override fun onBackPressed() {
+        val loginIntent = Intent(this, LoginActivity::class.java)
+        startActivity(loginIntent)
     }
 }

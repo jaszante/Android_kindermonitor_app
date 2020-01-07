@@ -55,7 +55,6 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             if (noCallInProgress) {
                 startActivity(registerIntent)
             }
-//            finish()
         }
 
         val loginButton = findViewById<Button>(R.id.LoginButton)
