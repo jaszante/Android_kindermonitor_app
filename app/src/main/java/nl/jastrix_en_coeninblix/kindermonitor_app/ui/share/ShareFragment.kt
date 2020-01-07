@@ -6,16 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import nl.jastrix_en_coeninblix.kindermonitor_app.Account.AccountPage
+import nl.jastrix_en_coeninblix.kindermonitor_app.Account.AddUserToAccount
+import nl.jastrix_en_coeninblix.kindermonitor_app.Account.ChangePW
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
+import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 
 class ShareFragment : Fragment() {
 
@@ -39,7 +44,6 @@ class ShareFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val currentView = getView()!!
-
 
         var buttonLogout= currentView.findViewById<Button>(R.id.BTNlogout)
         buttonLogout.setOnClickListener {
@@ -66,6 +70,28 @@ class ShareFragment : Fragment() {
             startActivity(loginIntent)
         }
 
+
+        val addPatientLayout = currentView.findViewById<LinearLayout>(R.id.Add_patient)
+        addPatientLayout.setOnClickListener{
+            val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
+            startActivity(registerPatientIntent)
+        }
+        val changePwLayout= currentView.findViewById<LinearLayout>(R.id.ChangePWLayout)
+        changePwLayout.setOnClickListener {
+            val changePWIntent = Intent(activity, ChangePW::class.java)
+            startActivity(changePWIntent)
+        }
+
+        val changeCredLayout = currentView.findViewById<LinearLayout>(R.id.ChangeCredentialsLayout)
+        changeCredLayout.setOnClickListener {
+            val changeCredIntent = Intent(activity, AccountPage::class.java)
+            startActivity(changeCredIntent)
+        }
+        val manageGebruikersLayout= currentView.findViewById<LinearLayout>(R.id.ManageGebruikersLayout)
+        manageGebruikersLayout.setOnClickListener {
+            val intent= Intent(activity, AddUserToAccount::class.java)
+            startActivity(intent)
+        }
 
 //
 //        }

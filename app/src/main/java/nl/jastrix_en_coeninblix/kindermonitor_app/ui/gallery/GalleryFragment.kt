@@ -49,10 +49,5 @@ class GalleryFragment : Fragment() {
             startActivity(intent)
         }
 
-        val createAndAddNewPatientButton = getView()!!.findViewById<Button>(R.id.createAndAddNewPatient)
-        createAndAddNewPatientButton.setOnClickListener() {
-            val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
-            startActivity(registerPatientIntent)
-        }
     }
 }

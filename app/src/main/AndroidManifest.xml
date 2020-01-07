@@ -24,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Account.AccountPage"/>
         <activity android:name=".register.RegisterPatientActivity" />
         <activity android:name=".register.RegisterActivity" />
         <activity
