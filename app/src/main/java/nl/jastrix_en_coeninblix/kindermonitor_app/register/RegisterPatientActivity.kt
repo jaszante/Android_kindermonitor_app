@@ -52,6 +52,9 @@ class RegisterPatientActivity : BaseActivityClass() {
     var emailContent3: EmailContent? = null
     var emailContent4: EmailContent? = null
 
+    var birthdateDay: String? = null
+    var birthdateMonth: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_patient)
@@ -76,6 +79,8 @@ class RegisterPatientActivity : BaseActivityClass() {
             this,
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 val monthPlusOne = monthOfYear + 1
+                birthdateDay = dayOfMonth.toString()
+                birthdateMonth = monthPlusOne.toString()
                 patientBirthDateEditText.setText("" + dayOfMonth + "-" + monthPlusOne + "-" + year)
             },
             year,
@@ -91,7 +96,7 @@ class RegisterPatientActivity : BaseActivityClass() {
 
             patientRegisterErrorField.visibility = View.INVISIBLE
 
-            val patientBirthdayString = patientBirthDateEditText.text.toString()
+            val patientBirthdayString = "" + birthdateMonth + "-" + birthdateDay + "-" + year  //patientBirthDateEditText.text.toString()
 //            var parsedDateString: String = ""
 //            var parseSucceeded: Boolean = false
 //

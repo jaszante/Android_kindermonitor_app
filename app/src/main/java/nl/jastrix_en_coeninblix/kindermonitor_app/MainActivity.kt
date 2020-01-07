@@ -109,6 +109,9 @@ class MainActivity : BaseActivityClass(), Observer {
         super.onResume()
 //        active = true
 
+        MonitorApplication.getInstance().stopMeasurementService = false
+
+
         if (MonitorApplication.getInstance().authTokenChanged) {
             // THE USERDATA AND PATIENT CALLS SHOULD BE DONE IN NEW PATIENT OVERVIEW ACTIVITY.
             // IN THAT ACTIVITY THE CURRENTPATIENT IS CHOSEN AND SET TO THE COMPANION HERE, THEN THE MESUREMENT CALLS CAN START

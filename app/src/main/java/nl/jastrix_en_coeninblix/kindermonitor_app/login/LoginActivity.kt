@@ -74,7 +74,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     }
 
     override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
-        registerOrLoginFailedShowMessage(t.message!!)
+        registerOrLoginFailedShowMessage(getString(R.string.noInternetError))//t.message!!)
     }
 
     override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
