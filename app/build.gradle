@@ -29,7 +29,9 @@ android {
         jvmTarget = "1.8"
     }
 }
-
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -52,6 +54,8 @@ dependencies {
     implementation 'androidx.security:security-crypto:1.0.0-alpha02'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
 //    implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation files('libs/activation.jar')
 }

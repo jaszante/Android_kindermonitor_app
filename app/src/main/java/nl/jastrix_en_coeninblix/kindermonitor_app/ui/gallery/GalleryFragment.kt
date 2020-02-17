@@ -18,6 +18,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.android.synthetic.main.fragment_slideshow.*
@@ -37,6 +38,7 @@ import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -180,10 +182,11 @@ class GalleryFragment : Fragment() {
 
 
         var nf = NumberFormat.getInstance()
-        nf.maximumFractionDigits = 3
+        nf.maximumFractionDigits = 0
         nf.maximumIntegerDigits = 4
         graph.title = "Hartslag"
         graph.gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
+        graph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this.context )
         view.isScrollable = true
         //view.isScalable = true
         view.borderColor = ContextCompat.getColor(this.context!!, R.color.colorPrimaryDark)
