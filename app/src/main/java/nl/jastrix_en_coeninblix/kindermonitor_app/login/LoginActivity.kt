@@ -94,9 +94,16 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         }
         else {
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+            var errorMessage = "API down"
             if (errorbodyLength != 0) {
+                try {
+
                 val jObjError = JSONObject(response.errorBody()!!.string())
-                val errorMessage = jObjError.getString("error")
+                errorMessage = jObjError.getString("error")
+                }
+                finally {
+
+                }
                 registerOrLoginFailedShowMessage(errorMessage)
             }
             else{

@@ -144,8 +144,15 @@ class RegisterPatientActivity : BaseActivityClass() {
                 } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
+                        var errorMessage = "API down"
+                        try{
+
                         val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getString("error")
+                        errorMessage = jObjError.getString("error")
+                        }
+                        finally {
+
+                        }
                         registerPatientShowErrorMessage(errorMessage)
                     } else {
                         registerPatientShowErrorMessage(response.message())
