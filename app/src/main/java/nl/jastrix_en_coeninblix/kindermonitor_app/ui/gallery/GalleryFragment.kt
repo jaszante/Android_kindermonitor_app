@@ -143,14 +143,14 @@ class GalleryFragment : Fragment() {
                     create_Graph(list)
 
                 } else {
-                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
-                    if (errorbodyLength != 0) {
-                        val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getString("error")
-                        // registerPatientShowErrorMessage(errorMessage)
-                    } else {
-                        //registerPatientShowErrorMessage(response.message())
-                    }
+//                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+//                    if (errorbodyLength != 0) {
+//                        val jObjError = JSONObject(response.errorBody()!!.string())
+//                        val errorMessage = jObjError.getString("error")
+//                        // registerPatientShowErrorMessage(errorMessage)
+//                    } else {
+//                        //registerPatientShowErrorMessage(response.message())
+//                    }
                 }
             }
 
