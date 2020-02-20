@@ -8,11 +8,9 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
-import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
@@ -73,6 +71,12 @@ class RegisterActivity : BaseActivityClass() {
                 if (isValidPassword(pw.text.toString())) {
                     if (pw.text.toString() == confirmPW.text.toString()) {
                         register(
+//                            uName.text.toString(),
+//                            "92045FbE",
+//                            "92045FbE",
+//                            "92045FbE",
+//                            "213123565",
+//                            "f@e.nl"
                             uName.text.toString(),
                             pw.text.toString(),
                             fName.text.toString(),
@@ -141,12 +145,12 @@ class RegisterActivity : BaseActivityClass() {
         pw: String,
         fName: String,
         lName: String,
-        bDate: String,
+        phoneNumber: String,
         email: String
     ) {
         if (noCallInProgress) {
             noCallInProgress = false
-            val userRegister = UserRegister(uName, pw, fName, lName, bDate, email)
+            val userRegister = UserRegister(uName, pw, fName, lName, phoneNumber, email)
             val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
                 .userRegister(userRegister)
             call.enqueue(object : Callback<AuthenticationToken> {

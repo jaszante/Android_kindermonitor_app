@@ -95,9 +95,11 @@ class RegisterPatientActivity : BaseActivityClass() {
 
         registerPatientButton.setOnClickListener() {
 
-            patientRegisterErrorField.visibility = View.INVISIBLE
+            if (noCallInProgress) {
+                patientRegisterErrorField.visibility = View.INVISIBLE
 
-            val patientBirthdayString = "" + birthdateMonth + "-" + birthdateDay + "-" + year  //patientBirthDateEditText.text.toString()
+                val patientBirthdayString =
+                    "" + birthdateMonth + "-" + birthdateDay + "-" + year  //patientBirthDateEditText.text.toString()
 //            var parsedDateString: String = ""
 //            var parseSucceeded: Boolean = false
 //
@@ -124,6 +126,7 @@ class RegisterPatientActivity : BaseActivityClass() {
                 )
 
                 createPatientForThisUser(createPatient)
+            }
 //            }
         }
 
