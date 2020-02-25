@@ -21,6 +21,9 @@ interface APIService {
     @POST ("Patients/{PatientId}/Sensors")
     fun createSensor(@Path("PatientId") patientId: Int, @Body newSensor: SensorToCreate): Call<Sensor>
 
+    @POST ("Sensors/{sensorId}")
+    fun updateSensor(@Path("sensorId") patientId: Int, @Body updatedSensor: SensorToCreate): Call<Sensor>
+
     @POST ("Users/me/patients")
     fun createPatientForLoggedInUser(@Body patient: Patient): Call<PatientWithID>
 

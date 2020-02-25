@@ -27,8 +27,8 @@
         android:ems="10"
         android:hint="@string/username"
         android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        android:singleLine="false" />
+        android:singleLine="false"
+    />
 
     <EditText
         android:id="@+id/passwordField"

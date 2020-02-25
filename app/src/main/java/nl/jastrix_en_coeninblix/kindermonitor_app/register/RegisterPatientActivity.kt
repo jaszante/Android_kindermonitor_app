@@ -89,6 +89,12 @@ class RegisterPatientActivity : BaseActivityClass() {
             day
         )
 
+        val datePicker = dpd.datePicker
+
+        val currentDate = Calendar.getInstance().getTime()
+
+        datePicker.maxDate = currentDate.time
+
         patientBirthDateEditText.setOnClickListener() {
             dpd.show()
         }
@@ -223,7 +229,7 @@ class RegisterPatientActivity : BaseActivityClass() {
         val patientListIntent = Intent(this, PatientList::class.java)
 
         val newSensor = SensorToCreate(type, "Nee", thresholdMin, thresholdMax)
-        var call = MonitorApplication.getInstance()
+        val call = MonitorApplication.getInstance()
             .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .createSensor(createdPatient.patientID, newSensor)
 

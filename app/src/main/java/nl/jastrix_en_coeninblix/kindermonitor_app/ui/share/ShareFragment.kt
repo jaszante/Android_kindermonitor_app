@@ -57,7 +57,7 @@ class ShareFragment : Fragment() {
         emailTextView = currentView.findViewById(R.id.PersonEmail)
         phoneNumberTextView = currentView.findViewById(R.id.PersonTelefoonNummer)
 
-        var buttonLogout= currentView.findViewById<Button>(R.id.BTNlogout)
+        val buttonLogout= currentView.findViewById<Button>(R.id.BTNlogout)
         buttonLogout.setOnClickListener {
             MonitorApplication.getInstance().stopMeasurementService = true
             val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)

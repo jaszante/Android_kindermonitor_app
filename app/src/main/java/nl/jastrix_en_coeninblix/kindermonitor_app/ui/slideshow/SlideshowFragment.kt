@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Sensor
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorToCreate
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.lang.Exception
 
 
 class SlideshowFragment : Fragment() {
@@ -35,6 +43,7 @@ class SlideshowFragment : Fragment() {
     private lateinit var buttonSave: Button
     private lateinit var spinner: Spinner
 
+    private var noCallInProgress: Boolean = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -113,8 +122,20 @@ class SlideshowFragment : Fragment() {
             monitorApplication.saturatieSensor!!.thresholdMin = saturatieMin.text.toString().toInt()
             monitorApplication.saturatieSensor!!.thresholdMax = saturatieMax.text.toString().toInt()
 
+            if (noCallInProgress) {
+                noCallInProgress= false
 
-            // api call voor elke sensor
+                val updatedHartslagSensor = SensorToCreate(
+                    monitorApplication.hartslagSensor!!.sensorType.toString(),
+                    "Nee",
+                    hartslagMin.toString(),
+                    hartslagMax.toString()
+                )
+                updateSensorThresholds(updatedHartslagSensor)
+
+                // three more sensors
+            }
+
 
             buttonSave.visibility = View.INVISIBLE
         }
@@ -140,6 +161,46 @@ class SlideshowFragment : Fragment() {
                 MonitorApplication.getInstance().pauzeTime = newValue.toLong()
             }
         }
+    }
+
+    private fun updateSensorThresholds(updatedHartslagSensor: SensorToCreate){
+        val call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+            .updateSensor(MonitorApplication.getInstance().hartslagSensor!!.sensorID, updatedHartslagSensor)
+
+        call.enqueue(object : Callback<Sensor> {
+            override fun onResponse(
+                call: Call<Sensor>,
+                response: Response<Sensor>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    noCallInProgress = true
+                } else {
+                    val errorbodyLength = response.errorBody()!!.contentLength().toInt()
+                    if (errorbodyLength != 0) {
+                        try {
+
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getString("error")
+                            updateSensorShowErrorMessage(errorMessage)
+                        }
+                        catch (e: Exception) {
+                            updateSensorShowErrorMessage(response.message())
+                        }
+                    } else {
+                        updateSensorShowErrorMessage(response.message())
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Sensor>, t: Throwable) {
+                updateSensorShowErrorMessage(t.message!!)
+            }
+        })
+    }
+
+    private fun updateSensorShowErrorMessage(message: String){
+
     }
 
     private val changeAdemFrequentieThresholds = Observer<String> {

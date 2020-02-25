@@ -27,8 +27,8 @@
         android:autofillHints="@string/registerEditFname"
         android:ems="10"
         android:hint="@string/registerEditFname"
-        android:inputType="textPersonName"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:inputType="textCapSentences"/>
 
     <TextView
         android:id="@+id/patientLastNameLabel"
@@ -51,7 +51,7 @@
         android:autofillHints="@string/registerEditLname"
         android:ems="10"
         android:hint="@string/registerEditLname"
-        android:inputType="textPersonName"
+        android:inputType="textCapSentences"
         android:selectAllOnFocus="true"/>
 
     <TextView
@@ -104,6 +104,4 @@
         android:text="@string/registerButtonPatient"
         android:textColor="@color/white"
         android:stateListAnimator="@null"/>
-
-
 </LinearLayout>
