@@ -6,17 +6,16 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import org.json.JSONObject
-import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
+import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
@@ -40,6 +39,9 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
         this.setTitle(getString(R.string.login))
+
+        val test = MyFirebaseMessagingService()
+        test.getNewToken(this)
 
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
         loginOrRegisterErrorField.visibility = View.INVISIBLE

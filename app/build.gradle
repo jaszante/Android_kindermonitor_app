@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -31,7 +32,11 @@ android {
 }
 repositories {
     maven { url 'https://jitpack.io' }
+    maven {
+        url "https://dl.bintray.com/microsoftazuremobile/SDK"
+    }
 }
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -58,4 +63,19 @@ dependencies {
 
 //    implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation files('libs/activation.jar')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+//Add Firebase Core//
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+
+//Add FCM//
+
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+
+    implementation 'com.microsoft.azure:notification-hubs-android-sdk:0.6@aar'
 }
+
+
+apply plugin: 'com.google.gms.google-services'
