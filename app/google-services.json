@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "239934366670",
+    "firebase_url": "https://monitoringappnotifications.firebaseio.com",
+    "project_id": "monitoringappnotifications",
+    "storage_bucket": "monitoringappnotifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239934366670:android:df643ce6a0456368bfc19f",
+        "android_client_info": {
+          "package_name": "nl.jastrix_en_coeninblix.kindermonitor_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "239934366670-vc3s4lg2vetur8ricl6jq7g1u37ei69a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDbiKPwlyjIPqqTN3SlUNPOw6Owj7PqEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "239934366670-vc3s4lg2vetur8ricl6jq7g1u37ei69a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
