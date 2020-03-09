@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -17,7 +16,6 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
@@ -28,7 +26,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
-import kotlin.concurrent.schedule
 
 class MainActivity : BaseActivityClass(), Observer {
     override fun update(o: Observable?, arg: Any?) {
@@ -200,7 +197,7 @@ class MainActivity : BaseActivityClass(), Observer {
                                 SensorType.Hartslag.toString() -> {
                                     monitorApplication.hartslagSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag,
                                             sensorFromCallback.thresholdMin,
-                                        sensorFromCallback.thresholdMax, sensorFromCallback.PushnotificationDeviceToken)
+                                        sensorFromCallback.thresholdMax, sensorFromCallback.pushnotificationDeviceToken)
                                     monitorApplication.hartslagThresholds.postValue(sensorFromCallback.thresholdMin.toString() + " - " + sensorFromCallback.thresholdMax.toString())
                                 }
                                 SensorType.Temperature.toString() -> {
@@ -210,7 +207,7 @@ class MainActivity : BaseActivityClass(), Observer {
                                             SensorType.Temperature,
                                             sensorFromCallback.thresholdMin,
                                             sensorFromCallback.thresholdMax,
-                                            sensorFromCallback.PushnotificationDeviceToken
+                                            sensorFromCallback.pushnotificationDeviceToken
                                         )
                                     monitorApplication.temperatuurThresholds.postValue(sensorFromCallback.thresholdMin.toString() + "° - " + sensorFromCallback.thresholdMax.toString() + "°")
                                 }
@@ -220,7 +217,7 @@ class MainActivity : BaseActivityClass(), Observer {
                                             sensorFromCallback.sensorID, SensorType.Adem,
                                             sensorFromCallback.thresholdMin,
                                             sensorFromCallback.thresholdMax,
-                                            sensorFromCallback.PushnotificationDeviceToken)
+                                            sensorFromCallback.pushnotificationDeviceToken)
                                   monitorApplication.ademfrequentieThresholds.postValue(sensorFromCallback.thresholdMin.toString() + " - " + sensorFromCallback.thresholdMax.toString())
                                 }
                                 SensorType.Saturatie.toString() -> {
@@ -228,7 +225,7 @@ class MainActivity : BaseActivityClass(), Observer {
                                         sensorFromCallback.sensorID, SensorType.Saturatie,
                                         sensorFromCallback.thresholdMin,
                                         sensorFromCallback.thresholdMax,
-                                        sensorFromCallback.PushnotificationDeviceToken
+                                        sensorFromCallback.pushnotificationDeviceToken
                                     )
 
                                     monitorApplication.saturatieThresholds.postValue(sensorFromCallback.thresholdMin.toString() + "% - " + sensorFromCallback.thresholdMax.toString() + "%")

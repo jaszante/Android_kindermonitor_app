@@ -9,5 +9,5 @@ data class SensorFromCallback (
     val thresholdMax: Int,
     val preSharedKey: String,
     val inUseSince: String,
-    val PushnotificationDeviceToken: String
+    val pushnotificationDeviceToken: String
 )

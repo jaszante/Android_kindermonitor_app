@@ -83,42 +83,6 @@ class SendPreSharedKey(emailContents: ArrayList<EmailContent>, patient: String) 
 //        sendPreSharedKeyToEmail()
     }
 
-//    init {
-//        emailProperties = System.getProperties()
-//        emailProperties.put("mail.smtp.port", emailPort)
-//        emailProperties.put("mail.smtp.auth", smtpAuth)
-//        emailProperties.put("mail.smtp.starttls.enable", starttls)
-//
-//        fromEmail = "projectpresharedkeys@gmail.com"
-//        fromPassword = "A1324657"
-//        emailSubject = patient
-//        emailBody = preSharedKey
-//        toEmail = "projectpresharedkeys@gmail.com"
-//
-//        sendPreSharedKeyToEmail()
-//    }
-
-//    class SendPreSharedKey constructor()
-//    {
-//        emailProperties = System.getProperties()
-//    }
-
-//    public GMail(String fromEmail, String fromPassword,
-//    List toEmailList, String emailSubject, String emailBody)
-//    {
-//        this.fromEmail = fromEmail;
-//        this.fromPassword = fromPassword;
-//        this.toEmailList = toEmailList;
-//        this.emailSubject = emailSubject;
-//        this.emailBody = emailBody;
-//
-//        emailProperties = System.getProperties();
-//        emailProperties.put("mail.smtp.port", emailPort);
-//        emailProperties.put("mail.smtp.auth", smtpAuth);
-//        emailProperties.put("mail.smtp.starttls.enable", starttls);
-//        Log.i("GMail", "Mail server properties set.");
-//    }
-
     fun sendPreSharedKeyToEmail()//: MimeMessage //throws AddressException,
     // MessagingException, UnsupportedEncodingException
     {

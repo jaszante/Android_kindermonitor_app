@@ -204,7 +204,6 @@ class SlideshowFragment : Fragment() {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
                         try {
-
                             val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getString("error")
                             updateSensorShowErrorMessage(errorMessage)

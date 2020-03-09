@@ -24,7 +24,7 @@ class APIHelper {
     fun buildAndReturnAPIService(): APIService {
             val retrofit = Retrofit.Builder()
                 .baseUrl("https://kindermonitoringapi.azurewebsites.net/api/") //"https://ehealthapi-fun.azurewebsites.net/api/") //"https://ehealthapi-fun.azurewebsites.net/api/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create()) 
                 .build()
 
             return retrofit.create(APIService::class.java)
