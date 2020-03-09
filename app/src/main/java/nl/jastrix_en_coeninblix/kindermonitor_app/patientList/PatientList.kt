@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
+import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
@@ -43,6 +44,10 @@ class PatientList : BaseActivityClass() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_list)
         this.setTitle(getString(R.string.select_patient))
+
+        val makeSureThereIsAFirebaseToken = MyFirebaseMessagingService()
+        makeSureThereIsAFirebaseToken.getFirebaseToken(this)
+
 
         val patientListener: PatientListener = object : PatientListener {
             override fun onItemClick(position: Int, patient: PatientWithID) {

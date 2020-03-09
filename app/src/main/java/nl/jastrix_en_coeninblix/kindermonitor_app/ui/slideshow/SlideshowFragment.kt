@@ -129,13 +129,38 @@ class SlideshowFragment : Fragment() {
                     monitorApplication.hartslagSensor!!.sensorType.toString(),
                     "Nee",
                     hartslagMin.toString(),
-                    hartslagMax.toString()
+                    hartslagMax.toString(),
+                    monitorApplication.hartslagSensor!!.PushnotificationDeviceToken
                 )
                 updateSensorThresholds(updatedHartslagSensor)
 
-                // three more sensors
-            }
+                val updatedTemperatuurSensor = SensorToCreate(
+                    monitorApplication.temperatuurSensor!!.sensorType.toString(),
+                    "Nee",
+                    temperatuurMin.toString(),
+                    temperatuurMax.toString(),
+                    monitorApplication.temperatuurSensor!!.PushnotificationDeviceToken
+                )
+                updateSensorThresholds(updatedTemperatuurSensor)
 
+                val updatedSaturatieSensor = SensorToCreate(
+                    monitorApplication.saturatieSensor!!.sensorType.toString(),
+                    "Nee",
+                    saturatieMin.toString(),
+                    saturatieMax.toString(),
+                    monitorApplication.saturatieSensor!!.PushnotificationDeviceToken
+                )
+                updateSensorThresholds(updatedSaturatieSensor)
+
+                val updatedAdemFrequentieSensor = SensorToCreate(
+                    monitorApplication.ademFrequentieSensor!!.sensorType.toString(),
+                    "Nee",
+                    ademfrequentieMin.toString(),
+                    ademfrequentieMax.toString(),
+                    monitorApplication.ademFrequentieSensor!!.PushnotificationDeviceToken
+                )
+                updateSensorThresholds(updatedAdemFrequentieSensor)
+            }
 
             buttonSave.visibility = View.INVISIBLE
         }

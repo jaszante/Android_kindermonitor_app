@@ -13,31 +13,38 @@ import com.google.firebase.messaging.FirebaseMessagingService
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
+//    companion object {
+////        var hasToken: Boolean = false
+//    }
+
     override fun onNewToken(fireBaseToken: String?) {
         super.onNewToken(fireBaseToken)
         Log.e("newToken", fireBaseToken)
         getSharedPreferences("_", MODE_PRIVATE).edit().putString("firebasetoken", fireBaseToken).apply()
+//        hasToken = true
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        super.onMessageReceived(remoteMessage)
-    }
-
-    fun getNewToken(context: Context) {
+    fun getFirebaseToken(context: Context): String {
         val token = context.getSharedPreferences("_", MODE_PRIVATE).getString("firebasetoken", "empty")!!
         if (token == "empty"){
+
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener(OnCompleteListener { task ->
                     if (!task.isSuccessful) {
                         return@OnCompleteListener
                     }
 
-                    // Get new Instance ID token
                     val lateNewToken = task.result!!.token
                     context.getSharedPreferences("_", MODE_PRIVATE).edit().putString("firebasetoken", lateNewToken).apply()
+//                    hasToken = true
                 })
+
+            return context.getSharedPreferences("_", MODE_PRIVATE).getString("firebasetoken", "empty")!!
         }
-//            return  token
+        else {
+//            hasToken = true
+            return token
+        }
     }
 
 }

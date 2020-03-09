@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ProcessLifecycleOwner
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIHelper
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.services.ForegroundMeasurmentService
@@ -56,6 +57,7 @@ class MonitorApplication : Application() {
     var noConnectionAlarmNotPauzed = true
     private var currentActivity: Activity? = null
     var currentlyShowingErrorColor: Boolean = false
+    var appInForeground: Boolean = true
 
 //    var patientSensors: ArrayList<PatientSensor> = ArrayList()
 
@@ -95,6 +97,10 @@ class MonitorApplication : Application() {
         super.onCreate()
 
         singleton = this
+
+        ProcessLifecycleOwner.get()
+            .lifecycle
+            .addObserver(MonitoringApplicationLifecycleObserver())
 
 //        setupLifecycleListener()
 //        //https://medium.com/@mohitsharma_49363/android-detect-app-foreground-time-9b4f6752b077

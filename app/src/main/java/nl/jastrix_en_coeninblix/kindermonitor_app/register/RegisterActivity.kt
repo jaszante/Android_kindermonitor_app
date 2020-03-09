@@ -26,6 +26,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.util.regex.Pattern
 
 
@@ -172,9 +173,17 @@ class RegisterActivity : BaseActivityClass() {
                     } else {
                         val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                         if (errorbodyLength != 0) {
-                            val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getString("error")
-                            registerFailedShowMessage(errorMessage)
+                            try {
+                                val jObjError = JSONObject(response.errorBody()!!.string())
+                                val errorMessage = jObjError.getString("error")
+                                registerFailedShowMessage(errorMessage)
+                            }
+                            catch (e: Exception){
+                                registerFailedShowMessage(response.message())
+                            }
+                            finally {
+
+                            }
                         } else {
                             registerFailedShowMessage(response.message())
                         }

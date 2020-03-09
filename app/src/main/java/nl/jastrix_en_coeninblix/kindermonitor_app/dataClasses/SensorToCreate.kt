@@ -4,5 +4,6 @@ data class SensorToCreate (
     val Type: String,
     val Brand: String,
     val ThresholdMin: String,
-    val ThresholdMax: String
+    val ThresholdMax: String,
+    val PushnotificationDeviceToken:String
 )

@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_register_patient.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
@@ -228,7 +229,10 @@ class RegisterPatientActivity : BaseActivityClass() {
     private fun createSensorForPatient(type: String, thresholdMin: String, thresholdMax: String) {
         val patientListIntent = Intent(this, PatientList::class.java)
 
-        val newSensor = SensorToCreate(type, "Nee", thresholdMin, thresholdMax)
+        val fireBaseMessagingService = MyFirebaseMessagingService()
+        val newSensor = SensorToCreate(type, "Nee", thresholdMin, thresholdMax, fireBaseMessagingService.getFirebaseToken(this)) //Array<String>(1)
+//        { fireBaseMessagingService.getFirebaseToken(this) } )
+
         val call = MonitorApplication.getInstance()
             .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .createSensor(createdPatient.patientID, newSensor)
@@ -286,9 +290,14 @@ class RegisterPatientActivity : BaseActivityClass() {
                 } else {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
-                        val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getString("error")
-                        registerPatientShowErrorMessage(errorMessage)
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getString("error")
+                            registerPatientShowErrorMessage(errorMessage)
+                        }catch (e: Exception){
+
+                            registerPatientShowErrorMessage(response.message())
+                        }
                     } else {
                         registerPatientShowErrorMessage(response.message())
                     }

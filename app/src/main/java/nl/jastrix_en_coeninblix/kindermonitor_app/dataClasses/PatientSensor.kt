@@ -2,7 +2,7 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses
 
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 
-class PatientSensor(var sensorID: Int, var sensorType: SensorType, var thresholdMin: Int, var thresholdMax: Int) {
+class PatientSensor(var sensorID: Int, var sensorType: SensorType, var thresholdMin: Int, var thresholdMax: Int, val PushnotificationDeviceToken: String) {
 //    var sensorID: Int
 //    var sensorType: SensorType
 //

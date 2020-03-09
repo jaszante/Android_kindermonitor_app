@@ -40,9 +40,6 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         setContentView(R.layout.login_activity)
         this.setTitle(getString(R.string.login))
 
-        val test = MyFirebaseMessagingService()
-        test.getNewToken(this)
-
         loginOrRegisterErrorField = findViewById<TextView>(R.id.loginOrRegisterFailed)
         loginOrRegisterErrorField.visibility = View.INVISIBLE
 

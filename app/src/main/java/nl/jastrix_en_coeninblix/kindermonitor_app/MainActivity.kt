@@ -200,7 +200,7 @@ class MainActivity : BaseActivityClass(), Observer {
                                 SensorType.Hartslag.toString() -> {
                                     monitorApplication.hartslagSensor = PatientSensor(sensorFromCallback.sensorID, SensorType.Hartslag,
                                             sensorFromCallback.thresholdMin,
-                                        sensorFromCallback.thresholdMax)
+                                        sensorFromCallback.thresholdMax, sensorFromCallback.PushnotificationDeviceToken)
                                     monitorApplication.hartslagThresholds.postValue(sensorFromCallback.thresholdMin.toString() + " - " + sensorFromCallback.thresholdMax.toString())
                                 }
                                 SensorType.Temperature.toString() -> {
@@ -209,7 +209,8 @@ class MainActivity : BaseActivityClass(), Observer {
                                             sensorFromCallback.sensorID,
                                             SensorType.Temperature,
                                             sensorFromCallback.thresholdMin,
-                                            sensorFromCallback.thresholdMax
+                                            sensorFromCallback.thresholdMax,
+                                            sensorFromCallback.PushnotificationDeviceToken
                                         )
                                     monitorApplication.temperatuurThresholds.postValue(sensorFromCallback.thresholdMin.toString() + "° - " + sensorFromCallback.thresholdMax.toString() + "°")
                                 }
@@ -218,14 +219,16 @@ class MainActivity : BaseActivityClass(), Observer {
                                         PatientSensor(
                                             sensorFromCallback.sensorID, SensorType.Adem,
                                             sensorFromCallback.thresholdMin,
-                                            sensorFromCallback.thresholdMax)
+                                            sensorFromCallback.thresholdMax,
+                                            sensorFromCallback.PushnotificationDeviceToken)
                                   monitorApplication.ademfrequentieThresholds.postValue(sensorFromCallback.thresholdMin.toString() + " - " + sensorFromCallback.thresholdMax.toString())
                                 }
                                 SensorType.Saturatie.toString() -> {
                                     monitorApplication.saturatieSensor = PatientSensor(
                                         sensorFromCallback.sensorID, SensorType.Saturatie,
                                         sensorFromCallback.thresholdMin,
-                                        sensorFromCallback.thresholdMax
+                                        sensorFromCallback.thresholdMax,
+                                        sensorFromCallback.PushnotificationDeviceToken
                                     )
 
                                     monitorApplication.saturatieThresholds.postValue(sensorFromCallback.thresholdMin.toString() + "% - " + sensorFromCallback.thresholdMax.toString() + "%")

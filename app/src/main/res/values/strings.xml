@@ -40,7 +40,7 @@
     <string name="log_uit">Log uit</string>
     <string name="registerButtonPatient">Registreer Patient</string>
     <string name="incorrectDateFormatError">Incorrect date format, voorbeeld: \'02–01–2009\'</string>
-    <string name="pwError">Wachtwoord moet meer dan acht characters lang zijn en 3 of meer cijfers bevatten</string>
+    <string name="pwError">Wachtwoord moet meer dan acht characters lang zijn, een hoofdletter bevatten, en 3 of meer cijfers bevatten</string>
     <string name="create_and_add_new_patient">Create and add new patient</string>
     <string name="algemeen">Algemeen</string>
     <string name="bevestig_wachtwoord">Bevestig wachtwoord</string>

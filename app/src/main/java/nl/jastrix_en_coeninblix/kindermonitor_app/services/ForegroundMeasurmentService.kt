@@ -185,7 +185,7 @@ class ForegroundMeasurmentService : Service() {
 
     private fun thresholdPopup(message: String){
         if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null
-            && MonitorApplication.getInstance().alarmNotPauzed){
+            && MonitorApplication.getInstance().alarmNotPauzed && MonitorApplication.getInstance().appInForeground){
                 val notificationPopup = NotificationPopup(message)
 
                 try {
@@ -200,7 +200,7 @@ class ForegroundMeasurmentService : Service() {
 
     private fun noConnectionPopup(message: String){
         if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("NoConnectionNotification") == null &&
-                MonitorApplication.getInstance().noConnectionAlarmNotPauzed){
+                MonitorApplication.getInstance().noConnectionAlarmNotPauzed && MonitorApplication.getInstance().appInForeground){
             val noConnectionPopup = NoConnectionPopup(message)
 
             try {
