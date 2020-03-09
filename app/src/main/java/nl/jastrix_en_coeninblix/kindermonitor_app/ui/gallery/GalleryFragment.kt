@@ -16,6 +16,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
@@ -48,7 +53,7 @@ class GalleryFragment : Fragment() {
     private lateinit var fromDate: EditText
     private lateinit var toDate: EditText
     private lateinit var btnGraph: Button
-    private lateinit var graph: GraphView
+    private lateinit var graph: LineChart
     var fromDateString: String = ""
     var toDateString: String = ""
 
@@ -65,7 +70,7 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val currentView = getView()!!
-        graph = currentView.findViewById<GraphView>(R.id.graph)
+        graph = currentView.findViewById(R.id.graph)
         btnGraph = currentView.findViewById(R.id.btn_Graph)
 
         fromDate = currentView.findViewById(R.id.fromDate)
@@ -162,35 +167,54 @@ class GalleryFragment : Fragment() {
 
 
     fun create_Graph(array: Array<Measurement>) {
-
-        var dataPoint: ArrayList<DataPoint>
-        var list = ArrayList<DataPoint>()
+/*
+        var list = ArrayList<Entry>()
         var format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSS", Locale.GERMANY)
 
         array.forEach {
             var date = format.parse(it.time)
-            var point = DataPoint(date, it.value)
+            var point = Entry(it.time.toFloat(), it.value.toFloat())
             list.add(point)
         }
         var arrayDP = arrayOfNulls<DataPoint>(list.size)
         var de = list.toArray(arrayDP)
 
-        var series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(de)
+        var series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(de)*/
 
+        var entries = ArrayList<Entry>()
+        var entriesHoog = ArrayList<Entry>()
+        var entriesLaag = ArrayList<Entry>()
+        val Entry1 = Entry(1.toFloat(), 1.toFloat())
+        val Entry2 = Entry(2.toFloat(), 2.toFloat())
+        val Entry3 = Entry(3.toFloat(), 3.toFloat())
+        entries.add(Entry1)
+        entries.add(Entry2)
+        entries.add(Entry3)
+        val Entry4 = Entry(1.toFloat(), 2.toFloat())
+        val Entry5 = Entry(2.toFloat(), 3.toFloat())
+        val Entry6 = Entry(3.toFloat(), 4.toFloat())
+        entriesHoog.add(Entry4)
+        entriesHoog.add(Entry5)
+        entriesHoog.add(Entry6)
+        val Entry7 = Entry(1.toFloat(), 0.toFloat())
+        val Entry8 = Entry(2.toFloat(), 1.toFloat())
+        val Entry9 = Entry(3.toFloat(), 2.toFloat())
+        entriesLaag.add(Entry7)
+        entriesLaag.add(Entry8)
+        entriesLaag.add(Entry9)
 
-        val view = graph.getViewport()
-
-
-        var nf = NumberFormat.getInstance()
-        nf.maximumFractionDigits = 0
-        nf.maximumIntegerDigits = 4
-        graph.title = "Hartslag"
-        graph.gridLabelRenderer.labelFormatter = DefaultLabelFormatter(nf, nf)
-        graph.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this.context )
-        view.isScrollable = true
-        //view.isScalable = true
-        view.borderColor = ContextCompat.getColor(this.context!!, R.color.colorPrimaryDark)
-        view.backgroundColor = ContextCompat.getColor(this.context!!, R.color.white)
-        graph.addSeries(series)
+        var dataSet =  LineDataSet(entries, "lijn gemiddelt");
+        var dataSet2 =  LineDataSet(entriesHoog, "lijn hoog");
+        var dataSet3 =  LineDataSet(entriesLaag, "lijn laag");
+    /*    dataSet.setColor(R.color.colorPrimary)
+        dataSet2.setColor(R.color.colorBad)
+        dataSet3.setColor(R.color.colorGood)*/
+        var dataSets =  ArrayList<ILineDataSet>()
+        dataSets.add(dataSet)
+        dataSets.add(dataSet2)
+        dataSets.add(dataSet3)
+        val lineData = LineData(dataSets)
+        graph.data = lineData
+        graph.invalidate()
     }
 }
