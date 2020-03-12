@@ -3,12 +3,11 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.ui.gallery
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.fragment.app.Fragment
@@ -26,6 +25,7 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import kotlinx.android.synthetic.main.fragment_gallery.*
 import kotlinx.android.synthetic.main.fragment_slideshow.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
@@ -54,8 +54,10 @@ class GalleryFragment : Fragment() {
     private lateinit var toDate: EditText
     private lateinit var btnGraph: Button
     private lateinit var graph: LineChart
+    private lateinit var dropdown: Spinner
     var fromDateString: String = ""
     var toDateString: String = ""
+    var type_selected: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,6 +77,7 @@ class GalleryFragment : Fragment() {
 
         fromDate = currentView.findViewById(R.id.fromDate)
         toDate = currentView.findViewById(R.id.toDate)
+        dropdown = currentView.findViewById(R.id.dropdown_type)
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
@@ -121,20 +124,52 @@ class GalleryFragment : Fragment() {
 
         btnGraph.setOnClickListener {
             // apicall
-            getArray(fromDateString, toDateString)
+            type_selected = dropdown.selectedItem.toString()
+            getArray(fromDateString, toDateString, type_selected)
+
+        }
+        val array: Array<String> =
+            arrayOf("Hartslag", "Saturatie", "Adem Frequentie", "Temperatuur")
+
+        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, array)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        dropdown.adapter = adapter
+        dropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                dropdown.setBackgroundColor(resources.getColor(R.color.colorBad))
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                type_selected = adapter.getItem(position)
+
+            }
         }
 
 
     }
 
-    private fun getArray(from: String, to: String) {
+    private fun getArray(from: String, to: String, type: String) {
         var monitorapp = MonitorApplication.getInstance()
+        var id = 0
+        when (type) {
+            "Hartslag" -> id = monitorapp.hartslagSensor!!.sensorID
+            "Saturatie" -> id = monitorapp.saturatieSensor!!.sensorID
+            "Temperatuur" -> id = monitorapp.temperatuurSensor!!.sensorID
+            "Adem Frequentie" -> id = monitorapp.ademFrequentieSensor!!.sensorID
+            else -> Log.d("TypeERror", "unsupported sensor")
+
+        }
 
 
         val call = monitorapp.apiHelper.buildAPIServiceWithNewToken(
             monitorapp.authToken
         ).getMeasurementsForSensorWithRange(
-            monitorapp.hartslagSensor!!.sensorID
+            id
             , fromDateString, toDateString
         )
         call.enqueue(object : Callback<Array<Measurement>> {
@@ -167,52 +202,51 @@ class GalleryFragment : Fragment() {
 
 
     fun create_Graph(array: Array<Measurement>) {
-/*
+
         var list = ArrayList<Entry>()
         var format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSS", Locale.GERMANY)
 
         array.forEach {
             var date = format.parse(it.time)
-            var point = Entry(it.time.toFloat(), it.value.toFloat())
+            var point = Entry(date.time.toFloat(), it.value.toFloat())
             list.add(point)
         }
-        var arrayDP = arrayOfNulls<DataPoint>(list.size)
-        var de = list.toArray(arrayDP)
+      //  var arrayDP = arrayOfNulls<DataPoint>(list.size)
+      //  var de = list.toArray(arrayDP)
 
-        var series: LineGraphSeries<DataPoint> = LineGraphSeries<DataPoint>(de)*/
 
-        var entries = ArrayList<Entry>()
-        var entriesHoog = ArrayList<Entry>()
-        var entriesLaag = ArrayList<Entry>()
-        val Entry1 = Entry(1.toFloat(), 1.toFloat())
-        val Entry2 = Entry(2.toFloat(), 2.toFloat())
-        val Entry3 = Entry(3.toFloat(), 3.toFloat())
-        entries.add(Entry1)
-        entries.add(Entry2)
-        entries.add(Entry3)
-        val Entry4 = Entry(1.toFloat(), 2.toFloat())
-        val Entry5 = Entry(2.toFloat(), 3.toFloat())
-        val Entry6 = Entry(3.toFloat(), 4.toFloat())
-        entriesHoog.add(Entry4)
-        entriesHoog.add(Entry5)
-        entriesHoog.add(Entry6)
-        val Entry7 = Entry(1.toFloat(), 0.toFloat())
-        val Entry8 = Entry(2.toFloat(), 1.toFloat())
-        val Entry9 = Entry(3.toFloat(), 2.toFloat())
-        entriesLaag.add(Entry7)
-        entriesLaag.add(Entry8)
-        entriesLaag.add(Entry9)
+        /*   var entries = ArrayList<Entry>()
+           var entriesHoog = ArrayList<Entry>()
+           var entriesLaag = ArrayList<Entry>()
+           val Entry1 = Entry(1.toFloat(), 1.toFloat())
+           val Entry2 = Entry(2.toFloat(), 2.toFloat())
+           val Entry3 = Entry(3.toFloat(), 3.toFloat())
+           entries.add(Entry1)
+           entries.add(Entry2)
+           entries.add(Entry3)
+           val Entry4 = Entry(1.toFloat(), 2.toFloat())
+           val Entry5 = Entry(2.toFloat(), 3.toFloat())
+           val Entry6 = Entry(3.toFloat(), 4.toFloat())
+           entriesHoog.add(Entry4)
+           entriesHoog.add(Entry5)
+           entriesHoog.add(Entry6)
+           val Entry7 = Entry(1.toFloat(), 0.toFloat())
+           val Entry8 = Entry(2.toFloat(), 1.toFloat())
+           val Entry9 = Entry(3.toFloat(), 2.toFloat())
+           entriesLaag.add(Entry7)
+           entriesLaag.add(Entry8)
+           entriesLaag.add(Entry9)*/
 
-        var dataSet =  LineDataSet(entries, "lijn gemiddelt");
-        var dataSet2 =  LineDataSet(entriesHoog, "lijn hoog");
-        var dataSet3 =  LineDataSet(entriesLaag, "lijn laag");
-    /*    dataSet.setColor(R.color.colorPrimary)
-        dataSet2.setColor(R.color.colorBad)
-        dataSet3.setColor(R.color.colorGood)*/
-        var dataSets =  ArrayList<ILineDataSet>()
+        var dataSet = LineDataSet(list, "lijn gemiddelt");
+        // var dataSet2 = LineDataSet(entriesHoog, "lijn hoog");
+        //  var dataSet3 = LineDataSet(entriesLaag, "lijn laag");
+        /*    dataSet.setColor(R.color.colorPrimary)
+            dataSet2.setColor(R.color.colorBad)
+            dataSet3.setColor(R.color.colorGood)*/
+        var dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
-        dataSets.add(dataSet2)
-        dataSets.add(dataSet3)
+        //  dataSets.add(dataSet2)
+        // dataSets.add(dataSet3)
         val lineData = LineData(dataSets)
         graph.data = lineData
         graph.invalidate()
