@@ -27,7 +27,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/EOld"
+            android:id="@+id/UserToAdd"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginStart="24dp"
@@ -43,7 +43,7 @@
             android:paddingEnd="4dp"
             android:textColor="@android:color/black" />
         <Button
-            android:id="@+id/LoginButton"
+            android:id="@+id/AddPatientToUserButton"
             android:layout_width="100dp"
             android:layout_height="32dp"
             android:layout_marginStart="8dp"
@@ -55,5 +55,20 @@
             android:text="Toevoegen"
             android:textColor="@color/white"
             android:layout_gravity="end"/>
+
+        <TextView
+            android:id="@+id/errorField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/rounded_shape_bad"
+            android:visibility="invisible"
+            android:textColorHint="@android:color/black"
+            android:textColor="@android:color/black"
+            android:textAlignment="center"/>
     </LinearLayout>
+
+
 </LinearLayout>
