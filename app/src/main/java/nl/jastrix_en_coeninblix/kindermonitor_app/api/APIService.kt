@@ -39,6 +39,7 @@ interface APIService {
     @PUT ("Users/me")
     fun updateCurrentUser(@Body newUserData: UserRegister): Call<Void>
 
+//    @FormUrlEncoded
     @POST ("Users/me/Patients/{patientId}/Permissions")
-    fun giveUserPermission(@Path("patientId") patientId: Int, userName: String): Call<Void>
+    fun giveUserPermission(@Path("patientId") patientId: Int, @Body userName: UserObjectWithOnlyUsername): Call<Void>
 }

@@ -146,6 +146,8 @@ class PatientList : BaseActivityClass() {
     }
 
     private fun getUserDataThenStartGetPatientsCall() {
+        patientList.clear()
+
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         val call =
@@ -243,6 +245,11 @@ class PatientList : BaseActivityClass() {
                         buttonPatient.setOnClickListener{
                             val intent : Intent = Intent(applicationContext, RegisterPatientActivity::class.java)
                             startActivity(intent)
+                        }
+                        val buttonLoguit = findViewById<Button>(R.id.loguitButton)
+                        buttonLoguit.visibility = View.VISIBLE
+                        buttonLoguit.setOnClickListener{
+                            startActivity(loginIntent)
                         }
 
                     } else {

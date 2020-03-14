@@ -99,6 +99,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
 
                 val jObjError = JSONObject(response.errorBody()!!.string())
                 errorMessage = jObjError.getString("error")
+
                 }
                 finally {
 

@@ -16,10 +16,17 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.RestError
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserObjectWithOnlyUsername
+import retrofit2.Retrofit
+import java.lang.Exception
+import org.json.JSONObject
+
+
+
 
 class AddUserToAccount : BaseActivityClass() {
 
-//    lateinit var users: ArrayList<UserData>
     lateinit var userToAddEditText: EditText
     lateinit var errorField: TextView
 
@@ -49,15 +56,22 @@ class AddUserToAccount : BaseActivityClass() {
 
         val call = MonitorApplication.getInstance()
             .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().giveUserPermission(
-            MonitorApplication.getInstance().currentlySelectedPatient!!.patientID, userToAddEditText.text.toString() )
+            MonitorApplication.getInstance().currentlySelectedPatient!!.patientID, UserObjectWithOnlyUsername(userToAddEditText.text.toString()))
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful && response.body() != null) {
-//                    users = response.body()!!
-                    // feest!
+                if (response.isSuccessful) {
+                    // refresh recyclerview (new call, should get the newly added user as well)
 
                 } else {
-                    errorHandling(response.message())
+                    try {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        val errorMessage = jObjError.getString("error")
+                        errorHandling(errorMessage)
+
+                    }
+                    catch (e: Exception) {
+                        errorHandling(response.message())
+                    }
                 }
             }
 
