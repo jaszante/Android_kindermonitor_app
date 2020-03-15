@@ -55,6 +55,7 @@
     <string name="genereer_grafiek">genereer grafiek</string>
     <string name="noInternetError">Not connected to mobile internet or wifi</string>
     <string name="wachtwoordenKomenNietOvereen">De twee wachtwoorden komen niet overeen</string>
+    <string name="NoAuthorisationToChangePermissions">Your account does not have authorisation to change patient permissions</string>
 
 
 </resources>

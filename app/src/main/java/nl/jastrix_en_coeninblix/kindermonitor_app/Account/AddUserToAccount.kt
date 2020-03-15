@@ -49,6 +49,8 @@ class AddUserToAccount : BaseActivityClass() {
         userToAddEditText = findViewById(R.id.UserToAdd)
         errorField = findViewById(R.id.errorField)
         errorField.visibility = View.INVISIBLE
+
+        getAllUsersWithPermissionForThisPatient()
     }
 
     private fun giveUserPermission() {
@@ -60,8 +62,7 @@ class AddUserToAccount : BaseActivityClass() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    // refresh recyclerview (new call, should get the newly added user as well)
-
+                    getAllUsersWithPermissionForThisPatient()
                 } else {
                     try {
                         val jObjError = JSONObject(response.errorBody()!!.string())
@@ -85,4 +86,43 @@ class AddUserToAccount : BaseActivityClass() {
             }
         })
     }
+
+    fun getAllUsersWithPermissionForThisPatient(){
+        // haal de oude lijst weg, data.clear()
+
+        val call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllUsersWithPermission(
+            MonitorApplication.getInstance().currentlySelectedPatient!!.patientID)
+        call.enqueue(object : Callback<ArrayList<UserData>> {
+            override fun onResponse(call: Call<ArrayList<UserData>>, response: Response<ArrayList<UserData>>) {
+                if (response.isSuccessful) {
+                    // refresh recyclerview, data = responce.body()
+
+                } else {
+                    if (response.code() == 401){
+                        errorHandling(getString(R.string.NoAuthorisationToChangePermissions))
+                    }
+                    else {
+                        try {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getString("error")
+                            errorHandling(errorMessage)
+
+                        } catch (e: Exception) {
+                            errorHandling(response.message())
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<UserData>>, t: Throwable) {
+                errorHandling(t.message!!)
+            }
+
+            private fun errorHandling(message: String){
+                errorField.text = message
+                errorField.visibility = View.VISIBLE
+            }
+        })
+            }
 }
