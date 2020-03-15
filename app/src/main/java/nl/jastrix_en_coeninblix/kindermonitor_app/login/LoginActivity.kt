@@ -53,6 +53,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             val registerIntent = Intent(this, RegisterActivity::class.java)
             if (noCallInProgress) {
                 startActivity(registerIntent)
+                finish()
             }
         }
 
@@ -90,6 +91,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
 
             val patientListIntent = Intent(this, PatientList::class.java)
             startActivity(patientListIntent)
+            finish()
         }
         else {
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()

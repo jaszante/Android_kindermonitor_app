@@ -4,12 +4,10 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_register_patient.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
@@ -17,25 +15,19 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFireba
 //import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
-import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
-import java.security.Timestamp
-import java.text.DateFormat
-import java.text.DateFormat.getDateInstance
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class RegisterPatientActivity : BaseActivityClass() {
+
+//    companion object {
+//        var cameFromAccountFragment = false
+//    }
 
     var noCallInProgress: Boolean = true
     lateinit var registerPatientButton: Button
@@ -62,7 +54,6 @@ class RegisterPatientActivity : BaseActivityClass() {
         setContentView(R.layout.activity_register_patient)
         this.setTitle(R.string.register_patient)
 
-        // after startactivity do finish()
         patientFirstNameEditText = findViewById(R.id.patientFirstName)
         patientLastNameEditText = findViewById(R.id.patientLastName)
         patientBirthDateEditText = findViewById(R.id.patientBirthDate)
@@ -308,5 +299,20 @@ class RegisterPatientActivity : BaseActivityClass() {
                 registerPatientShowErrorMessage(t.message!!)
             }
         })
+    }
+
+    override fun onBackPressed() {
+//        val ss: String = intent.getBooleanExtra("cameFromAccountFragment")
+        if (intent.getBooleanExtra("cameFromAccountFragment", false)) {
+            val mainActivity = Intent(this, MainActivity::class.java)
+            startActivity(mainActivity)
+        }
+        else
+        {
+            val patientListIntent = Intent(this, PatientList::class.java)
+            startActivity(patientListIntent)
+        }
+
+        finish()
     }
 }

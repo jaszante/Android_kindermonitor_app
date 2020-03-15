@@ -96,6 +96,7 @@ class AccountPage : BaseActivityClass() {
                         monitorApplication.loggedInPhoneNumber.postValue(phonenumberTextView.text.toString())
                         saveUserCredentials()
                         startActivity(mainActivityIntent)
+                        finish()
                     }
                     else{
                         failedMessage(response.message())
@@ -133,5 +134,12 @@ class AccountPage : BaseActivityClass() {
                 }
             })
         }
+    }
+
+    override fun onBackPressed() {
+        val mainActivity = Intent(this, MainActivity::class.java)
+        startActivity(mainActivity)
+        finish()
+//        super.onBackPressed()
     }
 }

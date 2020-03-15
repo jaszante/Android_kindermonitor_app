@@ -82,6 +82,7 @@ class ChangePW : BaseActivityClass() {
 
                         saveUserCredentials()
                         startActivity(mainActivityIntent)
+                        finish()
                     }
                     else{
                             failedMessage(response.message())
@@ -152,5 +153,12 @@ class ChangePW : BaseActivityClass() {
         }
 
         return true
+    }
+
+    override fun onBackPressed() {
+        val mainActivity = Intent(this, MainActivity::class.java)
+        startActivity(mainActivity)
+        finish()
+//        super.onBackPressed()
     }
 }

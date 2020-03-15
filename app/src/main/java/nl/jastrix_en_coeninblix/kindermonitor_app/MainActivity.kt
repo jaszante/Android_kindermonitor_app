@@ -32,19 +32,6 @@ class MainActivity : BaseActivityClass(), Observer {
 //        getNewUserdataThenInitDrawerWithUserInformation()
     }
 
-//    companion object {
-////        lateinit var userName: String
-////        lateinit var password: String
-////        val apiHelper = APIHelper()
-////        lateinit var userData: UserData
-//
-////        var authToken: String = ""
-////        var authTokenChanged: Boolean = false
-//
-////        var active: Boolean = false
-////        var currentPatient : PatientWithID? = null
-//    }
-
     private fun removeAllSharedPreferencesAndStartLoginActivity() {
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
@@ -65,6 +52,7 @@ class MainActivity : BaseActivityClass(), Observer {
 
         val loginIntent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(loginIntent)
+        finish()
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -76,26 +64,22 @@ class MainActivity : BaseActivityClass(), Observer {
         setupNavigationDrawer();
 
         MonitorApplication.getInstance().fragmentManager = supportFragmentManager
+
+
     }
 
     private fun setupNavigationDrawer() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-//        val fab: FloatingActionButton = findViewById(R.id.fab)
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_share //, R.id.nav_send
+                R.id.nav_share
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -138,17 +122,13 @@ class MainActivity : BaseActivityClass(), Observer {
 
                     initDrawerWithUserInformationThenGetPatientSensors()
                 } else {
-//                    if (statusCode == 401) {
-//                        loginWithCachedUsernameAndPassword()
-//                    } else {
                     removeAllSharedPreferencesAndStartLoginActivity()
-//                    }
-
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
                 startActivity(loginIntent)
+                finish()
             }
         })
     }
@@ -240,15 +220,6 @@ class MainActivity : BaseActivityClass(), Observer {
                             monitorApplication.startForegroundMeasurmentService()
                         }
                     } else {
-//                        if (statusCode == 401) {
-////                            loginWithCachedCredentialsOnResume = true
-////                            startActivity(loginIntent)
-//                        } else if (statusCode == 404) {
-//                            // notification that there is no connection to API
-//                        } else {
-//                            // internet down notification? // or maybe there are no patients linked?
-//                        }
-
                         removeAllSharedPreferencesAndStartLoginActivity()
                     }
                 }
@@ -260,11 +231,11 @@ class MainActivity : BaseActivityClass(), Observer {
             })
         } else {
             startActivity(patientListIntent)
+            finish()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main2, menu)
         return true
     }
@@ -272,5 +243,11 @@ class MainActivity : BaseActivityClass(), Observer {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onBackPressed() {
+        val patientListIntent = Intent(this, PatientList::class.java)
+        startActivity(patientListIntent)
+        finish()
     }
 }

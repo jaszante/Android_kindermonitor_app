@@ -55,6 +55,7 @@ class PatientList : BaseActivityClass() {
                 val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
 
                 startActivity(mainActivityIntent)
+                finish()
             }
         }
 
@@ -143,6 +144,7 @@ class PatientList : BaseActivityClass() {
 
         val loginIntent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(loginIntent)
+        finish()
     }
 
     private fun getUserDataThenStartGetPatientsCall() {
@@ -166,14 +168,12 @@ class PatientList : BaseActivityClass() {
                     }
                     else {
                         removeAllSharedPreferencesAndStartLoginActivity()
-                        finish()
                     }
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
                 removeAllSharedPreferencesAndStartLoginActivity()
-                finish()
             }
         })
     }
@@ -200,11 +200,6 @@ class PatientList : BaseActivityClass() {
                         ) // important that we build the apiservice again with new token before the observabletoken is changed
                         MonitorApplication.getInstance().authToken = newToken
                         getUserDataThenStartGetPatientsCall()
-//                        if (MonitorApplication.getInstance().currentlySelectedPatient == null) {
-//                            startActivity(patientListIntent)
-//                        } else {
-//                            getNewUserdataThenInitDrawerWithUserInformation()
-//                        }
 
                     } else {
                         removeAllSharedPreferencesAndStartLoginActivity()
@@ -236,7 +231,6 @@ class PatientList : BaseActivityClass() {
                 if (response.isSuccessful && response.body() != null) {
                     val allPatients = response.body()!!
                     if (allPatients.count() == 0) {
-                        //startActivity(loginIntent)
                         text = findViewById(R.id.TextViewEmpty)
                         buttonPatient = findViewById(R.id.BTNPatient)
                         text.text =
@@ -245,11 +239,13 @@ class PatientList : BaseActivityClass() {
                         buttonPatient.setOnClickListener{
                             val intent : Intent = Intent(applicationContext, RegisterPatientActivity::class.java)
                             startActivity(intent)
+                            finish()
                         }
                         val buttonLoguit = findViewById<Button>(R.id.loguitButton)
                         buttonLoguit.visibility = View.VISIBLE
                         buttonLoguit.setOnClickListener{
                             startActivity(loginIntent)
+                            finish()
                         }
 
                     } else {
@@ -261,11 +257,13 @@ class PatientList : BaseActivityClass() {
 
                 } else {
                     startActivity(loginIntent)
+                    finish()
                 }
             }
 
             override fun onFailure(call: Call<Array<PatientWithID>>, t: Throwable) {
                 startActivity(loginIntent)
+                finish()
             }
         })
     }

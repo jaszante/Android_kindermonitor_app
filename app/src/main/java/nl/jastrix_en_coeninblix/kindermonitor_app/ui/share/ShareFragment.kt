@@ -80,28 +80,34 @@ class ShareFragment : Fragment() {
 
             val loginIntent: Intent = Intent(activity, LoginActivity::class.java)
             startActivity(loginIntent)
+            activity!!.finish()
         }
 
         val addPatientLayout = currentView.findViewById<LinearLayout>(R.id.Add_patient)
         addPatientLayout.setOnClickListener{
             val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
+            registerPatientIntent.putExtra("cameFromAccountFragment", true)
             startActivity(registerPatientIntent)
+            activity!!.finish()
         }
         val changePwLayout= currentView.findViewById<LinearLayout>(R.id.ChangePWLayout)
         changePwLayout.setOnClickListener {
             val changePWIntent = Intent(activity, ChangePW::class.java)
             startActivity(changePWIntent)
+            activity!!.finish()
         }
 
         val changeCredLayout = currentView.findViewById<LinearLayout>(R.id.ChangeCredentialsLayout)
         changeCredLayout.setOnClickListener {
             val changeCredIntent = Intent(activity, AccountPage::class.java)
             startActivity(changeCredIntent)
+            activity!!.finish()
         }
         val manageGebruikersLayout= currentView.findViewById<LinearLayout>(R.id.ManageGebruikersLayout)
         manageGebruikersLayout.setOnClickListener {
             val intent= Intent(activity, AddUserToAccount::class.java)
             startActivity(intent)
+            activity!!.finish()
         }
     }
 

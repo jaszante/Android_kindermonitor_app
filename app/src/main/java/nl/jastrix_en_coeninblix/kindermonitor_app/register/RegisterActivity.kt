@@ -210,7 +210,6 @@ class RegisterActivity : BaseActivityClass() {
 
                     val editor = sharedPreferences.edit()
 
-//                        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
                     editor.putString(
                         "AuthenticationToken",
                         MonitorApplication.getInstance().authToken
@@ -251,5 +250,6 @@ class RegisterActivity : BaseActivityClass() {
     override fun onBackPressed() {
         val loginIntent = Intent(this, LoginActivity::class.java)
         startActivity(loginIntent)
+        finish()
     }
 }
