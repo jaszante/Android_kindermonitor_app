@@ -1,17 +1,23 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.Account
 
 import android.content.Intent
+import android.media.Image
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_add_user_to_account.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import retrofit2.Call
@@ -19,19 +25,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.RestError
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserObjectWithOnlyUsername
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionAdapter
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import retrofit2.Retrofit
 import java.lang.Exception
 import org.json.JSONObject
 
 
-
-
 class AddUserToAccount : BaseActivityClass() {
 
+    lateinit var recyclerView: RecyclerView
+    lateinit var viewAdapter: RecyclerView.Adapter<*>
+    lateinit var viewManager: RecyclerView.LayoutManager
     lateinit var userToAddEditText: EditText
     lateinit var errorField: TextView
     var noCallInProgress = true
+    var list: ArrayList<UserData> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +57,31 @@ class AddUserToAccount : BaseActivityClass() {
 
 //        getAllUsers()
 
-        val findAllUserPermissionsButton =  findViewById<Button>(R.id.AddPatientToUserButton)
-        findAllUserPermissionsButton.setOnClickListener() {
-            errorField.visibility = View.INVISIBLE
+        val findAllUserPermissionsButton = findViewById<Button>(R.id.AddPatientToUserButton)
+        findAllUserPermissionsButton.setOnClickListener{
             giveUserPermission()
         }
         userToAddEditText = findViewById(R.id.UserToAdd)
         errorField = findViewById(R.id.errorField)
         errorField.visibility = View.INVISIBLE
 
+
+        val permissionListener: PermissionListener = object : PermissionListener {
+            override fun onItemClick(position: Int, patient: UserData) {
+
+            }
+        }
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = PermissionAdapter(this, list, permissionListener)
+
+        recyclerView = findViewById<RecyclerView>(R.id.permissionRecyclerView).apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
         getAllUsersWithPermissionForThisPatient()
+
     }
 
     private fun giveUserPermission() {
@@ -69,8 +97,9 @@ class AddUserToAccount : BaseActivityClass() {
             call.enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
-                        getAllUsersWithPermissionForThisPatient()
                         noCallInProgress = true
+                        getAllUsersWithPermissionForThisPatient()
+
                     } else {
                         try {
                             val jObjError = JSONObject(response.errorBody()!!.string())
@@ -99,7 +128,7 @@ class AddUserToAccount : BaseActivityClass() {
     fun getAllUsersWithPermissionForThisPatient() {
         if (noCallInProgress) {
             noCallInProgress = false
-            // haal de oude lijst weg, data.clear()
+            list.clear()
 
             val call = MonitorApplication.getInstance()
                 .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getAllUsersWithPermission(
@@ -112,7 +141,10 @@ class AddUserToAccount : BaseActivityClass() {
                 ) {
                     if (response.isSuccessful) {
                         noCallInProgress = true
-                        // refresh recyclerview, data = responce.body()
+                        response.body()!!.forEach {
+                            list.add(it)
+                        }
+                        viewAdapter.notifyDataSetChanged()
 
                     } else {
                         if (response.code() == 401) {

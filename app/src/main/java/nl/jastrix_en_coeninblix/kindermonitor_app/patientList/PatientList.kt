@@ -33,9 +33,9 @@ import retrofit2.Response
 
 class PatientList : BaseActivityClass() {
 
-    public lateinit var recyclerView: RecyclerView
-    public lateinit var viewAdapter: RecyclerView.Adapter<*>
-    public lateinit var viewManager: RecyclerView.LayoutManager
+    lateinit var recyclerView: RecyclerView
+    lateinit var viewAdapter: RecyclerView.Adapter<*>
+    lateinit var viewManager: RecyclerView.LayoutManager
     val patientList: ArrayList<PatientWithID> = ArrayList()
     lateinit var text: TextView
     lateinit var buttonPatient: Button
@@ -68,16 +68,7 @@ class PatientList : BaseActivityClass() {
             adapter = viewAdapter
         }
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //get all patients opnieuw ofzo
 
-                    //viewAdapter.notifyDataSetChanged();
-                }
-            }
-        })
     }
 
     override fun onResume() {
@@ -153,7 +144,8 @@ class PatientList : BaseActivityClass() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
         val call =
-            MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+            MonitorApplication.getInstance()
+                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                 val statusCode = response.code()
@@ -165,8 +157,7 @@ class PatientList : BaseActivityClass() {
                 } else {
                     if (statusCode == 401) {
                         loginWithCachedUsernameAndPassword()
-                    }
-                    else {
+                    } else {
                         removeAllSharedPreferencesAndStartLoginActivity()
                     }
                 }
@@ -210,8 +201,7 @@ class PatientList : BaseActivityClass() {
                     removeAllSharedPreferencesAndStartLoginActivity()
                 }
             })
-        }
-        else {
+        } else {
             removeAllSharedPreferencesAndStartLoginActivity()
         }
     }
@@ -219,7 +209,8 @@ class PatientList : BaseActivityClass() {
     private fun getAllPatients() {
         val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call = MonitorApplication.getInstance().apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
+        val call = MonitorApplication.getInstance()
+            .apiHelper.returnAPIServiceWithAuthenticationTokenAdded()
             .getAllPatientsForLogginedInUser()
         call.enqueue(object : Callback<Array<PatientWithID>> {
             override fun onResponse(
@@ -236,14 +227,15 @@ class PatientList : BaseActivityClass() {
                         text.text =
                             "Er zijn op dit moment geen patienten aan uw account gekoppeld. Vraag aan een ouder/verzorger om uw toe te voegen. Of maak een kind aan."
                         buttonPatient.visibility = View.VISIBLE
-                        buttonPatient.setOnClickListener{
-                            val intent : Intent = Intent(applicationContext, RegisterPatientActivity::class.java)
+                        buttonPatient.setOnClickListener {
+                            val intent: Intent =
+                                Intent(applicationContext, RegisterPatientActivity::class.java)
                             startActivity(intent)
                             finish()
                         }
                         val buttonLoguit = findViewById<Button>(R.id.loguitButton)
                         buttonLoguit.visibility = View.VISIBLE
-                        buttonLoguit.setOnClickListener{
+                        buttonLoguit.setOnClickListener {
                             startActivity(loginIntent)
                             finish()
                         }
