@@ -312,7 +312,6 @@ class RegisterPatientActivity : BaseActivityClass() {
             val patientListIntent = Intent(this, PatientList::class.java)
             startActivity(patientListIntent)
         }
-
         finish()
     }
 }
