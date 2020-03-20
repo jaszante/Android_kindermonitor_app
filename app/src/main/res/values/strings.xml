@@ -56,6 +56,11 @@
     <string name="noInternetError">Not connected to mobile internet or wifi</string>
     <string name="wachtwoordenKomenNietOvereen">De twee wachtwoorden komen niet overeen</string>
     <string name="NoAuthorisationToChangePermissions">Your account does not have authorisation to change patient permissions</string>
+    <string name="tot_datum">Tot datum:</string>
+    <string name="streepjes">---</string>
+    <string name="van_datum">Van datum:</string>
+    <string name="dropdown_arrow">dropdown arrow</string>
+    <string name="vitale_functie">Vitale Functie:</string>
 
 
 </resources>

@@ -2,10 +2,10 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.patientList
 
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +14,6 @@ import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.currentPatient
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userData
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
@@ -25,7 +23,6 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserLogin
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
-//import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +36,7 @@ class PatientList : BaseActivityClass() {
     val patientList: ArrayList<PatientWithID> = ArrayList()
     lateinit var text: TextView
     lateinit var buttonPatient: Button
+    lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +46,7 @@ class PatientList : BaseActivityClass() {
         val makeSureThereIsAFirebaseToken = MyFirebaseMessagingService()
         makeSureThereIsAFirebaseToken.getFirebaseToken(this)
 
+        progressBar = findViewById(R.id.progressBar)
 
         val patientListener: PatientListener = object : PatientListener {
             override fun onItemClick(position: Int, patient: PatientWithID) {
@@ -140,6 +139,7 @@ class PatientList : BaseActivityClass() {
 
     private fun getUserDataThenStartGetPatientsCall() {
         patientList.clear()
+        progressBar.visibility = View.VISIBLE
 
         val loginIntent = Intent(this, LoginActivity::class.java)
 
@@ -218,6 +218,7 @@ class PatientList : BaseActivityClass() {
                 response: Response<Array<PatientWithID>>
             ) {
                 val statusCode = response.code()
+                progressBar.visibility = View.INVISIBLE
 
                 if (response.isSuccessful && response.body() != null) {
                     val allPatients = response.body()!!

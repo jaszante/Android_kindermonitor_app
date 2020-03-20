@@ -1,237 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".register.RegisterActivity">
+        android:layout_height="match_parent">
 
-
-        <TextView
-            android:id="@+id/TUname"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerUname"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/EUname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditUname"
-            android:ems="10"
-            android:hint="@string/registerEditUname"
-            android:inputType="textCapSentences"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/TPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerPW"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/EPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditPW"
-            android:ems="10"
-            android:hint="@string/registerEditPW"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/TCPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/bevestig_wachtwoord"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/ECPW"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditPW"
-            android:ems="10"
-            android:hint="@string/registerEditPW"
-            android:inputType="textPassword"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/Temail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerEmail"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/Eemail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditEmail"
-            android:ems="10"
-            android:hint="@string/registerEditEmail"
-            android:inputType="textEmailAddress"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/TVname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerFname"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/EVname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditFname"
-            android:ems="10"
-            android:hint="@string/registerEditFname"
-            android:inputType="textCapSentences"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/TLname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerLname"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/ELname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:autofillHints="@string/registerEditLname"
-            android:ems="10"
-            android:hint="@string/registerEditLname"
-            android:inputType="textCapSentences"
-            android:selectAllOnFocus="true" />
-
-        <TextView
-            android:id="@+id/Tphone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerPhone"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:id="@+id/Ephone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:ems="10"
-            android:inputType="phone"
-            android:hint="@string/registerEditPhone"
-            android:autofillHints="@string/registerEditPhone"
-            android:selectAllOnFocus="true" />
-
-        <CheckBox
-            android:id="@+id/CBcaretaker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:buttonTint="@color/colorPrimary"
-            android:checked="false"
-            android:text="@string/registerCaretaker"
-            android:textColor="@android:color/black" />
-
-        <CheckBox
-            android:id="@+id/CBterms"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/registerterms"
-            android:buttonTint="@color/colorPrimary"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/registerError"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="@drawable/rounded_shape_bad"
-            android:visibility="invisible"
-            android:textColorHint="@android:color/black"
-            android:textColor="@android:color/black"
-            android:textAlignment="center"/>
+            android:orientation="vertical"
+            tools:context=".register.RegisterActivity">
 
 
-        <Button
-            android:id="@+id/BTNregister"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_shape"
-            android:text="@string/registerButton"
-            android:textColor="@color/white"
-            android:stateListAnimator="@null"/>
+            <TextView
+                android:id="@+id/TUname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerUname"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/EUname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditUname"
+                android:ems="10"
+                android:hint="@string/registerEditUname"
+                android:inputType="textCapSentences"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/TPW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerPW"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/EPW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditPW"
+                android:ems="10"
+                android:hint="@string/registerEditPW"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/TCPW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/bevestig_wachtwoord"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/ECPW"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditPW"
+                android:ems="10"
+                android:hint="@string/registerEditPW"
+                android:inputType="textPassword"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/Temail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerEmail"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/Eemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditEmail"
+                android:ems="10"
+                android:hint="@string/registerEditEmail"
+                android:inputType="textEmailAddress"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/TVname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerFname"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/EVname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditFname"
+                android:ems="10"
+                android:hint="@string/registerEditFname"
+                android:inputType="textCapSentences"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/TLname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerLname"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/ELname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditLname"
+                android:ems="10"
+                android:hint="@string/registerEditLname"
+                android:inputType="textCapSentences"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:id="@+id/Tphone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/registerPhone"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/Ephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:autofillHints="@string/registerEditPhone"
+                android:ems="10"
+                android:hint="@string/registerEditPhone"
+                android:inputType="phone"
+                android:selectAllOnFocus="true" />
+
+            <CheckBox
+                android:id="@+id/CBcaretaker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:buttonTint="@color/colorPrimary"
+                android:checked="false"
+                android:text="@string/registerCaretaker"
+                android:textColor="@android:color/black" />
+
+            <CheckBox
+                android:id="@+id/CBterms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:buttonTint="@color/colorPrimary"
+                android:text="@string/registerterms"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/registerError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/rounded_shape_bad"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/black"
+                android:visibility="invisible" />
 
 
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/BTNregister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/rounded_shape"
+                android:stateListAnimator="@null"
+                android:text="@string/registerButton"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</RelativeLayout>

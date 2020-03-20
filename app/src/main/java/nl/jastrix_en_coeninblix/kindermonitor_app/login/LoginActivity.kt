@@ -5,26 +5,21 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import org.json.JSONObject
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
-import nl.jastrix_en_coeninblix.kindermonitor_app.FirebaseNotifications.MyFirebaseMessagingService
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.password
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.userName
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
+import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserLogin
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterActivity
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
@@ -34,6 +29,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     private lateinit var passwordField: EditText
 
     private var noCallInProgress: Boolean = true
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +44,8 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         usernameField = findViewById<EditText>(R.id.UserNameField)
         passwordField = findViewById<EditText>(R.id.passwordField)
 
-        val registerButton = findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
+        val registerButton =
+            findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
         registerButton.setOnClickListener() {
             val registerIntent = Intent(this, RegisterActivity::class.java)
             if (noCallInProgress) {
@@ -57,11 +54,14 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             }
         }
 
+        progressBar = findViewById(R.id.progressBar)
+
         val loginButton = findViewById<Button>(R.id.LoginButton)
         loginButton.setOnClickListener() {
             loginButton.setBackground(getDrawable(R.drawable.round_shape_dark))
             if (noCallInProgress) {
                 noCallInProgress = false
+                progressBar.visibility = View.VISIBLE
                 loginOrRegisterErrorField.visibility = View.INVISIBLE
 
 //            val userLogin = UserLogin(usernameField.text.toString(), passwordField.text.toString())
@@ -76,8 +76,12 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         registerOrLoginFailedShowMessage(getString(R.string.noInternetError))//t.message!!)
     }
 
-    override fun onResponse(call: Call<AuthenticationToken>, response: Response<AuthenticationToken>) {
+    override fun onResponse(
+        call: Call<AuthenticationToken>,
+        response: Response<AuthenticationToken>
+    ) {
         noCallInProgress = true
+        progressBar.visibility = View.INVISIBLE
         if (response.isSuccessful && response.body() != null) {
             val monitorApplication = MonitorApplication.getInstance()
             monitorApplication.authToken = response.body()!!.token
@@ -92,23 +96,20 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             val patientListIntent = Intent(this, PatientList::class.java)
             startActivity(patientListIntent)
             finish()
-        }
-        else {
+        } else {
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()
             var errorMessage = "API down"
             if (errorbodyLength != 0) {
                 try {
 
-                val jObjError = JSONObject(response.errorBody()!!.string())
-                errorMessage = jObjError.getString("error")
+                    val jObjError = JSONObject(response.errorBody()!!.string())
+                    errorMessage = jObjError.getString("error")
 
-                }
-                finally {
+                } finally {
 
                 }
                 registerOrLoginFailedShowMessage(errorMessage)
-            }
-            else{
+            } else {
                 registerOrLoginFailedShowMessage(response.message())
             }
         }

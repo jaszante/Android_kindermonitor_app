@@ -1,21 +1,19 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.register
 
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authTokenChanged
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.observableToken
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.api.APIService
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.AuthenticationToken
@@ -26,7 +24,6 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
 import java.util.regex.Pattern
 
 
@@ -45,6 +42,7 @@ class RegisterActivity : BaseActivityClass() {
     lateinit var phone: EditText
     lateinit var email: EditText
     lateinit var confirmPW: EditText
+    lateinit var progressBar: ProgressBar
 
     var noCallInProgress = true
 
@@ -64,6 +62,10 @@ class RegisterActivity : BaseActivityClass() {
         errorfield = findViewById<EditText>(R.id.registerError)
         confirmPW = findViewById(R.id.ECPW)
         service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
+//        progressBar = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal)
+
+//        progressBar = layoutInflater.inflate(R.layout.api_progress_bar, null) as ProgressBar
+        progressBar = findViewById(R.id.progressBar)
 
         /*-------------------------------------------------------------------------------------------*/
         buttonRegister.setOnClickListener() {
@@ -151,6 +153,7 @@ class RegisterActivity : BaseActivityClass() {
     ) {
         if (noCallInProgress) {
             noCallInProgress = false
+            progressBar.visibility = View.VISIBLE
             val userRegister = UserRegister(uName, pw, fName, lName, phoneNumber, email)
             val call = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
                 .userRegister(userRegister)
@@ -160,6 +163,8 @@ class RegisterActivity : BaseActivityClass() {
                     response: Response<AuthenticationToken>
                 ) {
                     noCallInProgress = true
+                    progressBar.visibility = View.INVISIBLE
+                    errorfield.visibility = View.INVISIBLE
 
                     if (response.isSuccessful && response.body() != null) {
                         MonitorApplication.getInstance().authToken = response.body()!!.token
@@ -193,6 +198,7 @@ class RegisterActivity : BaseActivityClass() {
                 override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
                     Log.d("DEBUG", t.message)
                     noCallInProgress = true
+                    progressBar.visibility = View.INVISIBLE
 
                     registerFailedShowMessage(t.localizedMessage)
                 }

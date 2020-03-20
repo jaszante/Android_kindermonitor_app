@@ -1,7 +1,6 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.Account
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -9,7 +8,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import kotlinx.android.synthetic.main.activity_register_patient.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
