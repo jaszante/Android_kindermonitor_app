@@ -21,9 +21,12 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.abs
+import kotlin.math.round
 
 class GalleryFragment : Fragment() {
 
@@ -113,7 +116,7 @@ class GalleryFragment : Fragment() {
         val array: Array<String> =
             arrayOf("Hartslag", "Saturatie", "Adem Frequentie", "Temperatuur")
 
-        val adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, array)
+        val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, array)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         dropdown.adapter = adapter
         dropdown.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -142,7 +145,7 @@ class GalleryFragment : Fragment() {
             "Saturatie" -> id = monitorapp.saturatieSensor!!.sensorID
             "Temperatuur" -> id = monitorapp.temperatuurSensor!!.sensorID
             "Adem Frequentie" -> id = monitorapp.ademFrequentieSensor!!.sensorID
-            else -> Log.d("TypeERror", "unsupported sensor")
+            else -> Log.d("TypeError", "unsupported sensor")
         }
 
         val call = monitorapp.apiHelper.buildAPIServiceWithNewToken(
@@ -185,15 +188,60 @@ class GalleryFragment : Fragment() {
         })
     }
 
-    fun create_Graph(array: Array<Measurement>) {
-        val list = ArrayList<Entry>()
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSS", Locale.GERMANY)
+    fun create_Graph(allMeasurements: Array<Measurement>) {
+        val firstChosenDay = toDateString.split('T')
+        val secondChosenDay = fromDateString.split('T')
 
-        array.forEach {
-            val date = format.parse(it.time)
-            val point = Entry(date.time.toFloat(), it.value.toFloat())
-            list.add(point)
+        val showOneDay = firstChosenDay[0] == secondChosenDay[0]
+//        val showOneDay = abs(firstChosenDay[0].split('-')[2].toInt() - secondChosenDay[0].split('-')[2].toInt()) < 2
+
+        val averageGraphPoints = ArrayList<Entry>()
+        val highestGraphPoints = ArrayList<Entry>()
+        val lowestGraphPoints = ArrayList<Entry>()
+
+        var highPoint: Double
+        var lowestPoint: Double
+        var averagePoint: Double
+        var calculatingAverageForThisHourOrDay: Int = returnFormattedDate(allMeasurements[0].time).hours
+        val allMeasurementsWithinAverage = ArrayList<Double>()
+        var previousTimeForGraph: Float = -1f
+        allMeasurements.forEach {
+
+            if (showOneDay)
+            {
+                val date = returnFormattedDate(it.time)
+                if (date.hours == calculatingAverageForThisHourOrDay){
+                    allMeasurementsWithinAverage.add(it.value)
+                }
+                else{
+                    averagePoint = 0.0
+                    allMeasurementsWithinAverage.forEach{
+                        averagePoint += it
+                    }
+                    averagePoint /= allMeasurementsWithinAverage.count()
+                    allMeasurementsWithinAverage.clear()
+                    calculatingAverageForThisHourOrDay = date.hours
+                    allMeasurementsWithinAverage.add(it.value)
+
+                    val point = Entry(previousTimeForGraph, averagePoint.toFloat())
+                    averageGraphPoints.add(point)
+                }
+
+                previousTimeForGraph = date.hours.toFloat()
+            }
+            else  // days
+            {
+
+            }
+
+
         }
+
+
+
+
+
+
         //  var arrayDP = arrayOfNulls<DataPoint>(list.size)
         //  var de = list.toArray(arrayDP)
 
@@ -220,7 +268,7 @@ class GalleryFragment : Fragment() {
            entriesLaag.add(Entry8)
            entriesLaag.add(Entry9)*/
 
-        val dataSet = LineDataSet(list, "lijn gemiddelt");
+        val dataSet = LineDataSet(averageGraphPoints, "gemiddeld");
         // var dataSet2 = LineDataSet(entriesHoog, "lijn hoog");
         //  var dataSet3 = LineDataSet(entriesLaag, "lijn laag");
         /*    dataSet.setColor(R.color.colorPrimary)
@@ -233,5 +281,19 @@ class GalleryFragment : Fragment() {
         val lineData = LineData(dataSets)
         graph.data = lineData
         graph.invalidate()
+    }
+
+    private fun returnFormattedDate(time: String): Date {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSS", Locale.GERMANY)
+        val formatNoMillisecond = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.GERMANY)
+
+        var date: Date
+        try {
+            date = formatNoMillisecond.parse(time)
+        }
+        catch (e: Exception){
+            date = format.parse(time)
+        }
+        return date
     }
 }
