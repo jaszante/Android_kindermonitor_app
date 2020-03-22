@@ -22,7 +22,7 @@
     <EditText
         android:id="@+id/patientFirstName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
@@ -30,7 +30,12 @@
         android:ems="10"
         android:hint="@string/registerEditFname"
         android:inputType="textCapSentences"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:background="@drawable/borderinput"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_height="32dp"
+        />
 
     <TextView
         android:id="@+id/patientLastNameLabel"
@@ -46,7 +51,6 @@
     <EditText
         android:id="@+id/patientLastName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
@@ -54,7 +58,11 @@
         android:ems="10"
         android:hint="@string/registerEditLname"
         android:inputType="textCapSentences"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:background="@drawable/borderinput"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_height="32dp"/>
 
     <TextView
         android:id="@+id/patientBirthDateLabel"
@@ -70,7 +78,6 @@
     <EditText
         android:id="@+id/patientBirthDate"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
@@ -79,7 +86,11 @@
         android:focusable="false"
         android:hint="@string/registerEDate"
         android:inputType="date"
-        android:selectAllOnFocus="true" />
+        android:selectAllOnFocus="true"
+        android:background="@drawable/borderinput"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_height="32dp"/>
 
     <TextView
         android:id="@+id/patientRegisterError"

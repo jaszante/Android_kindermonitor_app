@@ -30,6 +30,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
 
     private var noCallInProgress: Boolean = true
     private lateinit var progressBar: ProgressBar
+    var errorlist = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +44,12 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
 
         usernameField = findViewById<EditText>(R.id.UserNameField)
         passwordField = findViewById<EditText>(R.id.passwordField)
+        usernameField.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        passwordField.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
 
         val registerButton =
             findViewById<Button>(nl.jastrix_en_coeninblix.kindermonitor_app.R.id.RegisterButton)
@@ -59,15 +66,17 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
         val loginButton = findViewById<Button>(R.id.LoginButton)
         loginButton.setOnClickListener() {
             loginButton.setBackground(getDrawable(R.drawable.round_shape_dark))
-            if (noCallInProgress) {
-                noCallInProgress = false
-                progressBar.visibility = View.VISIBLE
-                loginOrRegisterErrorField.visibility = View.INVISIBLE
+            if (allFieldsFilledIn()) {
+                if (noCallInProgress) {
+                    noCallInProgress = false
+                    progressBar.visibility = View.VISIBLE
+                    loginOrRegisterErrorField.visibility = View.INVISIBLE
 
 //            val userLogin = UserLogin(usernameField.text.toString(), passwordField.text.toString())
-                val userLogin =
-                    UserLogin(usernameField.text.toString(), passwordField.text.toString())
-                service.userLogin(userLogin).enqueue(this)
+                    val userLogin =
+                        UserLogin(usernameField.text.toString(), passwordField.text.toString())
+                    service.userLogin(userLogin).enqueue(this)
+                }
             }
         }
     }
@@ -150,4 +159,47 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
+
+    private fun allFieldsFilledIn(): Boolean {
+        errorlist.clear()
+        if (isNullOrEmpty(usernameField.text.toString())) {
+            val string = "gebruikersnaam"
+            usernameField.setBackgroundColor(getColor(R.color.colorBad))
+            errorlist.add(string)
+        }
+        if (isNullOrEmpty(passwordField.text.toString())) {
+            val string = "wachtwoord"
+            passwordField.setBackgroundColor(getColor(R.color.colorBad))
+            errorlist.add(string)
+        }
+
+        if (errorlist.count() > 0) {
+            var string = ""
+            val max = errorlist.count()
+            var index = 0
+            errorlist.forEach {
+                if (index < max - 1) {
+                    string = string + it + ", "
+                } else {
+                    string = string + it + " moet(en) worden ingevuld"
+                }
+                index++
+            }
+            loginOrRegisterErrorField.text = string
+            loginOrRegisterErrorField.visibility = View.VISIBLE
+            return false
+        } else {
+            return true
+        }
+
+    }
+
+    private fun isNullOrEmpty(str: String?): Boolean {
+        if (str != null && !str.isEmpty()) {
+            return false
+        } else {
+            return true
+        }
+    }
+
 }

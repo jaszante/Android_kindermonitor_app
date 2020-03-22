@@ -32,7 +32,6 @@
             <EditText
                 android:id="@+id/EUname"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -40,7 +39,11 @@
                 android:ems="10"
                 android:hint="@string/registerEditUname"
                 android:inputType="textCapSentences"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
 
             <TextView
                 android:id="@+id/TPW"
@@ -56,7 +59,6 @@
             <EditText
                 android:id="@+id/EPW"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -64,7 +66,22 @@
                 android:ems="10"
                 android:hint="@string/registerEditPW"
                 android:inputType="textPassword"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
+
+            <TextView
+                android:id="@+id/TWWReq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:text="* Het wachtwoord moet minimaal een hoofdletter en 3 cijfers bevatten. En moet minimaal 8 characters lang zijn."
+                 />
 
             <TextView
                 android:id="@+id/TCPW"
@@ -80,7 +97,6 @@
             <EditText
                 android:id="@+id/ECPW"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -88,7 +104,12 @@
                 android:ems="10"
                 android:hint="@string/registerEditPW"
                 android:inputType="textPassword"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"
+                />
 
             <TextView
                 android:id="@+id/Temail"
@@ -104,7 +125,6 @@
             <EditText
                 android:id="@+id/Eemail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -112,7 +132,11 @@
                 android:ems="10"
                 android:hint="@string/registerEditEmail"
                 android:inputType="textEmailAddress"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
 
             <TextView
                 android:id="@+id/TVname"
@@ -128,7 +152,6 @@
             <EditText
                 android:id="@+id/EVname"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -136,7 +159,11 @@
                 android:ems="10"
                 android:hint="@string/registerEditFname"
                 android:inputType="textCapSentences"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
 
             <TextView
                 android:id="@+id/TLname"
@@ -152,7 +179,6 @@
             <EditText
                 android:id="@+id/ELname"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -160,7 +186,11 @@
                 android:ems="10"
                 android:hint="@string/registerEditLname"
                 android:inputType="textCapSentences"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
 
             <TextView
                 android:id="@+id/Tphone"
@@ -176,7 +206,6 @@
             <EditText
                 android:id="@+id/Ephone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="8dp"
@@ -184,7 +213,11 @@
                 android:ems="10"
                 android:hint="@string/registerEditPhone"
                 android:inputType="phone"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:background="@drawable/borderinput"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:layout_height="32dp"/>
 
             <CheckBox
                 android:id="@+id/CBcaretaker"
@@ -197,18 +230,6 @@
                 android:buttonTint="@color/colorPrimary"
                 android:checked="false"
                 android:text="@string/registerCaretaker"
-                android:textColor="@android:color/black" />
-
-            <CheckBox
-                android:id="@+id/CBterms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
-                android:buttonTint="@color/colorPrimary"
-                android:text="@string/registerterms"
                 android:textColor="@android:color/black" />
 
             <TextView

@@ -33,8 +33,6 @@ class RegisterActivity : BaseActivityClass() {
 
     lateinit var buttonRegister: Button
     lateinit var checkBoxCaretaker: CheckBox
-    lateinit var checkBoxTerms: CheckBox
-
     lateinit var uName: EditText
     lateinit var pw: EditText
     lateinit var fName: EditText
@@ -43,6 +41,7 @@ class RegisterActivity : BaseActivityClass() {
     lateinit var email: EditText
     lateinit var confirmPW: EditText
     lateinit var progressBar: ProgressBar
+    var errorList = ArrayList<String>()
 
     var noCallInProgress = true
 
@@ -58,7 +57,6 @@ class RegisterActivity : BaseActivityClass() {
         phone = findViewById(R.id.Ephone)
         email = findViewById(R.id.Eemail)
         checkBoxCaretaker = findViewById(R.id.CBcaretaker)
-        checkBoxTerms = findViewById(R.id.CBterms)
         errorfield = findViewById<EditText>(R.id.registerError)
         confirmPW = findViewById(R.id.ECPW)
         service = MonitorApplication.getInstance().apiHelper.buildAndReturnAPIService()
@@ -68,9 +66,32 @@ class RegisterActivity : BaseActivityClass() {
         progressBar = findViewById(R.id.progressBar)
 
         /*-------------------------------------------------------------------------------------------*/
-        buttonRegister.setOnClickListener() {
-            if (checkBoxTerms.isChecked) {
+        uName.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        pw.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        fName.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        lName.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        phone.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        email.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        confirmPW.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
 
+
+        buttonRegister.setOnClickListener() {
+
+            if (allFieldsFilledIn()) {
                 if (isValidPassword(pw.text.toString())) {
                     if (pw.text.toString() == confirmPW.text.toString()) {
                         register(
@@ -88,7 +109,8 @@ class RegisterActivity : BaseActivityClass() {
                             email.text.toString()
                         )
                     } else {
-                        errorfield.text = getString(R.string.wachtwoordenKomenNietOvereen) //"De twee wachtwoorden komen niet overeen"
+                        errorfield.text =
+                            getString(R.string.wachtwoordenKomenNietOvereen) //"De twee wachtwoorden komen niet overeen"
                         errorfield.visibility = View.VISIBLE
                     }
                 } else {
@@ -103,12 +125,10 @@ class RegisterActivity : BaseActivityClass() {
 //                   "123",
 //                   "kees@kees.kees"
 //                )
-            } else {
-                errorfield.text = getString(R.string.registerTerms)
-                errorfield.visibility = View.VISIBLE
             }
         }
     }
+
 
     private fun isValidPassword(pw: String, updateUI: Boolean = true): Boolean {
         val str: CharSequence = pw
@@ -182,11 +202,9 @@ class RegisterActivity : BaseActivityClass() {
                                 val jObjError = JSONObject(response.errorBody()!!.string())
                                 val errorMessage = jObjError.getString("error")
                                 registerFailedShowMessage(errorMessage)
-                            }
-                            catch (e: Exception){
+                            } catch (e: Exception) {
                                 registerFailedShowMessage(response.message())
-                            }
-                            finally {
+                            } finally {
 
                             }
                         } else {
@@ -258,4 +276,72 @@ class RegisterActivity : BaseActivityClass() {
         startActivity(loginIntent)
         finish()
     }
+
+
+    private fun allFieldsFilledIn(): Boolean {
+        errorList.clear()
+        if (isNullOrEmpty(uName.text.toString())) {
+            val string = "gebruikersnaam"
+            uName.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(pw.text.toString())) {
+            val string = "wachtwoord"
+            pw.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(confirmPW.text.toString())) {
+            val string = "bevestig wachtwoord"
+            confirmPW.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(fName.text.toString())) {
+            val string = "voornaam"
+            fName.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(lName.text.toString())) {
+            val string = "achternaam"
+            lName.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(phone.text.toString())) {
+            val string = "telefoonnummer"
+            phone.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (isNullOrEmpty(email.text.toString())) {
+            val string = "email"
+            email.setBackgroundColor(getColor(R.color.colorBad))
+            errorList.add(string)
+        }
+        if (errorList.count() > 0) {
+            var string = ""
+            val max = errorList.count()
+            var index = 0
+            errorList.forEach {
+                if (index < max - 1) {
+                    string = string + it + ", "
+                } else {
+                    string = string + it + " moet(en) worden ingevuld"
+                }
+                index++
+            }
+            errorfield.text = string
+            errorfield.visibility = View.VISIBLE
+            return false
+        } else {
+            return true
+        }
+
+    }
+
+    private fun isNullOrEmpty(str: String?): Boolean {
+        if (str != null && !str.isEmpty()) {
+            return false
+        } else {
+            return true
+        }
+    }
+
 }

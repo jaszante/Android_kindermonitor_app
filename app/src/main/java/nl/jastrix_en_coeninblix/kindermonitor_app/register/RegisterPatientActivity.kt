@@ -23,6 +23,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RegisterPatientActivity : BaseActivityClass() {
 
@@ -36,7 +37,7 @@ class RegisterPatientActivity : BaseActivityClass() {
     lateinit var patientLastNameEditText: EditText
     lateinit var patientBirthDateEditText: EditText
     lateinit var patientRegisterErrorField: TextView
-
+    var errorlist = ArrayList<String>()
     lateinit var userData: UserData
 
     lateinit var createdPatient: PatientWithID
@@ -91,23 +92,34 @@ class RegisterPatientActivity : BaseActivityClass() {
         datePicker.maxDate = currentDate.time
 
         patientBirthDateEditText.setOnClickListener() {
+            it.background = getDrawable(R.drawable.borderinput)
             dpd.show()
         }
+        patientLastNameEditText.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+        patientFirstNameEditText.setOnFocusChangeListener { v, hasFocus ->
+            v.background = getDrawable(R.drawable.borderinput)
+        }
+
 
         registerPatientButton.setOnClickListener() {
-            if (noCallInProgress) {
-                progressBar.visibility = View.VISIBLE
-                patientRegisterErrorField.visibility = View.INVISIBLE
 
-                val patientBirthdayString = birthdateMonth + "-" + birthdateDay + "-" + year
+            if (allFieldsFilledIn()) {
+                if (noCallInProgress) {
+                    progressBar.visibility = View.VISIBLE
+                    patientRegisterErrorField.visibility = View.INVISIBLE
 
-                val createPatient = Patient(
-                    patientFirstNameEditText.text.toString(),
-                    patientLastNameEditText.text.toString(),
-                    patientBirthdayString
-                )
+                    val patientBirthdayString = birthdateMonth + "-" + birthdateDay + "-" + year
 
-                createPatientForThisUser(createPatient)
+                    val createPatient = Patient(
+                        patientFirstNameEditText.text.toString(),
+                        patientLastNameEditText.text.toString(),
+                        patientBirthdayString
+                    )
+
+                    createPatientForThisUser(createPatient)
+                }
             }
         }
 
@@ -131,12 +143,11 @@ class RegisterPatientActivity : BaseActivityClass() {
                     val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                     if (errorbodyLength != 0) {
                         var errorMessage = "API down"
-                        try{
+                        try {
 
-                        val jObjError = JSONObject(response.errorBody()!!.string())
-                        errorMessage = jObjError.getString("error")
-                        }
-                        finally {
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            errorMessage = jObjError.getString("error")
+                        } finally {
 
                         }
                         registerPatientShowErrorMessage(errorMessage)
@@ -181,10 +192,9 @@ class RegisterPatientActivity : BaseActivityClass() {
                     createSensorForPatient(SensorType.Saturatie.toString(), "85", "100", true)
 
                 } else {
-                    if (response.code() == 500){
+                    if (response.code() == 500) {
                         registerPatientShowErrorMessage(getString(R.string.incorrectDateFormatError))
-                    }
-                    else{
+                    } else {
                         val errorbodyLength = response.errorBody()!!.contentLength().toInt()
                         if (errorbodyLength != 0) {
                             val jObjError = JSONObject(response.errorBody()!!.string())
@@ -203,11 +213,22 @@ class RegisterPatientActivity : BaseActivityClass() {
         })
     }
 
-    private fun createSensorForPatient(type: String, thresholdMin: String, thresholdMax: String, lastSensor: Boolean = false) {
+    private fun createSensorForPatient(
+        type: String,
+        thresholdMin: String,
+        thresholdMax: String,
+        lastSensor: Boolean = false
+    ) {
         val patientListIntent = Intent(this, PatientList::class.java)
 
         val fireBaseMessagingService = MyFirebaseMessagingService()
-        val newSensor = SensorToCreate(type, "Nee", thresholdMin, thresholdMax, fireBaseMessagingService.getFirebaseToken(this)) //Array<String>(1)
+        val newSensor = SensorToCreate(
+            type,
+            "Nee",
+            thresholdMin,
+            thresholdMax,
+            fireBaseMessagingService.getFirebaseToken(this)
+        ) //Array<String>(1)
 //        { fireBaseMessagingService.getFirebaseToken(this) } )
 
         val call = MonitorApplication.getInstance()
@@ -219,7 +240,7 @@ class RegisterPatientActivity : BaseActivityClass() {
                 call: Call<Sensor>,
                 response: Response<Sensor>
             ) {
-                if (lastSensor){
+                if (lastSensor) {
                     progressBar.visibility = View.INVISIBLE
                 }
 
@@ -228,34 +249,51 @@ class RegisterPatientActivity : BaseActivityClass() {
 
                     val callbackResponse = response.body()!!
 
-                    when (callbackResponse.type){
+                    when (callbackResponse.type) {
                         SensorType.Temperature.toString() ->
-                            emailContent1 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                            emailContent1 = EmailContent(
+                                callbackResponse.sensorID.toString(),
+                                callbackResponse.preSharedKey,
+                                callbackResponse.type
+                            )
                         SensorType.Hartslag.toString() ->
-                            emailContent2 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                            emailContent2 = EmailContent(
+                                callbackResponse.sensorID.toString(),
+                                callbackResponse.preSharedKey,
+                                callbackResponse.type
+                            )
                         SensorType.Adem.toString() ->
-                            emailContent3 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                            emailContent3 = EmailContent(
+                                callbackResponse.sensorID.toString(),
+                                callbackResponse.preSharedKey,
+                                callbackResponse.type
+                            )
                         SensorType.Saturatie.toString() ->
-                            emailContent4 = EmailContent(callbackResponse.sensorID.toString(), callbackResponse.preSharedKey, callbackResponse.type)
+                            emailContent4 = EmailContent(
+                                callbackResponse.sensorID.toString(),
+                                callbackResponse.preSharedKey,
+                                callbackResponse.type
+                            )
                     }
 
                     sensorsCreatedIndex++
-                    if (sensorsCreatedIndex == 4){
+                    if (sensorsCreatedIndex == 4) {
                         sensorsCreatedIndex = 0
-                        val patientFullName = patientFirstName.text.toString() + " " + patientLastName.text.toString()
+                        val patientFullName =
+                            patientFirstName.text.toString() + " " + patientLastName.text.toString()
 
                         var emailContents = ArrayList<EmailContent>()
 
-                        if (emailContent1 != null){
+                        if (emailContent1 != null) {
                             emailContents.add(emailContent1!!)
                         }
-                        if (emailContent2 != null){
+                        if (emailContent2 != null) {
                             emailContents.add(emailContent2!!)
                         }
-                        if (emailContent3 != null){
+                        if (emailContent3 != null) {
                             emailContents.add(emailContent3!!)
                         }
-                        if (emailContent4 != null){
+                        if (emailContent4 != null) {
                             emailContents.add(emailContent4!!)
                         }
 
@@ -275,7 +313,7 @@ class RegisterPatientActivity : BaseActivityClass() {
                             val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getString("error")
                             registerPatientShowErrorMessage(errorMessage)
-                        }catch (e: Exception){
+                        } catch (e: Exception) {
 
                             registerPatientShowErrorMessage(response.message())
                         }
@@ -297,12 +335,58 @@ class RegisterPatientActivity : BaseActivityClass() {
         if (intent.getBooleanExtra("cameFromAccountFragment", false)) {
             val mainActivity = Intent(this, MainActivity::class.java)
             startActivity(mainActivity)
-        }
-        else
-        {
+        } else {
             val patientListIntent = Intent(this, PatientList::class.java)
             startActivity(patientListIntent)
         }
         finish()
     }
+
+    private fun allFieldsFilledIn(): Boolean {
+        errorlist.clear()
+        if (isNullOrEmpty(patientBirthDateEditText.text.toString())) {
+            val string = "Geboortedatum"
+            patientBirthDateEditText.setBackgroundColor(getColor(R.color.colorBad))
+            errorlist.add(string)
+        }
+        if (isNullOrEmpty(patientFirstNameEditText.text.toString())) {
+            val string = "voornaam"
+            patientFirstNameEditText.setBackgroundColor(getColor(R.color.colorBad))
+            errorlist.add(string)
+        }
+        if (isNullOrEmpty(patientLastNameEditText.text.toString())) {
+            val string = "achternaam"
+            patientLastNameEditText.setBackgroundColor(getColor(R.color.colorBad))
+            errorlist.add(string)
+        }
+
+        if (errorlist.count() > 0) {
+            var string = ""
+            val max = errorlist.count()
+            var index = 0
+            errorlist.forEach {
+                if (index < max - 1) {
+                    string = string + it + ", "
+                } else {
+                    string = string + it + " moet(en) worden ingevuld"
+                }
+                index++
+            }
+            patientRegisterErrorField.text = string
+            patientRegisterErrorField.visibility = View.VISIBLE
+            return false
+        } else {
+            return true
+        }
+
+    }
+
+    private fun isNullOrEmpty(str: String?): Boolean {
+        if (str != null && !str.isEmpty()) {
+            return false
+        } else {
+            return true
+        }
+    }
+
 }

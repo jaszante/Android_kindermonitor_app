@@ -18,24 +18,24 @@
     <string name="menu_information">Informatie</string>
     <string name="menu_account">Account</string>
 
-    <string name="registerUname">Gebruikersnaam*</string>
+    <string name="registerUname">Gebruikersnaam</string>
     <string name="registerEditUname">Gebruikersnaam</string>
-    <string name="registerPW">Password*</string>
-    <string name="registerEditPW">Password</string>
-    <string name="registerFname">Voornaam*</string>
-    <string name="registerEditFname">Voornaam*</string>
-    <string name="registerLname">Achternaam*</string>
+    <string name="registerPW">Wachtwoord</string>
+    <string name="registerEditPW">Wachtwoord</string>
+    <string name="registerFname">Voornaam</string>
+    <string name="registerEditFname">Voornaam</string>
+    <string name="registerLname">Achternaam</string>
     <string name="registerEditLname">Achternaam</string>
-    <string name="registerPhone">Telefoonnummer*</string>
-    <string name="registerEditPhone">0612345678*</string>
-    <string name="registerEmail">Email*</string>
+    <string name="registerPhone">Telefoonnummer</string>
+    <string name="registerEditPhone">0612345678</string>
+    <string name="registerEmail">Email</string>
     <string name="registerEditEmail">Email@email.nl</string>
     <string name="registerCaretaker">Maak een patient aan na het registreren</string>
-    <string name="registerterms">Ik ga akkoord met de algemene voorwaarden*</string>
+    <string name="registerterms">Ik ga akkoord met de algemene voorwaarden</string>
     <string name="registerButton">Registreer</string>
     <string name="registerTerms">U moet akkoord gaan met de terms en agreements.</string>
 
-    <string name="registerDate">Geboorte datum*</string>
+    <string name="registerDate">Geboortedatum</string>
     <string name="registerEDate"> </string>
     <string name="log_uit">Log uit</string>
     <string name="registerButtonPatient">Registreer Patient</string>

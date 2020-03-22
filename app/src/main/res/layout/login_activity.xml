@@ -20,7 +20,7 @@
     <EditText
         android:id="@+id/UserNameField"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
@@ -29,12 +29,15 @@
         android:hint="@string/username"
         android:importantForAutofill="no"
         android:singleLine="false"
+        android:background="@drawable/borderinput"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_height="32dp"
     />
 
     <EditText
         android:id="@+id/passwordField"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
@@ -43,7 +46,11 @@
         android:hint="@string/wachtwoord"
         android:importantForAutofill="no"
         android:inputType="textPassword"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:background="@drawable/borderinput"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_height="32dp"/>
     <TextView
         android:id="@+id/loginOrRegisterFailed"
         android:layout_width="match_parent"
