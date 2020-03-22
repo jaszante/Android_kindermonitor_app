@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_register_patient.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.*
@@ -49,6 +50,8 @@ class RegisterPatientActivity : BaseActivityClass() {
     var birthdateDay: String? = null
     var birthdateMonth: String? = null
 
+    lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_patient)
@@ -61,7 +64,7 @@ class RegisterPatientActivity : BaseActivityClass() {
 
         registerPatientButton = findViewById(R.id.patientRegisterButton)
         registerPatientButton.isClickable = false
-
+        progressBar = findViewById(R.id.progressBar)
 
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
@@ -92,51 +95,33 @@ class RegisterPatientActivity : BaseActivityClass() {
         }
 
         registerPatientButton.setOnClickListener() {
-
             if (noCallInProgress) {
+                progressBar.visibility = View.VISIBLE
                 patientRegisterErrorField.visibility = View.INVISIBLE
 
-                val patientBirthdayString =
-                    "" + birthdateMonth + "-" + birthdateDay + "-" + year  //patientBirthDateEditText.text.toString()
-//            var parsedDateString: String = ""
-//            var parseSucceeded: Boolean = false
-//
-//            try {
-////                val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy")
-////                parsedDateString = getDateInstance("DD-MM-yyyy").parse(patientBirthdayString) // SimpleDateFormat("dd-MM-yyyy").parse(patientBirthdayString) //getDateInstance(patientBirthdayString)
-////                parsedDateString = format.parse(patientBirthdayString)
-//
-////                val parser =  SimpleDateFormat("dd.mm.yyyy") //SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-////                val formatter = SimpleDateFormat("dd.mm.yyyy");
-////                parsedDateString = formatter.format(parser.parse(patientBirthdayString));
-//
-//                parseSucceeded = true
-//            } catch (pe: Exception) {
-//                registerPatientShowErrorMessage(getString(R.string.incorrectDateFormatError))
-//            }
+                val patientBirthdayString = birthdateMonth + "-" + birthdateDay + "-" + year
 
-//            if (parseSucceeded) {
                 val createPatient = Patient(
                     patientFirstNameEditText.text.toString(),
                     patientLastNameEditText.text.toString(),
                     patientBirthdayString
-//                    parsedDateString.toString()
                 )
 
                 createPatientForThisUser(createPatient)
             }
-//            }
         }
 
         getUserData()
     }
 
     private fun getUserData() {
+        progressBar.visibility = View.VISIBLE
         val call = MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(
             MonitorApplication.getInstance().authToken
         ).getCurrentUser()
         call.enqueue(object : Callback<UserData> {
             override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                progressBar.visibility = View.INVISIBLE
                 if (response.isSuccessful && response.body() != null) {
                     userData = response.body()!!
 
@@ -171,6 +156,7 @@ class RegisterPatientActivity : BaseActivityClass() {
         noCallInProgress = true
         patientRegisterErrorField.text = errorMessage
         patientRegisterErrorField.visibility = View.VISIBLE
+        progressBar.visibility = View.INVISIBLE
     }
 
     private fun createPatientForThisUser(patient: Patient) {
@@ -192,7 +178,7 @@ class RegisterPatientActivity : BaseActivityClass() {
                     createSensorForPatient(SensorType.Temperature.toString(), "35", "41")
                     createSensorForPatient(SensorType.Hartslag.toString(), "50", "200")
                     createSensorForPatient(SensorType.Adem.toString(), "10", "80")
-                    createSensorForPatient(SensorType.Saturatie.toString(), "85", "100")
+                    createSensorForPatient(SensorType.Saturatie.toString(), "85", "100", true)
 
                 } else {
                     if (response.code() == 500){
@@ -217,7 +203,7 @@ class RegisterPatientActivity : BaseActivityClass() {
         })
     }
 
-    private fun createSensorForPatient(type: String, thresholdMin: String, thresholdMax: String) {
+    private fun createSensorForPatient(type: String, thresholdMin: String, thresholdMax: String, lastSensor: Boolean = false) {
         val patientListIntent = Intent(this, PatientList::class.java)
 
         val fireBaseMessagingService = MyFirebaseMessagingService()
@@ -233,6 +219,10 @@ class RegisterPatientActivity : BaseActivityClass() {
                 call: Call<Sensor>,
                 response: Response<Sensor>
             ) {
+                if (lastSensor){
+                    progressBar.visibility = View.INVISIBLE
+                }
+
                 if (response.isSuccessful && response.body() != null) {
                     noCallInProgress = true
 
@@ -297,6 +287,7 @@ class RegisterPatientActivity : BaseActivityClass() {
 
             override fun onFailure(call: Call<Sensor>, t: Throwable) {
                 registerPatientShowErrorMessage(t.message!!)
+                progressBar.visibility = View.INVISIBLE
             }
         })
     }

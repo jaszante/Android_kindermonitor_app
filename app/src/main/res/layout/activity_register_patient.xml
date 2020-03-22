@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".register.RegisterPatientActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".register.RegisterPatientActivity">
+
 
     <TextView
         android:id="@+id/patientFirstNameLabel"
@@ -27,8 +29,8 @@
         android:autofillHints="@string/registerEditFname"
         android:ems="10"
         android:hint="@string/registerEditFname"
-        android:selectAllOnFocus="true"
-        android:inputType="textCapSentences"/>
+        android:inputType="textCapSentences"
+        android:selectAllOnFocus="true" />
 
     <TextView
         android:id="@+id/patientLastNameLabel"
@@ -52,7 +54,7 @@
         android:ems="10"
         android:hint="@string/registerEditLname"
         android:inputType="textCapSentences"
-        android:selectAllOnFocus="true"/>
+        android:selectAllOnFocus="true" />
 
     <TextView
         android:id="@+id/patientBirthDateLabel"
@@ -72,12 +74,12 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="date"
-        android:hint="@string/registerEDate"
         android:autofillHints="@string/registerEDate"
-        android:selectAllOnFocus="true"
-        android:focusable="false"/>
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/registerEDate"
+        android:inputType="date"
+        android:selectAllOnFocus="true" />
 
     <TextView
         android:id="@+id/patientRegisterError"
@@ -101,7 +103,20 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_shape"
+        android:stateListAnimator="@null"
         android:text="@string/registerButtonPatient"
-        android:textColor="@color/white"
-        android:stateListAnimator="@null"/>
+        android:textColor="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@android:color/transparent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </LinearLayout>

@@ -73,7 +73,8 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     }
 
     override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
-        registerOrLoginFailedShowMessage(getString(R.string.noInternetError))//t.message!!)
+        registerOrLoginFailedShowMessage(getString(R.string.noInternetError))
+        progressBar.visibility = View.INVISIBLE
     }
 
     override fun onResponse(
