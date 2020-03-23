@@ -66,8 +66,6 @@ class PatientList : BaseActivityClass() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
-
-
     }
 
     override fun onResume() {

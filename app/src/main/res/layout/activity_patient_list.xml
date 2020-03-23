@@ -51,7 +51,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_shape"
         android:stateListAnimator="@null"
-        android:text="Maak een patient aan"
+        android:text="@string/maak_een_patient_aan"
         android:textColor="@color/white"
         android:visibility="invisible" />
 
@@ -65,7 +65,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/rounded_shape"
         android:stateListAnimator="@null"
-        android:text="Log uit"
+        android:text="@string/log_uit"
         android:textColor="@color/white"
         android:visibility="invisible" />
 
