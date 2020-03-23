@@ -1,126 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Account.ChangePW"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-<!--    <TextView-->
-<!--        android:id="@+id/ToldPW"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginEnd="24dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:buttonTint="@color/colorPrimary"-->
-<!--        android:text="Huidig wachtwoord:"-->
-<!--        android:textColor="@android:color/black"-->
-<!--        android:textSize="18sp"-->
-<!--        android:textStyle="bold" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/EOld"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginEnd="24dp"-->
-<!--        android:layout_marginBottom="8dp"-->
-<!--        android:buttonTint="@color/colorPrimary"-->
-<!--        android:inputType="textPassword"-->
-<!--        android:textColor="@android:color/black"-->
-<!--        />-->
-
-    <TextView
-        android:id="@+id/Tnew1"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="Nieuw wachtwoord:"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Account.ChangePW"
+        android:background="@color/white">
 
-    <EditText
-        android:id="@+id/passwordChangeTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:inputType="textPassword"
-        android:textColor="@android:color/black"
-        />
 
-    <TextView
-        android:id="@+id/Tnew2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:text="Bevestig nieuw wachtwoord"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <!--    <TextView-->
+        <!--        android:id="@+id/ToldPW"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="24dp"-->
+        <!--        android:layout_marginTop="8dp"-->
+        <!--        android:layout_marginEnd="24dp"-->
+        <!--        android:layout_marginBottom="8dp"-->
+        <!--        android:buttonTint="@color/colorPrimary"-->
+        <!--        android:text="Huidig wachtwoord:"-->
+        <!--        android:textColor="@android:color/black"-->
+        <!--        android:textSize="18sp"-->
+        <!--        android:textStyle="bold" />-->
 
-    <EditText
-        android:id="@+id/checkPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:buttonTint="@color/colorPrimary"
-        android:inputType="textPassword"
-        android:textColor="@android:color/black"
-        />
+        <!--    <EditText-->
+        <!--        android:id="@+id/EOld"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_marginStart="24dp"-->
+        <!--        android:layout_marginTop="8dp"-->
+        <!--        android:layout_marginEnd="24dp"-->
+        <!--        android:layout_marginBottom="8dp"-->
+        <!--        android:buttonTint="@color/colorPrimary"-->
+        <!--        android:inputType="textPassword"-->
+        <!--        android:textColor="@android:color/black"-->
+        <!--        />-->
 
-    <TextView
-        android:id="@+id/errorField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_shape_bad"
-        android:text=""
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/Tnew1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorPrimary"
+            android:text="Nieuw wachtwoord:"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/changeUserDataButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_shape"
-        android:stateListAnimator="@null"
-        android:text="Opslaan"
-        android:textColor="@color/white" />
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:visibility="invisible" />
+        <EditText
+            android:id="@+id/passwordChangeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorPrimary"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/Tnew2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorPrimary"
+            android:text="Bevestig nieuw wachtwoord"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/checkPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:buttonTint="@color/colorPrimary"
+            android:inputType="textPassword"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/errorField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/rounded_shape_bad"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/changeUserDataButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_shape"
+            android:stateListAnimator="@null"
+            android:text="Opslaan"
+            android:textColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:visibility="invisible" />
+
+    </LinearLayout>
+</ScrollView>

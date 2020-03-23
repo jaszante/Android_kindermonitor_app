@@ -1,133 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".register.RegisterPatientActivity">
+    android:background="@color/white">
 
-
-    <TextView
-        android:id="@+id/patientFirstNameLabel"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="Voornaam patient*"
-        android:textColor="@android:color/black" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".register.RegisterPatientActivity">
 
-    <EditText
-        android:id="@+id/patientFirstName"
-        android:layout_width="match_parent"
 
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints="@string/registerEditFname"
-        android:ems="10"
-        android:hint="@string/registerEditFname"
-        android:inputType="textCapSentences"
-        android:selectAllOnFocus="true"
-        android:background="@drawable/borderinput"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:layout_height="32dp"
-        />
+        <TextView
+            android:id="@+id/patientFirstNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="Voornaam patient*"
+            android:textColor="@android:color/black" />
 
-    <TextView
-        android:id="@+id/patientLastNameLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="Achternaam patient*"
-        android:textColor="@android:color/black" />
+        <EditText
+            android:id="@+id/patientFirstName"
+            android:layout_width="match_parent"
 
-    <EditText
-        android:id="@+id/patientLastName"
-        android:layout_width="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints="@string/registerEditLname"
-        android:ems="10"
-        android:hint="@string/registerEditLname"
-        android:inputType="textCapSentences"
-        android:selectAllOnFocus="true"
-        android:background="@drawable/borderinput"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:layout_height="32dp"/>
+            android:layout_height="32dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints="@string/registerEditFname"
+            android:background="@drawable/borderinput"
+            android:ems="10"
+            android:hint="@string/registerEditFname"
+            android:inputType="textCapSentences"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:selectAllOnFocus="true" />
 
-    <TextView
-        android:id="@+id/patientBirthDateLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="Geboortedatum patient*"
-        android:textColor="@android:color/black" />
+        <TextView
+            android:id="@+id/patientLastNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="Achternaam patient*"
+            android:textColor="@android:color/black" />
 
-    <EditText
-        android:id="@+id/patientBirthDate"
-        android:layout_width="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:autofillHints="@string/registerEDate"
-        android:ems="10"
-        android:focusable="false"
-        android:hint="@string/registerEDate"
-        android:inputType="date"
-        android:selectAllOnFocus="true"
-        android:background="@drawable/borderinput"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:layout_height="32dp"/>
+        <EditText
+            android:id="@+id/patientLastName"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints="@string/registerEditLname"
+            android:background="@drawable/borderinput"
+            android:ems="10"
+            android:hint="@string/registerEditLname"
+            android:inputType="textCapSentences"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:selectAllOnFocus="true" />
 
-    <TextView
-        android:id="@+id/patientRegisterError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/rounded_shape_bad"
-        android:text=""
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
-        android:visibility="invisible" />
+        <TextView
+            android:id="@+id/patientBirthDateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:text="Geboortedatum patient*"
+            android:textColor="@android:color/black" />
 
-    <Button
-        android:id="@+id/patientRegisterButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rounded_shape"
-        android:stateListAnimator="@null"
-        android:text="@string/registerButtonPatient"
-        android:textColor="@color/white" />
+        <EditText
+            android:id="@+id/patientBirthDate"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:autofillHints="@string/registerEDate"
+            android:background="@drawable/borderinput"
+            android:ems="10"
+            android:focusable="false"
+            android:hint="@string/registerEDate"
+            android:inputType="date"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:selectAllOnFocus="true" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/patientRegisterError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/rounded_shape_bad"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black"
+            android:visibility="invisible" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/patientRegisterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rounded_shape"
+            android:stateListAnimator="@null"
+            android:text="@string/registerButtonPatient"
+            android:textColor="@color/white" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+</ScrollView>
