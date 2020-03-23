@@ -2,6 +2,7 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -57,8 +60,14 @@ class ShareFragment : Fragment() {
         emailTextView = currentView.findViewById(R.id.PersonEmail)
         phoneNumberTextView = currentView.findViewById(R.id.PersonTelefoonNummer)
 
-        val buttonLogout= currentView.findViewById<Button>(R.id.BTNlogout)
+        val buttonLogout = currentView.findViewById<Button>(R.id.BTNlogout)
         buttonLogout.setOnClickListener {
+            buttonLogout.setBackground(
+                getDrawable(
+                    currentView.context,
+                    R.drawable.round_shape_dark
+                )
+            )
             MonitorApplication.getInstance().stopMeasurementService = true
             val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
@@ -84,13 +93,13 @@ class ShareFragment : Fragment() {
         }
 
         val addPatientLayout = currentView.findViewById<LinearLayout>(R.id.Add_patient)
-        addPatientLayout.setOnClickListener{
+        addPatientLayout.setOnClickListener {
             val registerPatientIntent = Intent(activity, RegisterPatientActivity::class.java)
             registerPatientIntent.putExtra("cameFromAccountFragment", true)
             startActivity(registerPatientIntent)
             activity!!.finish()
         }
-        val changePwLayout= currentView.findViewById<LinearLayout>(R.id.ChangePWLayout)
+        val changePwLayout = currentView.findViewById<LinearLayout>(R.id.ChangePWLayout)
         changePwLayout.setOnClickListener {
             val changePWIntent = Intent(activity, ChangePW::class.java)
             startActivity(changePWIntent)
@@ -103,9 +112,10 @@ class ShareFragment : Fragment() {
             startActivity(changeCredIntent)
             activity!!.finish()
         }
-        val manageGebruikersLayout= currentView.findViewById<LinearLayout>(R.id.ManageGebruikersLayout)
+        val manageGebruikersLayout =
+            currentView.findViewById<LinearLayout>(R.id.ManageGebruikersLayout)
         manageGebruikersLayout.setOnClickListener {
-            val intent= Intent(activity, AddUserToAccount::class.java)
+            val intent = Intent(activity, AddUserToAccount::class.java)
             startActivity(intent)
             activity!!.finish()
         }

@@ -7,9 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat.getColor
+import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -39,6 +43,7 @@ class GalleryFragment : Fragment() {
     var type_selected: String = ""
     private lateinit var progressBar: ProgressBar
     private lateinit var errorField: TextView
+    private lateinit var currentView: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +57,7 @@ class GalleryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val currentView = getView()!!
+        currentView = getView()!!
         progressBar = currentView.findViewById(R.id.progressBar)
         graph = currentView.findViewById(R.id.graph)
         btnGraph = currentView.findViewById(R.id.btn_Graph)
@@ -107,6 +112,7 @@ class GalleryFragment : Fragment() {
 
         btnGraph.setOnClickListener {
             // apicall
+            btnGraph.setBackground(getDrawable(currentView.context, R.drawable.round_shape_dark))
             type_selected = dropdown.selectedItem.toString()
             getArray(type_selected)
 
@@ -158,6 +164,12 @@ class GalleryFragment : Fragment() {
                 response: Response<Array<Measurement>>
             ) {
                 progressBar.visibility = View.INVISIBLE
+                btnGraph.setBackground(
+                    getDrawable(
+                        currentView.context,
+                        R.drawable.rounded_shape
+                    )
+                )
                 if (response.isSuccessful && response.body() != null) {
                     val responsebody = response.body()!!
                     val list: Array<Measurement> = responsebody
@@ -177,6 +189,12 @@ class GalleryFragment : Fragment() {
 
             override fun onFailure(call: Call<Array<Measurement>>, t: Throwable) {
                 showGraphRequestErrorMessage(t.message!!)
+                btnGraph.setBackground(
+                    getDrawable(
+                        currentView.context,
+                        R.drawable.rounded_shape
+                    )
+                )
             }
 
             private fun showGraphRequestErrorMessage(message: String) {
@@ -268,7 +286,7 @@ class GalleryFragment : Fragment() {
                 allMeasurements[0].time.split('-')[2].split('T')[0].toInt() //returnFormattedDate(allMeasurements[0].time).day // allMeasurements[0].time.split('-')[2].split('T')[0].toInt()
             var index = 1
             allMeasurements.forEach {
-//                val date = returnFormattedDate(it.time)
+                //                val date = returnFormattedDate(it.time)
                 if (it.time.split('-')[2].split('T')[0].toInt() == calculatingAverageForThisDay) {
                     allMeasurementsWithinAverage.add(it.value)
 
@@ -326,17 +344,22 @@ class GalleryFragment : Fragment() {
 
         }
 
-        val dataSet = LineDataSet(averageGraphPoints, "gemiddeld");
-        val dataSet2 = LineDataSet(highestGraphPoints, "hoogtepunt");
-        val dataSet3 = LineDataSet(lowestGraphPoints, "dieptepunt");
-//        dataSet.setColors(R.color.colorPrimary)
-//        dataSet2.setColors(R.color.colorBad)
-//        dataSet3.setColors(R.color.colorGood)
+        val dataSet = LineDataSet(averageGraphPoints, "Gemiddelde");
+        val dataSet2 = LineDataSet(highestGraphPoints, "Hoogste punt");
+        val dataSet3 = LineDataSet(lowestGraphPoints, "Laagste punt");
+        val colorB = getColor(context!!, R.color.black)
+        val colorP = getColor(context!!, R.color.colorPrimary)
+        val colorPD = getColor(context!!, R.color.colorPrimaryDark)
+        dataSet.setColor(colorB)
+        dataSet2.setColor(colorP)
+        dataSet3.setColor(colorPD)
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(dataSet)
         dataSets.add(dataSet2)
         dataSets.add(dataSet3)
         val lineData = LineData(dataSets)
+        graph.xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+        graph.description.text = dropdown.selectedItem.toString()
         graph.data = lineData
         graph.invalidate()
     }

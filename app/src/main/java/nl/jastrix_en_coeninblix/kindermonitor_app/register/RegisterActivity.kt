@@ -94,6 +94,7 @@ class RegisterActivity : BaseActivityClass() {
             if (allFieldsFilledIn()) {
                 if (isValidPassword(pw.text.toString())) {
                     if (pw.text.toString() == confirmPW.text.toString()) {
+                        buttonRegister.setBackground(getDrawable(R.drawable.round_shape_dark))
                         register(
 //                            uName.text.toString(),
 //                            "92045FbE",
@@ -211,6 +212,7 @@ class RegisterActivity : BaseActivityClass() {
                             registerFailedShowMessage(response.message())
                         }
                     }
+                    buttonRegister.setBackground(getDrawable(R.drawable.round_shape_dark))
                 }
 
                 override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
@@ -219,6 +221,7 @@ class RegisterActivity : BaseActivityClass() {
                     progressBar.visibility = View.INVISIBLE
 
                     registerFailedShowMessage(t.localizedMessage)
+                    buttonRegister.setBackground(getDrawable(R.drawable.round_shape_dark))
                 }
 
                 fun saveUserCredentials() {

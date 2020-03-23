@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -26,6 +27,8 @@ class AccountPage : BaseActivityClass() {
     private lateinit var lastnameTextView: EditText
     private lateinit var phonenumberTextView: EditText
     private lateinit var errorField: TextView
+    private lateinit var loading: ProgressBar
+    private lateinit var changeUsernameButton: Button
 
     private var noCallInProgress: Boolean = true
 
@@ -40,12 +43,22 @@ class AccountPage : BaseActivityClass() {
         lastnameTextView = findViewById(R.id.PersonLName)
         phonenumberTextView = findViewById(R.id.PersonTelefoonNummer)
         errorField = findViewById(R.id.errorField)
+        loading = findViewById(R.id.progressBar)
 
-        val changeUsernameButton = findViewById<Button>(R.id.changeUserDataButton)
-        changeUsernameButton.setOnClickListener(){
+        changeUsernameButton = findViewById(R.id.changeUserDataButton)
+        changeUsernameButton.setOnClickListener {
+            loading.visibility = View.VISIBLE
+            changeUsernameButton.setBackground(getDrawable(R.drawable.round_shape_dark))
             val oldUserData = MonitorApplication.getInstance().userData!!
 
-            val newUserRegister = UserRegister(usernameTextView.text.toString(), oldUserData.password, firstnameTextView.text.toString(), lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString())
+            val newUserRegister = UserRegister(
+                usernameTextView.text.toString(),
+                oldUserData.password,
+                firstnameTextView.text.toString(),
+                lastnameTextView.text.toString(),
+                phonenumberTextView.text.toString(),
+                emailTextView.text.toString()
+            )
 
             updateUserData(newUserRegister)
         }
@@ -64,11 +77,9 @@ class AccountPage : BaseActivityClass() {
     }
 
     private fun updateUserData(newUserData: UserRegister) {
-        errorField.visibility = View.INVISIBLE
 
         if (noCallInProgress) {
             noCallInProgress = false
-
             val mainActivityIntent = Intent(this, MainActivity::class.java)
 
             val call = MonitorApplication.getInstance()
@@ -85,7 +96,15 @@ class AccountPage : BaseActivityClass() {
                         val monitorApplication = MonitorApplication.getInstance()
 
                         val oldUserData = MonitorApplication.getInstance().userData!!
-                        monitorApplication.userData = UserData(oldUserData.userID, usernameTextView.text.toString(), oldUserData.password , firstnameTextView.text.toString() ,lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString())
+                        monitorApplication.userData = UserData(
+                            oldUserData.userID,
+                            usernameTextView.text.toString(),
+                            oldUserData.password,
+                            firstnameTextView.text.toString(),
+                            lastnameTextView.text.toString(),
+                            phonenumberTextView.text.toString(),
+                            emailTextView.text.toString()
+                        )
 //                        MonitorApplication.getInstance().userRegister.postValue(UserRegister(usernameTextView.text.toString(), oldUserData.password , firstnameTextView.text.toString() ,lastnameTextView.text.toString(), phonenumberTextView.text.toString(), emailTextView.text.toString()))
                         monitorApplication.loggedInUsername.postValue(usernameTextView.text.toString())
                         monitorApplication.loggedInFirstName.postValue(firstnameTextView.text.toString())
@@ -95,17 +114,20 @@ class AccountPage : BaseActivityClass() {
                         saveUserCredentials()
                         startActivity(mainActivityIntent)
                         finish()
-                    }
-                    else{
+                    } else {
                         failedMessage(response.message())
+
                     }
+                    errorField.visibility = View.INVISIBLE
+                    changeUsernameButton.setBackground(getDrawable(R.drawable.rounded_shape))
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     failedMessage(t.localizedMessage)
+                    loading.visibility = View.INVISIBLE
                 }
 
-                fun failedMessage(message: String){
+                fun failedMessage(message: String) {
                     noCallInProgress = true
                     errorField.text = message
                     errorField.visibility = View.VISIBLE

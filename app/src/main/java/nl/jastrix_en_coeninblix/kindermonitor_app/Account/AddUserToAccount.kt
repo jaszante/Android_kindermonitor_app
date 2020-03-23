@@ -6,10 +6,7 @@ import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_add_user_to_account.*
@@ -44,12 +41,14 @@ class AddUserToAccount : BaseActivityClass() {
     lateinit var errorField: TextView
     var noCallInProgress = true
     var list: ArrayList<UserData> = ArrayList()
-
+    private lateinit var loading: ProgressBar
+    private lateinit var findAllUserPermissionsButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_user_to_account)
         this.setTitle(R.string.title_add_users)
+        loading = findViewById(R.id.progressBar)
 
         // getallusers
         // knop: vergelijk usernames, krijg de userid van een user
@@ -57,8 +56,10 @@ class AddUserToAccount : BaseActivityClass() {
 
 //        getAllUsers()
 
-        val findAllUserPermissionsButton = findViewById<Button>(R.id.AddPatientToUserButton)
-        findAllUserPermissionsButton.setOnClickListener{
+        findAllUserPermissionsButton = findViewById<Button>(R.id.AddPatientToUserButton)
+        findAllUserPermissionsButton.setOnClickListener {
+            loading.visibility = View.VISIBLE
+            findAllUserPermissionsButton.setBackground(getDrawable(R.drawable.round_shape_dark))
             giveUserPermission()
         }
         userToAddEditText = findViewById(R.id.UserToAdd)
@@ -110,10 +111,14 @@ class AddUserToAccount : BaseActivityClass() {
                             errorHandling(response.message())
                         }
                     }
+                    loading.visibility = View.INVISIBLE
+                    findAllUserPermissionsButton.setBackground(getDrawable(R.drawable.rounded_shape))
                 }
 
                 override fun onFailure(call: Call<Void>, t: Throwable) {
                     errorHandling(t.message!!)
+                    loading.visibility = View.INVISIBLE
+                    findAllUserPermissionsButton.setBackground(getDrawable(R.drawable.rounded_shape))
                 }
 
                 private fun errorHandling(message: String) {

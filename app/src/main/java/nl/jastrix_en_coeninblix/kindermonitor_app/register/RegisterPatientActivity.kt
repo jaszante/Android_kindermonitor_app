@@ -109,6 +109,7 @@ class RegisterPatientActivity : BaseActivityClass() {
                 if (noCallInProgress) {
                     progressBar.visibility = View.VISIBLE
                     patientRegisterErrorField.visibility = View.INVISIBLE
+                    registerPatientButton.setBackground(getDrawable(R.drawable.round_shape_dark))
 
                     val patientBirthdayString = birthdateMonth + "-" + birthdateDay + "-" + year
 
@@ -154,11 +155,13 @@ class RegisterPatientActivity : BaseActivityClass() {
                     } else {
                         registerPatientShowErrorMessage(response.message())
                     }
+                    registerPatientButton.setBackground(getDrawable(R.drawable.rounded_shape))
                 }
             }
 
             override fun onFailure(call: Call<UserData>, t: Throwable) {
                 registerPatientShowErrorMessage(t.message!!)
+                 registerPatientButton.setBackground(getDrawable(R.drawable.rounded_shape))
             }
         })
     }
@@ -209,6 +212,7 @@ class RegisterPatientActivity : BaseActivityClass() {
 
             override fun onFailure(call: Call<PatientWithID>, t: Throwable) {
                 registerPatientShowErrorMessage(t.message!!)
+                registerPatientButton.setBackground(getDrawable(R.drawable.rounded_shape))
             }
         })
     }
@@ -326,6 +330,7 @@ class RegisterPatientActivity : BaseActivityClass() {
             override fun onFailure(call: Call<Sensor>, t: Throwable) {
                 registerPatientShowErrorMessage(t.message!!)
                 progressBar.visibility = View.INVISIBLE
+                registerPatientButton.setBackground(getDrawable(R.drawable.rounded_shape))
             }
         })
     }

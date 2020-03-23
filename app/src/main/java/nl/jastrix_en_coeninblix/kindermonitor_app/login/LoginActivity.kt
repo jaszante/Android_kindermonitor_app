@@ -31,6 +31,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     private var noCallInProgress: Boolean = true
     private lateinit var progressBar: ProgressBar
     var errorlist = ArrayList<String>()
+    private lateinit var loginButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
 
         progressBar = findViewById(R.id.progressBar)
 
-        val loginButton = findViewById<Button>(R.id.LoginButton)
+        loginButton = findViewById<Button>(R.id.LoginButton)
         loginButton.setOnClickListener() {
             loginButton.setBackground(getDrawable(R.drawable.round_shape_dark))
             if (allFieldsFilledIn()) {
@@ -84,6 +85,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
     override fun onFailure(call: Call<AuthenticationToken>, t: Throwable) {
         registerOrLoginFailedShowMessage(getString(R.string.noInternetError))
         progressBar.visibility = View.INVISIBLE
+        loginButton.setBackground(getDrawable(R.drawable.rounded_shape))
     }
 
     override fun onResponse(
@@ -107,6 +109,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             startActivity(patientListIntent)
             finish()
         } else {
+            loginButton.setBackground(getDrawable(R.drawable.rounded_shape))
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()
             var errorMessage = "API down"
             if (errorbodyLength != 0) {
@@ -123,6 +126,7 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
                 registerOrLoginFailedShowMessage(response.message())
             }
         }
+
     }
 
     private fun saveUserCredentials() {
