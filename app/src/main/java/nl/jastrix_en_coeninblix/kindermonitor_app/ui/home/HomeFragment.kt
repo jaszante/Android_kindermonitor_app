@@ -1,25 +1,27 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.ui.home
 
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
+//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.VideoView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.fragment_home.*
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.apiHelper
-//import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity.Companion.authToken
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.SensorFromCallback
+import nl.jastrix_en_coeninblix.kindermonitor_app.R
+
+
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 
 
@@ -80,14 +82,21 @@ class HomeFragment : Fragment() {
         saturatieGrensWaardes = currentView.findViewById(R.id.saturatieGrensWaardes)
 
 
-        val vidstream = currentView.findViewById<VideoView>(R.id.videoStream)
+        // voorbeeld livestream in de echte app zou dit een andere player zijn
+        val vidstream = currentView.findViewById<YouTubePlayerView>(R.id.videoStream)
+        lifecycle.addObserver(vidstream)
 
-       /* val vidAddress =
-            "https://archive.org/download/ksnn_compilation_master_the_internet/ksnn_compilation_master_the_internet_512kb.mp4"*/
-        val vidAddress = "https://18973.live.streamtheworld.com/RADIO538.mp3"
-        val vidUri: Uri = Uri.parse(vidAddress)
-        vidstream.setVideoURI(vidUri)
-        vidstream.start()
+        vidstream.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(youTubePlayer: YouTubePlayer) {
+                val videoId = "5qap5aO4i9A"
+                youTubePlayer.loadVideo(videoId, 0f)
+            }
+        })
+
+
+
+
+
 
         val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
         myLayout.requestFocus()
