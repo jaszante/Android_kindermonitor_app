@@ -46,6 +46,6 @@ interface APIService {
     @GET ("Users/me/Patients/{patientId}/Permissions")
     fun getAllUsersWithPermission(@Path("patientId") patientId: Int): Call<ArrayList<UserData>>
 
-    @DELETE ("Users/me/Patients/{patientId}/Permissions")
-    fun deleteUserPermission(@Path("patientId") patientId: Int): Call<Void>
+    @DELETE ("Users/me/Patients/{patientId}/Permissions/{doctorId}")
+    fun deleteUserPermission(@Path("patientId") patientId: Int, @Path("doctorId") doctorId: Int): Call<Void>
 }

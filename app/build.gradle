@@ -62,22 +62,15 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
 
-//    implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation files('libs/activation.jar')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-//Add Firebase Core//
-
     implementation 'com.google.firebase:firebase-core:16.0.1'
-
-//Add FCM//
 
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
 
     implementation 'com.microsoft.azure:notification-hubs-android-sdk:0.6@aar'
-
-//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.1'
 }
 
 

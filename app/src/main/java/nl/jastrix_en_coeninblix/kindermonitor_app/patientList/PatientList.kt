@@ -37,6 +37,7 @@ class PatientList : BaseActivityClass() {
     lateinit var text: TextView
     lateinit var buttonPatient: Button
     lateinit var progressBar: ProgressBar
+    private var noCallInProgress: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,19 +94,13 @@ class PatientList : BaseActivityClass() {
         val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
         val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
 
-        // if the authtoken, username, password were set earlier the app starts. later if a call fails because of authentication, the app tries to login again with the username password
-        // if that succeeds the call is done again this time automatically with the new authentication observableToken, if it fails the user is booted back to login page and has to manually try to log in
-
         if (authTokenNullable != null && authTokenNullable != ""
             && userNameNullable != null && userNameNullable != ""
             && passwordNullable != null && passwordNullable != ""
         ) {
-//            authToken = authTokenNullable
             MonitorApplication.getInstance().userName = userNameNullable
             MonitorApplication.getInstance().password = passwordNullable
 
-//            observableToken.addObserver(this)
-//            observableToken.changeToken(authTokenNullable!!) // when observableToken changes userdata call, patients call, and sensors call should be executed in order
             MonitorApplication.getInstance().authTokenChanged = true
         } else {
             removeAllSharedPreferencesAndStartLoginActivity()
@@ -113,6 +108,7 @@ class PatientList : BaseActivityClass() {
     }
 
     private fun removeAllSharedPreferencesAndStartLoginActivity() {
+        noCallInProgress = true
         val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 
         val sharedPreferences = EncryptedSharedPreferences.create(
@@ -124,7 +120,6 @@ class PatientList : BaseActivityClass() {
         )
 
         val editor = sharedPreferences.edit()
-//        val editor = getSharedPreferences("kinderMonitorApp", Context.MODE_PRIVATE).edit()
         editor.putString("AuthenticationToken", null)
         editor.putString("KinderMonitorAppUserName", null)
         editor.putString("KinderMonitorAppPassword", null)
@@ -136,35 +131,39 @@ class PatientList : BaseActivityClass() {
     }
 
     private fun getUserDataThenStartGetPatientsCall() {
-        patientList.clear()
-        progressBar.visibility = View.VISIBLE
+        if (noCallInProgress) {
+            noCallInProgress = false
+            patientList.clear()
+            progressBar.visibility = View.VISIBLE
 
-        val loginIntent = Intent(this, LoginActivity::class.java)
+            val loginIntent = Intent(this, LoginActivity::class.java)
 
-        val call =
-            MonitorApplication.getInstance()
-                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
-        call.enqueue(object : Callback<UserData> {
-            override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
-                val statusCode = response.code()
+            val call =
+                MonitorApplication.getInstance()
+                    .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getCurrentUser()
+            call.enqueue(object : Callback<UserData> {
+                override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
+                    val statusCode = response.code()
 
-                if (response.isSuccessful && response.body() != null) {
-                    MonitorApplication.getInstance().userData = response.body()!!
+                    if (response.isSuccessful && response.body() != null) {
+                        MonitorApplication.getInstance().userData = response.body()!!
 
-                    getAllPatients()
-                } else {
-                    if (statusCode == 401) {
-                        loginWithCachedUsernameAndPassword()
+                        getAllPatients()
                     } else {
-                        removeAllSharedPreferencesAndStartLoginActivity()
+                        if (statusCode == 401) {
+                            loginWithCachedUsernameAndPassword()
+                        } else {
+                            removeAllSharedPreferencesAndStartLoginActivity()
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<UserData>, t: Throwable) {
-                removeAllSharedPreferencesAndStartLoginActivity()
-            }
-        })
+                override fun onFailure(call: Call<UserData>, t: Throwable) {
+                    removeAllSharedPreferencesAndStartLoginActivity()
+                    noCallInProgress = true
+                }
+            })
+        }
     }
 
     private fun loginWithCachedUsernameAndPassword() {
@@ -182,6 +181,7 @@ class PatientList : BaseActivityClass() {
                     call: Call<AuthenticationToken>,
                     response: retrofit2.Response<AuthenticationToken>
                 ) {
+                    noCallInProgress = true
                     if (response.isSuccessful && response.body() != null) {
                         val newToken = response.body()!!.token
                         MonitorApplication.getInstance().apiHelper.buildAPIServiceWithNewToken(
@@ -217,7 +217,7 @@ class PatientList : BaseActivityClass() {
             ) {
                 val statusCode = response.code()
                 progressBar.visibility = View.INVISIBLE
-
+                noCallInProgress = true
                 if (response.isSuccessful && response.body() != null) {
                     val allPatients = response.body()!!
                     if (allPatients.count() == 0) {
@@ -253,6 +253,7 @@ class PatientList : BaseActivityClass() {
             }
 
             override fun onFailure(call: Call<Array<PatientWithID>>, t: Throwable) {
+                noCallInProgress = true
                 startActivity(loginIntent)
                 finish()
             }
