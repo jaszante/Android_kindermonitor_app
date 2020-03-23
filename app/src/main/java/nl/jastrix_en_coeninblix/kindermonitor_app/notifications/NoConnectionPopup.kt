@@ -18,10 +18,10 @@ class NoConnectionPopup(var message: String) : DialogFragment() {
                         MonitorApplication.getInstance().noConnectionAlarmNotPauzed = false
                         MonitorApplication.getInstance().startNoConnectionPauzeTimer()
                     })
-                .setNegativeButton("Bel noodnummer",
-                    DialogInterface.OnClickListener { dialog, id ->
-                        // call number
-                    })
+//                .setNegativeButton("Bel noodnummer",
+//                    DialogInterface.OnClickListener { dialog, id ->
+//                        // call number
+//                    })
             // Create the AlertDialog object and return it
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")

@@ -20,17 +20,10 @@ import kotlin.concurrent.scheduleAtFixedRate
 
 
 class ForegroundMeasurmentService : Service() {
-//    private lateinit var fragmentManager: FragmentManager
-
     override fun onBind(intent: Intent?): IBinder? {
 
         return null
     }
-
-//    override fun onCreate() {
-//        super.onCreate()
-//        startForeground();
-//    }
 
     private lateinit var timer: TimerTask
 
@@ -39,8 +32,6 @@ class ForegroundMeasurmentService : Service() {
         flags: Int,
         startId: Int
     ): Int {
-//        fragmentManager = MonitorApplication.getInstance().fragmentManager!!
-
         timer = Timer("schedule", false).scheduleAtFixedRate(0, 2000) {
 
             if (MonitorApplication.getInstance().stopMeasurementService){
@@ -56,13 +47,6 @@ class ForegroundMeasurmentService : Service() {
 
     private fun continuesMeasurementCall() {
         val monitorApplication = MonitorApplication.getInstance()
-//        var randomValue = (80..100).random()
-
-//        if (monitorApplication.patientSensors.count() > 0) {
-//            for (patientSensor in monitorApplication.patientSensors){
-//                requestMeasurementFromSensor(monitorApplication, patientSensor.sensorID, patientSensor.sensorType)
-//            }
-//        }
 
         requestMeasurementFromSensor(monitorApplication, monitorApplication.temperatuurSensor!!)
         requestMeasurementFromSensor(monitorApplication, monitorApplication.hartslagSensor!!)
@@ -161,27 +145,6 @@ class ForegroundMeasurmentService : Service() {
             }
         })
     }
-
-//    private fun requestMeasurmentFromSensor(monitorApplication: MonitorApplication, id: Int): ArrayList<Measurement> {
-//        val call = monitorApplication.apiHelper.returnAPIServiceWithAuthenticationTokenAdded().getMeasurementsForSensor(id)
-//
-//        call.enqueue(object : Callback<ArrayList<Measurement>> {
-//            override fun onResponse(call: Call<ArrayList<Measurement>>, response: Response<ArrayList<Measurement>>) {
-//                if (response.isSuccessful && response.body() != null) {
-//                    response.body()!!
-//
-//                    registerPatientButton.isClickable = true
-//
-//                } else {
-//                    noConnectionError(response.message())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ArrayList<Measurement>>, t: Throwable) {
-//                noConnectionError(t.message!!)
-//            }
-//        })
-//    }
 
     private fun thresholdPopup(message: String){
         if (MonitorApplication.getInstance().fragmentManager!!.findFragmentByTag("Notification") == null

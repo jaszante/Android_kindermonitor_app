@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.patientlistitem.view.*
 import kotlinx.android.synthetic.main.patientlistitem.view.patientName
 import kotlinx.android.synthetic.main.permissionlistitem.view.*
+import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
@@ -54,12 +55,12 @@ class PermissionAdapter(
         }
     }
 
-    fun delete_user(id: Int) {
+    fun delete_user(userIdToDelete: Int) {
         if (noCallInProgress) {
             noCallInProgress = false
 
             val call = MonitorApplication.getInstance()
-                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().deleteUserPermission(id)
+                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().deleteUserPermission(MonitorApplication.getInstance().userData!!.userID, userIdToDelete)
 
             call.enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {

@@ -13,15 +13,10 @@ import com.google.firebase.messaging.FirebaseMessagingService
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-//    companion object {
-////        var hasToken: Boolean = false
-//    }
-
     override fun onNewToken(fireBaseToken: String?) {
         super.onNewToken(fireBaseToken)
         Log.e("newToken", fireBaseToken)
         getSharedPreferences("_", MODE_PRIVATE).edit().putString("firebasetoken", fireBaseToken).apply()
-//        hasToken = true
     }
 
     fun getFirebaseToken(context: Context): String {
@@ -36,13 +31,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
                     val lateNewToken = task.result!!.token
                     context.getSharedPreferences("_", MODE_PRIVATE).edit().putString("firebasetoken", lateNewToken).apply()
-//                    hasToken = true
                 })
 
             return context.getSharedPreferences("_", MODE_PRIVATE).getString("firebasetoken", "empty")!!
         }
         else {
-//            hasToken = true
             return token
         }
     }
