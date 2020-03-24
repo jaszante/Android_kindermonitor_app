@@ -49,6 +49,7 @@ class RegisterActivity : BaseActivityClass() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         this.setTitle(R.string.register_account)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         buttonRegister = findViewById(R.id.BTNregister)
         uName = findViewById(R.id.EUname)
         pw = findViewById(R.id.EPW)
@@ -346,5 +347,8 @@ class RegisterActivity : BaseActivityClass() {
             return true
         }
     }
-
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

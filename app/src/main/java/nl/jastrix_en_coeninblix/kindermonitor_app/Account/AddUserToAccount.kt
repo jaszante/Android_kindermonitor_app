@@ -53,6 +53,7 @@ class AddUserToAccount : BaseActivityClass() {
         setContentView(R.layout.activity_add_user_to_account)
         this.setTitle(R.string.title_add_users)
         loading = findViewById(R.id.progressBar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // getallusers
         // knop: vergelijk usernames, krijg de userid van een user
@@ -202,5 +203,10 @@ class AddUserToAccount : BaseActivityClass() {
         mainActivity.putExtra("openAccountFragment", true)
         startActivity(mainActivity)
         finish()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

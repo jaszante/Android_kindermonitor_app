@@ -34,7 +34,7 @@ class ChangePW : BaseActivityClass() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_pw)
         this.setTitle(R.string.title_change_pw)
-
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         errorField = findViewById(R.id.errorField)
         passwordEditText = findViewById(R.id.passwordChangeTextView)
         passwordCheckEditText = findViewById(R.id.checkPassword)
@@ -184,5 +184,9 @@ class ChangePW : BaseActivityClass() {
         startActivity(mainActivity)
         finish()
 //        super.onBackPressed()
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
