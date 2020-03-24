@@ -112,18 +112,21 @@ class LoginActivity : BaseActivityClass(), Callback<AuthenticationToken> {
             loginButton.setBackground(getDrawable(R.drawable.rounded_shape))
             val errorbodyLength = response.errorBody()!!.contentLength().toInt()
             var errorMessage = "API down"
-            if (errorbodyLength != 0) {
-                try {
+            if (response.code() == 401){
+                registerOrLoginFailedShowMessage("Incorrect username or password")
+            }
+            else {
+                if (errorbodyLength != 0) {
+                    try {
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        errorMessage = jObjError.getString("error")
+                    } finally {
 
-                    val jObjError = JSONObject(response.errorBody()!!.string())
-                    errorMessage = jObjError.getString("error")
-
-                } finally {
-
+                    }
+                    registerOrLoginFailedShowMessage(errorMessage)
+                } else {
+                    registerOrLoginFailedShowMessage(response.message())
                 }
-                registerOrLoginFailedShowMessage(errorMessage)
-            } else {
-                registerOrLoginFailedShowMessage(response.message())
             }
         }
 

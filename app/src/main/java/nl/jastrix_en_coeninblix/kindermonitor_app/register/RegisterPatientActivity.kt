@@ -339,6 +339,7 @@ class RegisterPatientActivity : BaseActivityClass() {
 //        val ss: String = intent.getBooleanExtra("cameFromAccountFragment")
         if (intent.getBooleanExtra("cameFromAccountFragment", false)) {
             val mainActivity = Intent(this, MainActivity::class.java)
+            mainActivity.putExtra("openAccountFragment", true)
             startActivity(mainActivity)
         } else {
             val patientListIntent = Intent(this, PatientList::class.java)

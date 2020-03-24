@@ -66,7 +66,7 @@ class PermissionAdapter(
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.isSuccessful) {
                         noCallInProgress = true
-
+                        MonitorApplication.getInstance().usersWithPermissionRecyclerviewShouldBeRefreshed.postValue(true)
                     } else {
                         try {
                             val jObjError = JSONObject(response.errorBody()!!.string())

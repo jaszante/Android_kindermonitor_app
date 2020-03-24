@@ -44,6 +44,7 @@ class MonitorApplication : Application() {
     var ademfrequentieThresholds = MutableLiveData<String>()
     var saturatieThresholds = MutableLiveData<String>()
 //    var userRegister = MutableLiveData<UserRegister>()
+    var usersWithPermissionRecyclerviewShouldBeRefreshed = MutableLiveData<Boolean>()
 
     var loggedInUsername = MutableLiveData<String>()
     var loggedInFirstName = MutableLiveData<String>()

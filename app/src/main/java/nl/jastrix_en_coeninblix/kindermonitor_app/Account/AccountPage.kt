@@ -77,7 +77,6 @@ class AccountPage : BaseActivityClass() {
     }
 
     private fun updateUserData(newUserData: UserRegister) {
-
         if (noCallInProgress) {
             noCallInProgress = false
             val mainActivityIntent = Intent(this, MainActivity::class.java)
@@ -112,6 +111,7 @@ class AccountPage : BaseActivityClass() {
                         monitorApplication.loggedInEmail.postValue(emailTextView.text.toString())
                         monitorApplication.loggedInPhoneNumber.postValue(phonenumberTextView.text.toString())
                         saveUserCredentials()
+                        mainActivityIntent.putExtra("openAccountFragment", true)
                         startActivity(mainActivityIntent)
                         finish()
                     } else {
@@ -158,6 +158,7 @@ class AccountPage : BaseActivityClass() {
 
     override fun onBackPressed() {
         val mainActivity = Intent(this, MainActivity::class.java)
+        mainActivity.putExtra("openAccountFragment", true)
         startActivity(mainActivity)
         finish()
 //        super.onBackPressed()

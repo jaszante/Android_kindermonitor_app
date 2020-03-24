@@ -100,6 +100,7 @@ class ChangePW : BaseActivityClass() {
                         updateUserData(newUserData)
 
                         saveUserCredentials()
+                        mainActivityIntent.putExtra("openAccountFragment", true)
                         startActivity(mainActivityIntent)
                         finish()
                     } else {
@@ -179,6 +180,7 @@ class ChangePW : BaseActivityClass() {
 
     override fun onBackPressed() {
         val mainActivity = Intent(this, MainActivity::class.java)
+        mainActivity.putExtra("openAccountFragment", true)
         startActivity(mainActivity)
         finish()
 //        super.onBackPressed()

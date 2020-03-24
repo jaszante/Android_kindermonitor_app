@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -84,10 +86,14 @@ class MainActivity : BaseActivityClass(), Observer {
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-//        val mobileNavigation = findViewById<NavigationView>(R.id.mobile_navigation)
-//        mobileNavigation.startD =
-//        findNavController(fragment).navigate(
-//            FirstFragmentDirections.actionFirstFragmentToSecondFragment())
+
+        if (intent.getBooleanExtra("openAccountFragment", false)) {
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.nav_home, true)
+                .build();
+
+            navController.navigate(R.id.action_firstFragment_to_secondFragment, null, navOptions)
+        }
 
         navView.setupWithNavController(navController)
     }
@@ -103,9 +109,6 @@ class MainActivity : BaseActivityClass(), Observer {
         } else {
             initDrawerWithUserInformationThenGetPatientSensors()
         }
-
-
-
     }
 
     private fun getNewUserdataThenInitDrawerWithUserInformation() {
@@ -151,17 +154,9 @@ class MainActivity : BaseActivityClass(), Observer {
         navHeaderTitle.text =
             getString(R.string.nav_header_name) +" "+ MonitorApplication.getInstance().userData!!.username
 
-        // + " " + userData.LastName
         MonitorApplication.getInstance().authTokenChanged = false
         getPatientSensors()
-
     }
-
-//    override fun onStop() {
-//        active = false
-//        super.onStop()
-//    }
-
 
     // called after patient has been chosen
     private fun getPatientSensors() {
@@ -177,8 +172,6 @@ class MainActivity : BaseActivityClass(), Observer {
                     call: Call<Array<SensorFromCallback>>,
                     response: Response<Array<SensorFromCallback>>
                 ) {
-                    val statusCode = response.code()
-
                     if (response.isSuccessful && response.body() != null) {
                         val monitorApplication = MonitorApplication.getInstance()
                         for (sensorFromCallback in response.body()!!) {

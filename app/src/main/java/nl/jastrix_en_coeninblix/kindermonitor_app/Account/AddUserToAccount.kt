@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_add_user_to_account.*
@@ -33,7 +34,6 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment
 import retrofit2.Retrofit
 import java.lang.Exception
 import org.json.JSONObject
-
 
 
 class AddUserToAccount : BaseActivityClass() {
@@ -154,7 +154,6 @@ class AddUserToAccount : BaseActivityClass() {
                             list.add(it)
                         }
                         viewAdapter.notifyDataSetChanged()
-
                     } else {
                         if (response.code() == 401) {
                             errorHandling(getString(R.string.NoAuthorisationToChangePermissions))
@@ -184,9 +183,23 @@ class AddUserToAccount : BaseActivityClass() {
         }
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+
+        MonitorApplication.getInstance().usersWithPermissionRecyclerviewShouldBeRefreshed.observe(this, recyclerviewShouldBeRefreshedLiveDataObserver)
+    }
+
+    private val recyclerviewShouldBeRefreshedLiveDataObserver = Observer<Boolean> { value ->
+        value?.let {
+            if (it) {
+                getAllUsersWithPermissionForThisPatient()
+            }
+        }
+    }
+
     override fun onBackPressed() {
         val mainActivity = Intent(this, MainActivity::class.java)
-        mainActivity.putExtra("fagmentToOpen", 3)
+        mainActivity.putExtra("openAccountFragment", true)
         startActivity(mainActivity)
         finish()
     }
