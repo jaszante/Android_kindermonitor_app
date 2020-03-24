@@ -58,6 +58,8 @@ class RegisterPatientActivity : BaseActivityClass() {
         setContentView(R.layout.activity_register_patient)
         this.setTitle(R.string.register_patient)
 
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         patientFirstNameEditText = findViewById(R.id.patientFirstName)
         patientLastNameEditText = findViewById(R.id.patientLastName)
         patientBirthDateEditText = findViewById(R.id.patientBirthDate)
@@ -392,6 +394,10 @@ class RegisterPatientActivity : BaseActivityClass() {
         } else {
             return true
         }
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

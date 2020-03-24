@@ -36,6 +36,7 @@ class AccountPage : BaseActivityClass() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_page)
         this.setTitle(R.string.title_change_cred)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         usernameTextView = findViewById(R.id.PersonGebruikersnaam)
         emailTextView = findViewById(R.id.PersonEmail)
@@ -161,5 +162,10 @@ class AccountPage : BaseActivityClass() {
         startActivity(mainActivity)
         finish()
 //        super.onBackPressed()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }
