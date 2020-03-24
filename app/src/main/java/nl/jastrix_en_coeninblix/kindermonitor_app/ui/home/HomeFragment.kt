@@ -20,6 +20,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
+import nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment
 
 
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
@@ -92,11 +93,6 @@ class HomeFragment : Fragment() {
                 youTubePlayer.loadVideo(videoId, 0f)
             }
         })
-
-
-
-
-
 
         val myLayout = activity!!.findViewById(R.id.homeConstraintLayout) as ConstraintLayout
         myLayout.requestFocus()

@@ -94,17 +94,24 @@ class PatientList : BaseActivityClass() {
         val userNameNullable = sharedPreferences.getString("KinderMonitorAppUserName", "")
         val passwordNullable = sharedPreferences.getString("KinderMonitorAppPassword", "")
 
+        val monitorApplication = MonitorApplication.getInstance()
+
         if (authTokenNullable != null && authTokenNullable != ""
             && userNameNullable != null && userNameNullable != ""
             && passwordNullable != null && passwordNullable != ""
         ) {
-            MonitorApplication.getInstance().userName = userNameNullable
-            MonitorApplication.getInstance().password = passwordNullable
+            monitorApplication.userName = userNameNullable
+            monitorApplication.password = passwordNullable
 
-            MonitorApplication.getInstance().authTokenChanged = true
+            monitorApplication.authTokenChanged = true
         } else {
             removeAllSharedPreferencesAndStartLoginActivity()
         }
+
+        monitorApplication.hartslagLiveData.postValue("--")
+        monitorApplication.temperatuurLiveData.postValue("--")
+        monitorApplication.saturatieLiveData.postValue("--")
+        monitorApplication.ademFrequentieLiveData.postValue("--")
     }
 
     private fun removeAllSharedPreferencesAndStartLoginActivity() {

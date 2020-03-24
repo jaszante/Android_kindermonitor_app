@@ -60,7 +60,7 @@ class PermissionAdapter(
             noCallInProgress = false
 
             val call = MonitorApplication.getInstance()
-                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().deleteUserPermission(MonitorApplication.getInstance().userData!!.userID, userIdToDelete)
+                .apiHelper.returnAPIServiceWithAuthenticationTokenAdded().deleteUserPermission(MonitorApplication.getInstance().currentlySelectedPatient!!.patientID, userIdToDelete)
 
             call.enqueue(object : Callback<Void> {
                 override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -91,6 +91,4 @@ class PermissionAdapter(
             })
         }
     }
-
-
 }

@@ -21,18 +21,4 @@
             android:icon="@drawable/ic_account_box_black_24dp"
             android:title="@string/menu_account" />
     </group>
-
-<!--    <item android:title="Communicate">-->
-<!--        <menu>-->
-<!--            <item-->
-<!--                android:id="@+id/nav_share"-->
-<!--                android:icon="@drawable/ic_menu_share"-->
-<!--                android:title="@string/menu_settings" />-->
-<!--            <item-->
-<!--                android:id="@+id/nav_send"-->
-<!--                android:icon="@drawable/ic_menu_send"-->
-<!--                android:title="@string/menu_settings" />-->
-<!--        </menu>-->
-<!--    </item>-->
-
 </menu>

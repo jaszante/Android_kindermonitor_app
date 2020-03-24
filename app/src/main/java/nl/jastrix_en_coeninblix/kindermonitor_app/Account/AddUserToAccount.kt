@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_add_user_to_account.*
@@ -27,9 +28,12 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientLi
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
+import nl.jastrix_en_coeninblix.kindermonitor_app.ui.gallery.GalleryFragment
+import nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment
 import retrofit2.Retrofit
 import java.lang.Exception
 import org.json.JSONObject
+
 
 
 class AddUserToAccount : BaseActivityClass() {
@@ -182,8 +186,8 @@ class AddUserToAccount : BaseActivityClass() {
 
     override fun onBackPressed() {
         val mainActivity = Intent(this, MainActivity::class.java)
+        mainActivity.putExtra("fagmentToOpen", 3)
         startActivity(mainActivity)
         finish()
-//        super.onBackPressed()
     }
 }
