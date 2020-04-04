@@ -1,37 +1,24 @@
 package nl.jastrix_en_coeninblix.kindermonitor_app.Account
 
 import android.content.Intent
-import android.media.Image
-import android.opengl.Visibility
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_add_user_to_account.*
 import nl.jastrix_en_coeninblix.kindermonitor_app.BaseActivityClass
 import nl.jastrix_en_coeninblix.kindermonitor_app.MainActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.PatientWithID
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserData
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.RestError
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.UserObjectWithOnlyUsername
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientAdapter
-import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PatientListener
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionAdapter
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.adapters.PermissionListener
-import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
-import nl.jastrix_en_coeninblix.kindermonitor_app.ui.gallery.GalleryFragment
-import nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment
-import retrofit2.Retrofit
 import java.lang.Exception
 import org.json.JSONObject
 

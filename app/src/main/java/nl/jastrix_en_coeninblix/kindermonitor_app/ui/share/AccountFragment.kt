@@ -2,7 +2,6 @@ package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -25,9 +23,9 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 import nl.jastrix_en_coeninblix.kindermonitor_app.register.RegisterPatientActivity
 
-class ShareFragment : Fragment() {
+class AccountFragment : Fragment() {
 
-    private lateinit var shareViewModel: ShareViewModel
+    private lateinit var accountViewModel: AccountViewModel
 
     private lateinit var usernameTextView: TextView
     private lateinit var firstNameTextView: TextView
@@ -40,9 +38,9 @@ class ShareFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        shareViewModel =
-            ViewModelProviders.of(this).get(ShareViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_share, container, false)
+        accountViewModel =
+            ViewModelProviders.of(this).get(AccountViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_account, container, false)
 //        val textView: TextView = root.findViewById(R.id.text_share)
 //        shareViewModel.text.observe(this, Observer {
 //            textView.text = it

@@ -4,13 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -25,7 +22,6 @@ import nl.jastrix_en_coeninblix.kindermonitor_app.enums.SensorType
 import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity
 //import nl.jastrix_en_coeninblix.kindermonitor_app.login.LoginActivity.Companion.loginWithCachedCredentialsOnResume
 import nl.jastrix_en_coeninblix.kindermonitor_app.patientList.PatientList
-import nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment
 //import nl.jastrix_en_coeninblix.kindermonitor_app.ui.home.HomeFragment.Companion.patientSensors
 import retrofit2.Call
 import retrofit2.Callback

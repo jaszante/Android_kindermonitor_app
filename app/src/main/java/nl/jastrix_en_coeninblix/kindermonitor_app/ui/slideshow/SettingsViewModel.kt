@@ -1,13 +1,13 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
+package nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ShareViewModel : ViewModel() {
+class SettingsViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is share Fragment"
+        value = "This is slideshow Fragment"
     }
     val text: LiveData<String> = _text
 }

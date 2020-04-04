@@ -17,15 +17,15 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.gallery.GalleryFragment"
+        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.graph.GraphFragment"
         android:label="@string/menu_statistics"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_graph" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow.SlideshowFragment"
+        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow.SettingsFragment"
         android:label="@string/menu_instellingen"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_settings" />
 
     <fragment
         android:id="@+id/nav_tools"
@@ -35,9 +35,9 @@
 
     <fragment
         android:id="@+id/nav_share"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.ShareFragment"
+        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.AccountFragment"
         android:label="@string/menu_account"
-        tools:layout="@layout/fragment_share" />
+        tools:layout="@layout/fragment_account" />
 
 <!--    <fragment-->
 <!--        android:id="@+id/nav_send"-->

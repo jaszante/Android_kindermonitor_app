@@ -1,4 +1,4 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.ui.gallery
+package nl.jastrix_en_coeninblix.kindermonitor_app.ui.graph
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -30,9 +29,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class GalleryFragment : Fragment() {
+class GraphFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var graphViewModel: GraphViewModel
     private lateinit var fromDate: EditText
     private lateinit var toDate: EditText
     private lateinit var btnGraph: Button
@@ -50,9 +49,9 @@ class GalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        galleryViewModel =
-            ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+        graphViewModel =
+            ViewModelProviders.of(this).get(GraphViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_graph, container, false)
         return root
     }
 
