@@ -186,7 +186,6 @@ class RegisterPatientActivity : BaseActivityClass() {
                 response: Response<PatientWithID>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    noCallInProgress = true
                     createdPatient = response.body()!!
 
                     Log.d("f", "Save the thresholds (grenswaarden) to local here")

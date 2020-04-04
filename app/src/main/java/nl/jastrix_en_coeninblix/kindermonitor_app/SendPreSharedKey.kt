@@ -83,8 +83,7 @@ class SendPreSharedKey(emailContents: ArrayList<EmailContent>, patient: String) 
 //        sendPreSharedKeyToEmail()
     }
 
-    fun sendPreSharedKeyToEmail()//: MimeMessage //throws AddressException,
-    // MessagingException, UnsupportedEncodingException
+    fun sendPreSharedKeyToEmail()
     {
         execute()// doInBackground().execute()
     }
