@@ -12,30 +12,24 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_firstFragment_to_secondFragment"
-            app:destination="@id/nav_share" />
+            app:destination="@id/nav_account" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_graph"
         android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.graph.GraphFragment"
         android:label="@string/menu_statistics"
         tools:layout="@layout/fragment_graph" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow.SettingsFragment"
+        android:id="@+id/nav_instellingen"
+        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.settings.SettingsFragment"
         android:label="@string/menu_instellingen"
         tools:layout="@layout/fragment_settings" />
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.tools.ToolsFragment"
-        android:label="@string/menu_information"
-        tools:layout="@layout/fragment_tools" />
-
-    <fragment
-        android:id="@+id/nav_share"
-        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.share.AccountFragment"
+        android:id="@+id/nav_account"
+        android:name="nl.jastrix_en_coeninblix.kindermonitor_app.ui.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_account" />
 

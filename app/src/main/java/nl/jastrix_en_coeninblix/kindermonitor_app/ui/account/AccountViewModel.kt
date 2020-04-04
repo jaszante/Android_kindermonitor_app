@@ -1,4 +1,4 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
+package nl.jastrix_en_coeninblix.kindermonitor_app.ui.account
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

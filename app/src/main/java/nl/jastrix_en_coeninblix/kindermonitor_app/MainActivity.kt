@@ -77,8 +77,8 @@ class MainActivity : BaseActivityClass(), Observer {
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_share
+                R.id.nav_home, R.id.nav_graph, R.id.nav_instellingen,
+                R.id.nav_account
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -1,4 +1,4 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.ui.slideshow
+package nl.jastrix_en_coeninblix.kindermonitor_app.ui.settings
 
 
 import android.app.AlertDialog

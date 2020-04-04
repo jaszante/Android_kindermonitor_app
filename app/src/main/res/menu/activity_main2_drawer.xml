@@ -9,15 +9,15 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_graph"
             android:icon="@drawable/ic_show_chart_black_24dp"
             android:title="@string/menu_statistics" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_instellingen"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/menu_instellingen" />
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav_account"
             android:icon="@drawable/ic_account_box_black_24dp"
             android:title="@string/menu_account" />
     </group>

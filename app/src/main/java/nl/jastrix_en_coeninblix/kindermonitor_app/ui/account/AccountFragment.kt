@@ -1,4 +1,4 @@
-package nl.jastrix_en_coeninblix.kindermonitor_app.ui.share
+package nl.jastrix_en_coeninblix.kindermonitor_app.ui.account
 
 import android.content.Context
 import android.content.Intent
