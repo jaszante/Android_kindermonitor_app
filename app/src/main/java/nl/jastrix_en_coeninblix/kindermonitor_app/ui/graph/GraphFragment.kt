@@ -16,10 +16,13 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import nl.jastrix_en_coeninblix.kindermonitor_app.MonitorApplication
 import nl.jastrix_en_coeninblix.kindermonitor_app.R
 import nl.jastrix_en_coeninblix.kindermonitor_app.dataClasses.Measurement
+import nl.jastrix_en_coeninblix.kindermonitor_app.graphPage.XasFormatter
+import nl.jastrix_en_coeninblix.kindermonitor_app.graphPage.XasFormatter.Companion.XasList
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -204,39 +207,64 @@ class GraphFragment : Fragment() {
     }
 
     fun create_Graph(allMeasurements: Array<Measurement>) {
-        val firstChosenDay = toDateString.split('T')
-        val secondChosenDay = fromDateString.split('T')
+        try {
+            val firstChosenDay = toDateString.split('T')
+            val secondChosenDay = fromDateString.split('T')
 
-        val showOneDay = firstChosenDay[0] == secondChosenDay[0]
+            val showOneDay = firstChosenDay[0] == secondChosenDay[0]
 //        val showOneDay = abs(firstChosenDay[0].split('-')[2].toInt() - secondChosenDay[0].split('-')[2].toInt()) < 2
 
-        val averageGraphPoints = ArrayList<Entry>()
-        val highestGraphPoints = ArrayList<Entry>()
-        val lowestGraphPoints = ArrayList<Entry>()
+            val averageGraphPoints = ArrayList<Entry>()
+            val highestGraphPoints = ArrayList<Entry>()
+            val lowestGraphPoints = ArrayList<Entry>()
 
-        var highestPoint: Double = allMeasurements[0].value
-        var lowestPoint: Double = allMeasurements[0].value
-        var averagePoint: Double = 0.0
-        val allMeasurementsWithinAverage = ArrayList<Double>()
-        var previousTimeForGraph: Float = -1f
+            var highestPoint: Double = allMeasurements[0].value
+            var lowestPoint: Double = allMeasurements[0].value
 
-        if (showOneDay) {
-            var index = 1
-            var calculatingAverageForThisHour: Int =
-                returnFormattedDate(allMeasurements[0].time).hours
-            allMeasurements.forEach {
-                val date = returnFormattedDate(it.time)
-                if (date.hours == calculatingAverageForThisHour) {
-                    allMeasurementsWithinAverage.add(it.value)
 
-                    if (it.value > highestPoint) {
-                        highestPoint = it.value
-                    }
-                    if (it.value < lowestPoint) {
-                        lowestPoint = it.value
-                    }
+            var averagePoint: Double = 0.0
+            val allMeasurementsWithinAverage = ArrayList<Double>()
+            var previousTimeForGraph: Float = -1f
+            var index = 0;
+            var xasIndex = 0;
+            var xasLabels = ArrayList<Float>()
+            if (showOneDay) {
+                var index = 1
+                var calculatingAverageForThisHour: Int =
+                    returnFormattedDate(allMeasurements[0].time).hours
+                allMeasurements.forEach {
+                    val date = returnFormattedDate(it.time)
+                    if (date.hours == calculatingAverageForThisHour) {
+                        allMeasurementsWithinAverage.add(it.value)
 
-                    if (index == allMeasurements.count()) {
+                        if (it.value > highestPoint) {
+                            highestPoint = it.value
+                        }
+                        if (it.value < lowestPoint) {
+                            lowestPoint = it.value
+                        }
+
+                        if (index == allMeasurements.count()) {
+                            averagePoint = 0.0
+                            allMeasurementsWithinAverage.forEach {
+                                averagePoint += it
+                            }
+                            averagePoint /= allMeasurementsWithinAverage.count()
+                            allMeasurementsWithinAverage.clear()
+                            calculatingAverageForThisHour = date.hours
+                            allMeasurementsWithinAverage.add(it.value)
+
+                            val averagePointPoint = Entry(previousTimeForGraph, averagePoint.toFloat())
+                            averageGraphPoints.add(averagePointPoint)
+
+                            val highestPointPoint = Entry(previousTimeForGraph, highestPoint.toFloat())
+                            highestGraphPoints.add(highestPointPoint)
+
+                            val lowestPointPoint = Entry(previousTimeForGraph, lowestPoint.toFloat())
+                            lowestGraphPoints.add(lowestPointPoint)
+                            xasLabels.add(previousTimeForGraph)
+                        }
+                    } else {
                         averagePoint = 0.0
                         allMeasurementsWithinAverage.forEach {
                             averagePoint += it
@@ -251,52 +279,61 @@ class GraphFragment : Fragment() {
 
                         val highestPointPoint = Entry(previousTimeForGraph, highestPoint.toFloat())
                         highestGraphPoints.add(highestPointPoint)
+                        highestPoint = it.value
 
                         val lowestPointPoint = Entry(previousTimeForGraph, lowestPoint.toFloat())
                         lowestGraphPoints.add(lowestPointPoint)
+                        lowestPoint = it.value
+                        xasLabels.add(previousTimeForGraph)
                     }
-                } else {
-                    averagePoint = 0.0
-                    allMeasurementsWithinAverage.forEach {
-                        averagePoint += it
-                    }
-                    averagePoint /= allMeasurementsWithinAverage.count()
-                    allMeasurementsWithinAverage.clear()
-                    calculatingAverageForThisHour = date.hours
-                    allMeasurementsWithinAverage.add(it.value)
 
-                    val averagePointPoint = Entry(previousTimeForGraph, averagePoint.toFloat())
-                    averageGraphPoints.add(averagePointPoint)
-
-                    val highestPointPoint = Entry(previousTimeForGraph, highestPoint.toFloat())
-                    highestGraphPoints.add(highestPointPoint)
-                    highestPoint = it.value
-
-                    val lowestPointPoint = Entry(previousTimeForGraph, lowestPoint.toFloat())
-                    lowestGraphPoints.add(lowestPointPoint)
-                    lowestPoint = it.value
+                    previousTimeForGraph = date.hours.toFloat()
+                    index++
                 }
 
-                previousTimeForGraph = date.hours.toFloat()
-                index++
-            }
-        } else {
-            var calculatingAverageForThisDay: Int =
-                allMeasurements[0].time.split('-')[2].split('T')[0].toInt() //returnFormattedDate(allMeasurements[0].time).day // allMeasurements[0].time.split('-')[2].split('T')[0].toInt()
-            var index = 1
-            allMeasurements.forEach {
-                //                val date = returnFormattedDate(it.time)
-                if (it.time.split('-')[2].split('T')[0].toInt() == calculatingAverageForThisDay) {
-                    allMeasurementsWithinAverage.add(it.value)
 
-                    if (it.value > highestPoint) {
-                        highestPoint = it.value
-                    }
-                    if (it.value < lowestPoint) {
-                        lowestPoint = it.value
-                    }
+            } else {
+                var calculatingAverageForThisDay: Int =
+                    allMeasurements[0].time.split('-')[2].split('T')[0].toInt() //returnFormattedDate(allMeasurements[0].time).day // allMeasurements[0].time.split('-')[2].split('T')[0].toInt()
+                var index = 1
+                allMeasurements.forEach {
+                    //                val date = returnFormattedDate(it.time)
+                    if (it.time.split('-')[2].split('T')[0].toInt() == calculatingAverageForThisDay) {
+                        allMeasurementsWithinAverage.add(it.value)
 
-                    if (index == allMeasurements.count()) {
+                        if (it.value > highestPoint) {
+                            highestPoint = it.value
+                        }
+                        if (it.value < lowestPoint) {
+                            lowestPoint = it.value
+                        }
+
+                        if (index == allMeasurements.count()) {
+                            averagePoint = 0.0
+                            allMeasurementsWithinAverage.forEach {
+                                averagePoint += it
+                            }
+                            averagePoint /= allMeasurementsWithinAverage.count()
+                            allMeasurementsWithinAverage.clear()
+                            calculatingAverageForThisDay =
+                                it.time.split('-')[2].split('T')[0].toInt()
+                            allMeasurementsWithinAverage.add(it.value)
+
+                            val averagePointPoint =
+                                Entry(xasIndex.toFloat(), averagePoint.toFloat())
+                            averageGraphPoints.add(averagePointPoint)
+
+                            val highestPointPoint =
+                                Entry(xasIndex.toFloat(), highestPoint.toFloat())
+                            highestGraphPoints.add(highestPointPoint)
+
+                            val lowestPointPoint =
+                                Entry(xasIndex.toFloat(), lowestPoint.toFloat())
+                            lowestGraphPoints.add(lowestPointPoint)
+                            xasLabels.add(previousTimeForGraph)
+                            xasIndex++
+                        }
+                    } else {
                         averagePoint = 0.0
                         allMeasurementsWithinAverage.forEach {
                             averagePoint += it
@@ -306,61 +343,53 @@ class GraphFragment : Fragment() {
                         calculatingAverageForThisDay = it.time.split('-')[2].split('T')[0].toInt()
                         allMeasurementsWithinAverage.add(it.value)
 
-                        val averagePointPoint = Entry(previousTimeForGraph, averagePoint.toFloat())
+                        val averagePointPoint = Entry(xasIndex.toFloat(), averagePoint.toFloat())
                         averageGraphPoints.add(averagePointPoint)
 
-                        val highestPointPoint = Entry(previousTimeForGraph, highestPoint.toFloat())
+                        val highestPointPoint = Entry(xasIndex.toFloat(), highestPoint.toFloat())
                         highestGraphPoints.add(highestPointPoint)
+                        highestPoint = it.value
 
-                        val lowestPointPoint = Entry(previousTimeForGraph, lowestPoint.toFloat())
+                        val lowestPointPoint = Entry(xasIndex.toFloat(), lowestPoint.toFloat())
                         lowestGraphPoints.add(lowestPointPoint)
+                        lowestPoint = it.value
+                        xasLabels.add(previousTimeForGraph)
+                        xasIndex++
+
                     }
-                } else {
-                    averagePoint = 0.0
-                    allMeasurementsWithinAverage.forEach {
-                        averagePoint += it
-                    }
-                    averagePoint /= allMeasurementsWithinAverage.count()
-                    allMeasurementsWithinAverage.clear()
-                    calculatingAverageForThisDay = it.time.split('-')[2].split('T')[0].toInt()
-                    allMeasurementsWithinAverage.add(it.value)
 
-                    val averagePointPoint = Entry(previousTimeForGraph, averagePoint.toFloat())
-                    averageGraphPoints.add(averagePointPoint)
-
-                    val highestPointPoint = Entry(previousTimeForGraph, highestPoint.toFloat())
-                    highestGraphPoints.add(highestPointPoint)
-                    highestPoint = it.value
-
-                    val lowestPointPoint = Entry(previousTimeForGraph, lowestPoint.toFloat())
-                    lowestGraphPoints.add(lowestPointPoint)
-                    lowestPoint = it.value
+                    previousTimeForGraph = it.time.split('-')[2].split('T')[0].toInt().toFloat()
+                    index++
                 }
-
-                previousTimeForGraph = it.time.split('-')[2].split('T')[0].toInt().toFloat()
-                index++
             }
 
-        }
+            XasList = xasLabels
+            var formatter = XasFormatter()
 
-        val dataSet = LineDataSet(averageGraphPoints, "Gemiddelde");
-        val dataSet2 = LineDataSet(highestGraphPoints, "Hoogste punt");
-        val dataSet3 = LineDataSet(lowestGraphPoints, "Laagste punt");
-        val colorB = getColor(context!!, R.color.black)
-        val colorP = getColor(context!!, R.color.colorPrimary)
-        val colorPD = getColor(context!!, R.color.colorPrimaryDark)
-        dataSet.setColor(colorB)
-        dataSet2.setColor(colorP)
-        dataSet3.setColor(colorPD)
-        val dataSets = ArrayList<ILineDataSet>()
-        dataSets.add(dataSet)
-        dataSets.add(dataSet2)
-        dataSets.add(dataSet3)
-        val lineData = LineData(dataSets)
-        graph.xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
-        graph.description.text = dropdown.selectedItem.toString()
-        graph.data = lineData
-        graph.invalidate()
+
+            val dataSet = LineDataSet(averageGraphPoints, "Gemiddelde");
+            val dataSet2 = LineDataSet(highestGraphPoints, "Hoogste punt");
+            val dataSet3 = LineDataSet(lowestGraphPoints, "Laagste punt");
+            val colorB = getColor(context!!, R.color.black)
+            val colorP = getColor(context!!, R.color.colorPrimary)
+            val colorPD = getColor(context!!, R.color.colorPrimaryDark)
+            dataSet.setColor(colorB)
+            dataSet2.setColor(colorP)
+            dataSet3.setColor(colorPD)
+            val dataSets = ArrayList<ILineDataSet>()
+            dataSets.add(dataSet)
+            dataSets.add(dataSet2)
+            dataSets.add(dataSet3)
+            val lineData = LineData(dataSets)
+            graph.xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+            graph.description.text = dropdown.selectedItem.toString()
+            graph.data = lineData
+            graph.xAxis.valueFormatter = formatter
+            graph.invalidate()
+        }
+        finally {
+
+        }
     }
 
     private fun returnFormattedDate(time: String): Date {
